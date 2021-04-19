@@ -1,0 +1,30 @@
+<svg width="1600" height="572" viewBox="0 0 1600 572" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="572">
+<rect width="1600" height="572" fill="#C4C4C4"/>
+</mask>
+<g mask="url(#mask0)">
+<path d="M137 198C95.8 198 27.1667 248.667 0 273V518H1626.5V85C1623.5 66.3333 1608.2 29 1571 29C1524.5 29 1490.5 103 1447.5 103C1404.5 103 1373 0 1329.5 0C1286 0 1249 150 1211.5 150C1174 150 1131 60.5 1088.5 60.5C1046 60.5 1026 189 976.5 189C927 189 895.5 112.5 846.5 112.5C797.5 112.5 780.5 189 731 189C681.5 189 653 87 610.5 87C568 87 527.5 235.5 490.5 235.5C453.5 235.5 417 146 372.5 146C328 146 298.5 275.5 254.5 275.5C210.5 275.5 188.5 198 137 198Z" transform="translate(-11.5 69)" fill="url(#paint0_linear)"/>
+<g filter="url(#filter0_d)">
+<path d="M0 273C27.1667 248.667 95.8 198 137 198C188.5 198 210.5 275.5 254.5 275.5C298.5 275.5 328 146 372.5 146C417 146 453.5 235.5 490.5 235.5C527.5 235.5 568 87 610.5 87C653 87 681.5 189 731 189C780.5 189 797.5 112.5 846.5 112.5C895.5 112.5 927 189 976.5 189C1026 189 1046 60.5 1088.5 60.5C1131 60.5 1174 150 1211.5 150C1249 150 1286 0 1329.5 0C1373 0 1404.5 103 1447.5 103C1490.5 103 1524.5 29 1571 29C1608.2 29 1623.5 66.3333 1626.5 85" transform="translate(-11.5 66)" stroke="url(#paint1_linear)" stroke-width="8"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_d" x="-36.1688" y="43" width="1681.12" height="331.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0"/>
+<feOffset dx="2" dy="5"/>
+<feGaussianBlur stdDeviation="12"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.0515055 0 0 0 0 0.0758029 0 0 0 0 0.318777 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear" x2="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1626.5) scale(1642 518) rotate(90)">
+<stop stop-color="#131B57"/>
+<stop offset="1" stop-color="#2E3880" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint1_linear" x2="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1700 -201 1186.67 10036.5 -644.833 -4743.24)">
+<stop stop-color="#B711FF"/>
+<stop offset="1" stop-color="#3460FF"/>
+</linearGradient>
+</defs>
+</svg>
