@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("xs")]: {
       borderRadius: "1em"
     }
+    
   },
   image: {
     backgroundImage: `url("https://images.unsplash.com/photo-1518544648563-3d99717dbe95?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1498&q=80")`,
