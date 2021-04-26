@@ -11,7 +11,8 @@ export const useAuth = () => {
   const [emailSentError, setEmailSentError] = useState()
   const [spinner, setSpinner] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [newUser, setNewUser] = useState(false)
+  const [newUser, setNewUser] = useState(false);
+  
 
   const handleLogin = (email, password) => {
   setSpinner(true)

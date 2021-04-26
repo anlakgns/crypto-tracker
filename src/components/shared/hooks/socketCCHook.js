@@ -22,8 +22,8 @@ export const useSocketCC = ()=> {
 
     ccSocket.onmessage = function onStreamMessage(event) {
       const data = JSON.parse(event.data)
-      console.log("messages started to come.")
-        if(data.TYPE = "5" && data.PRICE) {
+      // console.log("messages started to come.")
+        if(data.TYPE === "5" && data.PRICE) {
           setLivePrices(prevState => {
             const coinName = data.FROMSYMBOL
             const isPlus = prevState?.[coinName]?.price ? prevState?.[coinName]?.price < data.PRICE : null
@@ -43,7 +43,7 @@ export const useSocketCC = ()=> {
 
 
   const closeSocketConnection = () => {
-    ccSocket.close()
+    ccSocket?.close()
     console.log("connection closed.")
   } 
     

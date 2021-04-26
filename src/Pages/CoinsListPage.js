@@ -2,8 +2,6 @@ import React from "react"
 import {makeStyles} from '@material-ui/styles'
 import Grid from "@material-ui/core/Grid"
 import HeaderM from "../components/Landing Components/Introduction Section/HeaderM"
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
 import waves from "../assets/graph-dark.svg"
 import CoinTable from "../components/CoinsList Components/CoinTable"
 
@@ -19,8 +17,6 @@ const useStyles = makeStyles(theme => ({
     marginBottom:"-9em"
   },
 }))
-
-
 
 const CoinListPage = ()=> {
   const classes = useStyles()

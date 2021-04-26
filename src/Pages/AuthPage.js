@@ -3,7 +3,6 @@ import {makeStyles} from '@material-ui/styles'
 import Grid from "@material-ui/core/Grid"
 import LogIn from "../components/Auth Components/LogIn"
 import waves from "../assets/graph-dark.svg"
-import Waves from "../components/Landing Components/Introduction Section/Waves"
 
 
 const useStyles = makeStyles(theme => ({

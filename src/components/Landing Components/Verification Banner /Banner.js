@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from "react"
+import React, {useState, useContext} from "react"
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import ButtonPrimary from "../../shared/UI components/ButtonPrimary"

@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
 
 const LogIn = ({logStatus})=> {
 
-  const {handleLogin, handleSignUp, spinner, errorMessage, emailSent, newUser, setErrorMessage, isLoggedIn, snackOpen, setSnackOpen, userInfo} = useContext(GlobalContext)
+  const {handleLogin, handleSignUp, spinner, errorMessage, newUser, setErrorMessage, isLoggedIn, snackOpen, setSnackOpen} = useContext(GlobalContext)
   const history = useHistory();
   const classes = useStyles();
   const [password, setPassword] = useState("");

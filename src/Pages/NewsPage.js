@@ -1,4 +1,4 @@
-import React, {useEffect} from "react"
+import React from "react"
 import {makeStyles} from '@material-ui/styles'
 import Grid from "@material-ui/core/Grid"
 import HeaderM from "../components/Landing Components/Introduction Section/HeaderM"
@@ -9,7 +9,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import NewCard from "../components/News Components/NewCard"
 import waves from "../assets/graph-dark.svg"
-import axios from "axios"; 
 
 const useStyles = makeStyles(theme => ({
  headpage: {
@@ -28,19 +27,7 @@ const useStyles = makeStyles(theme => ({
 const NewsPage = ()=> {
   const theme = useTheme()
   const matchXS = useMediaQuery(theme.breakpoints.down('xs'))
-  console.log(matchXS)
   const classes = useStyles()
-
-  useEffect(async ()=> {
-    const response = await axios.get("/posts/?auth_token=7e7e477aa2c90c444c56da9455a325e492490f41", {
-      
-
-    })
-      console.log(response.data)
-     
- }, [])
-
-
 
   return (
     <>
