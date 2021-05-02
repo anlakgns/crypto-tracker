@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useContext, useCallback} from "react"
 import HeadUnderline from "../shared/UI components/HeadUnderline"
 import Grid from "@material-ui/core/Grid"
-import {fade, makeStyles } from '@material-ui/core/styles';
+import {makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import Button from '@material-ui/core/Button';
@@ -20,12 +20,14 @@ import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Switch from '@material-ui/core/Switch';
-import InputBase from '@material-ui/core/InputBase';
-import SearchIcon from '@material-ui/icons/Search';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {CoinCard} from "./CoinCard"
 import Checkbox from "@material-ui/core/Checkbox"
 import IsoIcon from '@material-ui/icons/Iso';
+import Popover from '@material-ui/core/Popover';
+import {CalculatorCard} from "./CalculatorCard"
+import {PortfolioModal} from "./portfolioModal/PortfolioModal"
+import {SearchBar} from "../shared/UI components/SearchBar"
 
 const useStyles = makeStyles(theme => ({ 
   table: {
@@ -67,48 +69,14 @@ const useStyles = makeStyles(theme => ({
     justifyContent:"center",
     marginLeft:"auto",
   },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '100%',
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-    width: "100%"
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    
-  },
- 
-  btnPortfolio: {
+  btnCalc: {
     color: "white",
     textTransform: "none",
     fontSize:"0.9em",
     fontWeight:"400"
 
   },
-  btnCalc: {
+  btnPortfolio: {
     textTransform: "none",
     color: theme.palette.secondary.main,
     fontSize:"0.9em",
@@ -121,6 +89,9 @@ const useStyles = makeStyles(theme => ({
   labelCheckboxSwitch:{
     fontSize: "0.9em",
     fontWeight:"400"
+  },
+  popoverPaper: {
+    borderRadius:"2em",
   }
 
 }))
@@ -131,13 +102,18 @@ const CoinTable = () => {
   const [sortType, setSortType] = useState("marketCapDescending")
   const [sortedCoinsInfo, setSortedCoinsInfo] = useState([])
   const [page, setPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState();
+  const [searchChangeTerm, setSearchChangeTerm] = useState();
   const [searchSubmitTerm, setSearchSubmitTerm] = useState();
-  const [livePriceSwitch, setLivePriceSwitch] = useState(true);
+  const [livePriceSwitch, setLivePriceSwitch] = useState(false);
   const [cardCoinsInfo, setCardCoinsInfo] = useState([]);
   const [bookmarks, setBookmarks] = useState([]);
   const [favoriteCheck, setFavoriteCheck] = useState(false)
   const [socketList, setSocketList] = useState([])
+  const [calcAnchor, setCalcAnchor] = useState(null);
+  const [responseCoins, setresponseCoins] = useState([])
+  const [popoverSwitch, setPopoverSwitch] = useState(false)
+  const [openPortfolioModal, setPortfolioModal] = useState(false);
+
   console.log(bookmarks)
 
  // Helper Functions
@@ -191,11 +167,13 @@ const CoinTable = () => {
   useEffect(()=> {
     const fetchData = async () => { // avoiding race condition.
       const response = await nomicsAPI.get("/currencies/ticker")
+      setresponseCoins(response.data);
       const requestListFromAPI = favoriteCheck ? bookmarks : response.data;
       const coinsForCards = topMoversByDay(response.data)
       setCardCoinsInfo(coinsForCards)
       const searchResult = requestListFromAPI.filter(coin => coin.name.toLowerCase().includes(searchSubmitTerm)) 
-      const sortedRequestListFromAPI = sortHandler(searchResult.length === 0 ? requestListFromAPI : searchResult )
+      console.log(searchResult.length)
+      const sortedRequestListFromAPI = sortHandler(searchResult.length === 0 || searchResult.length === requestListFromAPI.length ? requestListFromAPI : searchResult )
       setSortedCoinsInfo(favoriteCheck ? bookmarks : sortedRequestListFromAPI)
       const requestListFromSocket = sortedRequestListFromAPI.map((coin)=> {
               return `5~CCCAGG~${coin.id}~USD`  
@@ -230,12 +208,12 @@ const CoinTable = () => {
     setPage(1);
     sortType === sortType1 ? setSortType(sortType2) : setSortType(sortType1)
   }
-  const searchButtonChangeHandler = (e) => {
-    setSearchTerm(e.target.value)
+  const searchBoxChangeHandler = (e) => {
+    setSearchChangeTerm(e.target.value)
   }
-  const searchButtonSubmitHandler = (e)=> {
+  const searchBoxSubmitHandler = (e)=> {
     e.preventDefault();
-    const lowerChanger = searchTerm.toLowerCase();
+    const lowerChanger = searchChangeTerm.toLowerCase();
     setSearchSubmitTerm(lowerChanger)
   }
   const switchHandler = ()=> {
@@ -251,6 +229,18 @@ const CoinTable = () => {
       })
     }
 
+  }
+  const calcHandlerClose = () => {
+    setCalcAnchor(null);
+    setPopoverSwitch(false)
+
+  };
+  const calcHandlerOpen = (e) => {
+    setCalcAnchor(e.currentTarget)
+    setPopoverSwitch(true)
+  }
+  const createPortfolioHandler = () => {
+    setPortfolioModal(true)
   }
 
   // Number Formatters
@@ -282,7 +272,7 @@ const CoinTable = () => {
     <Grid container justify="center" alignItems="center" spacing={2}>
       {cardCoinsInfo.map((coin) => {
         return (
-          <Grid item md>
+          <Grid item md key={coin.id}>
             <CoinCard 
               imgSource = {coin.logo_url} 
               alt={coin.id} coinName={coin.name} 
@@ -297,19 +287,7 @@ const CoinTable = () => {
     {/* Functional Navitagiton */}
     <Grid container justify="space-between" alignItems="center" className={classes.optionBar}>
           <Grid item md={4} container justify="flex-end"  >
-            <form className={classes.search} onSubmit={searchButtonSubmitHandler}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                onChange= {searchButtonChangeHandler}
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-              />
-            </form>
+            <SearchBar onChange={searchBoxChangeHandler} onSubmit={searchBoxSubmitHandler} />
           </Grid>
           <Grid item container justify="center" md={2}>
             <FormControlLabel
@@ -328,15 +306,43 @@ const CoinTable = () => {
           </Grid>
           <Grid item container justify="center" md={2}>
             
-            <Button className={classes.btnPortfolio} onClick={()=>{}}>
+            <Button className={classes.btnCalc} onClick={calcHandlerOpen}>
               <IsoIcon color="primary" style={{marginRight:"0.3em"}} />
                 Calculator
             </Button>
+            <Popover
+              classes={{paper: classes.popoverPaper}}
+              open={popoverSwitch}
+              anchorEl={calcAnchor}
+              onClose={calcHandlerClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+             >
+               <CalculatorCard coinList = {responseCoins}  />
+            </Popover>
+
           </Grid>
           <Grid item container justify="center" md={2}>
-            <Button variant="contained" className={classes.btnCalc} color="primary" onClick={()=>{}}>Create a Portfolio</Button>
+            <Button 
+              variant="contained" 
+              className={classes.btnCalc} 
+              color="primary" 
+              onClick={createPortfolioHandler}>Create a Portfolio
+            </Button>
+            <PortfolioModal 
+              openPortfolioModal={openPortfolioModal} 
+              setPortfolioModal={setPortfolioModal} 
+              responseCoins={responseCoins}
+              
+              />
           </Grid>
-          
+            
         </Grid>
     
      {/* Table  */}

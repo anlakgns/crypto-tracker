@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     padding:"1em",
   },
   cardLogo: {
-    width: "30%",
+    maxHeight: 25,
     borderRadius:"50%",
   },
   cardGraph: {

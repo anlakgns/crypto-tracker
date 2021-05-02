@@ -31,6 +31,7 @@ export default createMuiTheme({
     }
   },
   typography: {
+    color:"white",
     fontsize: "16px",
     tab:{
       textTransform: "none",

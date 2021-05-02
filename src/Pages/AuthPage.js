@@ -36,7 +36,6 @@ const LandingPage = ({logStatus})=> {
         <Grid item md={12} >
           <img src={waves} className={classes.waves} alt="background pattern" />
         </Grid>
-     
       </Grid>
     </Grid>
     </>

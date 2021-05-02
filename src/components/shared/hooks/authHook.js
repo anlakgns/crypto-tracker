@@ -64,7 +64,7 @@ export const useAuth = () => {
   }
   const handleSignUp = (email, password)=> {
     setSpinner(true)
-  fire
+  fire  
     .auth()
     .createUserWithEmailAndPassword(email, password)
     .then(()=> {
