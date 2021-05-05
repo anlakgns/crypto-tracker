@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
    outlineButton: {
      border: `2px solid ${theme.palette.common.buttonPurple}`,
      '&:hover': {
-       backgroundColor: theme.palette.common.buttonPurple,
+       backgroundColor: theme.palette.primary.buttonPurple,
        color: "white",
      },
    },
@@ -74,7 +74,15 @@ const useStyles = makeStyles((theme) => ({
 
 const LogIn = ({logStatus})=> {
 
-  const {handleLogin, handleSignUp, spinner, errorMessage, newUser, setErrorMessage, isLoggedIn, snackOpen, setSnackOpen} = useContext(GlobalContext)
+  const {
+      handleLogin, 
+      handleSignUp,
+      state,
+      dispatch,
+      ACTIONS, 
+      } = useContext(GlobalContext)
+  const { spinner, errorMessage, newUser, isLoggedIn, snackOpen } = state  
+
   const history = useHistory();
   const classes = useStyles();
   const [password, setPassword] = useState("");
@@ -84,7 +92,7 @@ const LogIn = ({logStatus})=> {
 
   const modalHandleClose = () => {
     setModalOpen(false);
-    setErrorMessage(false)
+    dispatch({type: ACTIONS.SETERRORMESSAGE, payload: false})
   };
 
   useEffect(()=> {
@@ -106,8 +114,8 @@ const LogIn = ({logStatus})=> {
   return (
     <>
      
-      <Typography variant="h3" align="center" className={classes.headline}>Login</Typography>
-      <form className={classes.formContainer} onSubmit={(e)=> submitHandler(e)} >
+    <Typography variant="h3" align="center" className={classes.headline}>Login</Typography>
+    <form className={classes.formContainer} onSubmit={(e)=> submitHandler(e)} >
         <Grid container direction="column">
           { hasAccount === true ? 
              <Grid item >
@@ -179,7 +187,7 @@ const LogIn = ({logStatus})=> {
         <Typography align="right" className={classes.forgetText}>{hasAccount === true ? "Have an account?" : "Don't have an account?"} <Button onClick={()=> setHasAccount((prev)=> !prev)} color="secondary" className={classes.btnSignIn}>{hasAccount === true ? "Sign in" : "Sign up"}</Button></Typography>
         
         </Grid>
-    </form>
+      </form>
     
     <Backdrop className={classes.backdrop} open={spinner}>
       <CircularProgress color="inherit" />
@@ -197,7 +205,7 @@ const LogIn = ({logStatus})=> {
       open= {snackOpen}
       headline="Verify your Account"
       btnContext="Ok"
-      onBtnClick={()=> {setSnackOpen(false); history.push("/")}}
+      onBtnClick={()=> {dispatch({type: ACTIONS.SETSNACK, payload: false}); history.push("/")}}
       context="Thanks for joining coinOne. We just send a verification link to your mail. Please check your inbox and verify your account." />
     </>
   )

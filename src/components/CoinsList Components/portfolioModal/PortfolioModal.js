@@ -44,10 +44,10 @@ export const PortfolioModal = ({openPortfolioModal, setPortfolioModal, responseC
 
 
       {page === 1 ? 
-        <PortfolioModalFirst 
-        responseCoins={responseCoins} 
-        listItemHandler={listItemHandler}
-        handleClose={handleClose}  />
+          <PortfolioModalFirst 
+          responseCoins={responseCoins} 
+          listItemHandler={listItemHandler}
+          handleClose={handleClose}  />
       : 
         <PortfolioModalSecond 
           setPage={setPage} 

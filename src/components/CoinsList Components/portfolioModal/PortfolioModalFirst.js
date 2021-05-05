@@ -10,6 +10,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import IconButton from '@material-ui/core/IconButton';
+import {motion} from "framer-motion"
 
 const useStyles = makeStyles(theme => ({
   mainContainer: {
@@ -78,7 +79,7 @@ export const PortfolioModalFirst = ({responseCoins, listItemHandler, handleClose
   useEffect(()=> {
     const topten = sortTopTen(responseCoins)
     const searchResult = responseCoins.filter(coin => coin.name.toLowerCase().trim().includes(searchSubmitTerm)) 
-    setRenderList(searchResult.length === 0 || searchResult.length === responseCoins.data.length ? topten : searchResult )
+    setRenderList(searchResult.length === 0 || searchResult.length === responseCoins.length ? topten : searchResult )
     console.log(searchResult.length)
 
   }, [responseCoins,searchSubmitTerm ])
@@ -93,9 +94,16 @@ export const PortfolioModalFirst = ({responseCoins, listItemHandler, handleClose
     const lowerChanger = searchChangeTerm.toLowerCase();
     setSearchSubmitTerm(lowerChanger)
   }
+  
 
   return (
-      <Grid container className={classes.gridContainer} direction="column">
+      <Grid 
+        container 
+        className={classes.gridContainer} 
+        direction="column" 
+      
+        
+         >
 
         { /* Headline & Cross */}
         <Grid item container justify="space-between" className={classes.headlineContainer} >
@@ -116,10 +124,18 @@ export const PortfolioModalFirst = ({responseCoins, listItemHandler, handleClose
 
         { /* Coin List */}
         <Grid item container>
-          <List component="nav" className={classes.listContainer} >
-            {renderList.map(coin => {
+          <List 
+            className={classes.listContainer} >
+            {renderList.map((coin, i) => {
               return (
-                <ListItem button key={coin.id} onClick={()=> listItemHandler(coin)}>
+                <ListItem 
+                  button 
+                  key={coin.id} 
+                  component={motion.div} 
+                  initial={{x: -200, opacity: 0}} 
+                  animate={{x: 0, opacity: 1}} 
+                  transition={{delay: 0.1*i}} 
+                  onClick={()=> listItemHandler(coin)}>
                   <img src={coin.logo_url} alt="coin logo" className={classes.logo} />
                   <ListItemText primary={coin.name} />
                   <ListItemIcon classes={{root: classes.iconContainer}} >

@@ -11,6 +11,7 @@ import {CoinListButton} from "../../shared/UI components/CoinListButton"
 import {ResultBox} from "../../shared/UI components/ResultBox"
 import {QuantityInput} from "../../shared/UI components/QuantityInput"
 import ButtonLightPurple from "../../shared/UI components/ButtonLightPurple"
+import { motion } from "framer-motion";
 
 const useStyles = makeStyles(theme => ({
   mainContainer: {
@@ -60,7 +61,6 @@ const useStyles = makeStyles(theme => ({
     width:"7.5em",
     margin:"0.25em",
     
-
   },
   inputLabel:{
     color:"white"
@@ -79,16 +79,6 @@ const useStyles = makeStyles(theme => ({
     justifyContent:"center",
     marginTop:"1em"
   },
-  // fee:{
-  //   backgroundColor:theme.palette.common.textPurple,
-  //   margin:"1em",
-  //   borderRadius:"30px",
-  // },
-  // notes:{
-  //   backgroundColor:theme.palette.common.textPurple,
-  //   margin:"1em",
-  //   borderRadius:"30px",
-  // },
 
 }))
 
@@ -96,6 +86,7 @@ const useStyles = makeStyles(theme => ({
 
 export const PortfolioModalSecond = ({setPage, handleClose, responseCoins, selectedCoin, setSelectedCoin})=> {
   const classes = useStyles()
+
   const [transactionType, setTransactionType] = useState(0);
   const [coinQuantity, setCoinQuantity] = useState("");
   const [totalSpent, setTotalSpent] = useState(0)
@@ -139,11 +130,11 @@ export const PortfolioModalSecond = ({setPage, handleClose, responseCoins, selec
   }
 
 
-  // useEffect(() => {
-  //   return () => {
-  //     setPage(1)
-  //   };
-  // }, []);
+  useEffect(() => {
+    return () => {
+      setPage(1)
+    };
+  }, []);
 
   return (
     <Grid container className={classes.gridContainer} direction="column" >
@@ -166,8 +157,13 @@ export const PortfolioModalSecond = ({setPage, handleClose, responseCoins, selec
             value={transactionType}
             onChange={handleTabChange}
             className={classes.tabs}
-            TabIndicatorProps={{style: {display:"none"}}}>
-            <div className={classes.customIndicator} style={{marginLeft: indicatorStyle()}} />
+            component={motion.div}
+            TabIndicatorProps={{style: {display:"none"} }}>
+            <motion.div 
+              className={classes.customIndicator} 
+              animate={{marginLeft: indicatorStyle()}} 
+              transition={{duration: 0.6}} 
+              initial={false} />
             <Tab disableRipple value={0} label="Buy" className={classes.tab} classes={{root: classes.tabRoot}} />
             <Tab disableRipple value={1} label="Sell" className={classes.tab} classes={{root: classes.tabRoot}} />
             <Tab disableRipple value={2} label="Transfer"className={classes.tab} classes={{root: classes.tabRoot}} />
@@ -233,9 +229,6 @@ export const PortfolioModalSecond = ({setPage, handleClose, responseCoins, selec
           />
         </Grid>
 
-
-
-      
     </Grid>
   )
 }

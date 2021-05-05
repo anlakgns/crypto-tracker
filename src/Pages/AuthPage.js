@@ -7,7 +7,7 @@ import waves from "../assets/graph-dark.svg"
 
 const useStyles = makeStyles(theme => ({
   allPage: {
-   backgroundColor: theme.palette.common.darkPurple
+   backgroundColor: theme.palette.common.blue2
  },
  LoginContainer:{
    height: "90vh",

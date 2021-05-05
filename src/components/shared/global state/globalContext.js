@@ -7,43 +7,25 @@ export const GlobalContext = createContext()
 export const GlobalProvider = (props) => {
 
   const [
-    handleLogin, 
-    handleLogout, 
-    isLoggedIn, 
-    handleSignUp, 
-    userInfo, 
-    spinner, 
-    errorMessage,
-    setErrorMessage, 
-    handleVerify, 
-    emailSent, 
-    setEmailSent, 
-    setEmailSentError, 
-    emailSentError, 
-    snackOpen,
-    newUser,
-    setSnackOpen,
-     ] = useAuth();
+    handleLogin,
+    handleLogout,
+    handleVerify,
+    handleSignUp,
+    state,
+    dispatch,
+    ACTIONS
+  ] = useAuth();
 
 
     return (
       <GlobalContext.Provider value={{
         handleLogin,
-        handleLogout, 
-        isLoggedIn, 
-        handleSignUp,
-        userInfo, 
-        spinner,
-        errorMessage,
-        setErrorMessage,
+        handleLogout,
         handleVerify,
-        emailSent, 
-        setEmailSent,
-        emailSentError,
-        snackOpen,
-        setSnackOpen,
-        newUser,
-        setEmailSentError,
+        handleSignUp,
+        state,
+        dispatch,
+        ACTIONS
       }}>
         {props.children}
       </GlobalContext.Provider>

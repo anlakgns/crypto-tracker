@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 const TabsCom = () => {
 
-  const {handleLogout, isLoggedIn} = useContext(GlobalContext)
+  const {handleLogout, state} = useContext(GlobalContext)
 
   const [tabValue, setTabValue] = useState(0) // tabs state
 
@@ -91,7 +91,7 @@ const TabsCom = () => {
       </Tabs>
       </Grid>
       <Grid item >
-      {isLoggedIn 
+      {state.isLoggedIn 
           ?  <Button variant="outlined" className={classes.tabButton} color="secondary" onClick={handleLogout}>
             Log Out
             </Button> 
