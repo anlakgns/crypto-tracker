@@ -3,7 +3,6 @@ import {useState, useEffect} from "react"
 import {makeStyles } from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid"
 import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
 import { Typography } from "@material-ui/core"
 import CloseIcon from '@material-ui/icons/Close';
 import Tabs from '@material-ui/core/Tabs';
@@ -11,16 +10,14 @@ import Tab from '@material-ui/core/Tab';
 import {CoinListButton} from "../../shared/UI components/CoinListButton"
 import {ResultBox} from "../../shared/UI components/ResultBox"
 import {QuantityInput} from "../../shared/UI components/QuantityInput"
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import NotesIcon from '@material-ui/icons/Notes';
-import ButtonSecondary from "../../shared/UI components/ButtonSecondary"
+import ButtonLightPurple from "../../shared/UI components/ButtonLightPurple"
 
 const useStyles = makeStyles(theme => ({
   mainContainer: {
   },
   gridContainer: {
-    background: "linear-gradient(20deg, rgba(87,95,153,1) 50%, rgba(255,147,213,1) 100%)",
-    height:"35em", 
+    // background: "linear-gradient(20deg, rgba(87,95,153,1) 50%, rgba(255,147,213,1) 100%)",
+    height:"31em", 
     width:"27em",
     borderRadius:"2em",
     border: "4px solid",
@@ -43,14 +40,27 @@ const useStyles = makeStyles(theme => ({
     color:"white",
   },
   tabs:{
-    color:"white",
+    color: theme.palette.primary.main,
     marginBottom:"1.5em",
+    backgroundColor:"white",
+    borderRadius:"1.5em",
+    height:"3em",
   },
   tab: {
-    width:"8em"
+    width:"9em"
   },
   tabRoot: {
     minWidth: 0,
+  },
+  customIndicator:{
+    position:"absolute",
+    backgroundColor: theme.palette.secondary.light,
+    height:"2.5em",
+    borderRadius:"30px",
+    width:"7.5em",
+    margin:"0.25em",
+    
+
   },
   inputLabel:{
     color:"white"
@@ -61,18 +71,33 @@ const useStyles = makeStyles(theme => ({
   spentGridContainer:{
     color:"white",
     marginTop:"1em",
-  }
+  },
+  coinListGridContainer:{
+    justifyContent:"center",
+  },
+  buttonGridContainer:{
+    justifyContent:"center",
+    marginTop:"1em"
+  },
+  // fee:{
+  //   backgroundColor:theme.palette.common.textPurple,
+  //   margin:"1em",
+  //   borderRadius:"30px",
+  // },
+  // notes:{
+  //   backgroundColor:theme.palette.common.textPurple,
+  //   margin:"1em",
+  //   borderRadius:"30px",
+  // },
 
 }))
 
 
 
-export const PortfolioModalSecond = ({setPage, handleClose, responseCoins})=> {
+export const PortfolioModalSecond = ({setPage, handleClose, responseCoins, selectedCoin, setSelectedCoin})=> {
   const classes = useStyles()
   const [transactionType, setTransactionType] = useState(0);
-  const [selectedCoin, setSelectedCoin] = useState("")
   const [coinQuantity, setCoinQuantity] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [totalSpent, setTotalSpent] = useState(0)
 
   useEffect(()=> {
@@ -94,9 +119,25 @@ export const PortfolioModalSecond = ({setPage, handleClose, responseCoins})=> {
   const coinQuantityHandler = (event) => {
     setCoinQuantity(event.target.value)
   }
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+
+  const indicatorStyle = () => {
+    let marginLeft;
+    switch (transactionType) {
+      case 0: 
+        marginLeft= "0.25em";
+      break;
+      case 1: 
+        marginLeft= "8em";
+      break;
+      case 2: 
+        marginLeft= "15.75em";
+      break;
+      default: 
+        marginLeft= "0.25em"
+    }
+    return marginLeft;
+  }
+
 
   // useEffect(() => {
   //   return () => {
@@ -105,7 +146,7 @@ export const PortfolioModalSecond = ({setPage, handleClose, responseCoins})=> {
   // }, []);
 
   return (
-    <Grid container className={classes.gridContainer} direction="column">
+    <Grid container className={classes.gridContainer} direction="column" >
         
         { /* Headline & Cross */}
         <Grid item container justify="space-between" className={classes.headlineContainer} >
@@ -126,18 +167,20 @@ export const PortfolioModalSecond = ({setPage, handleClose, responseCoins})=> {
             onChange={handleTabChange}
             className={classes.tabs}
             TabIndicatorProps={{style: {display:"none"}}}>
-            <Tab label="Buy" className={classes.tab} classes={{root: classes.tabRoot}} />
-            <Tab label="Sell" className={classes.tab} classes={{root: classes.tabRoot}} />
-            <Tab label="Transfer"className={classes.tab} classes={{root: classes.tabRoot}} />
+            <div className={classes.customIndicator} style={{marginLeft: indicatorStyle()}} />
+            <Tab disableRipple value={0} label="Buy" className={classes.tab} classes={{root: classes.tabRoot}} />
+            <Tab disableRipple value={1} label="Sell" className={classes.tab} classes={{root: classes.tabRoot}} />
+            <Tab disableRipple value={2} label="Transfer"className={classes.tab} classes={{root: classes.tabRoot}} />
           </Tabs>
         </Grid>
 
         { /* Select Coin List */}
-        <Grid item container>
-        <CoinListButton 
-          coinList={responseCoins}
-          onChange = {handleChangeCrypto}
-          selected={selectedCoin} />
+        <Grid item container justify="center">
+          <CoinListButton 
+            responseCoins={responseCoins}
+            onChange = {handleChangeCrypto}
+            selected={selectedCoin}
+            width="90%" />
         </Grid>
 
         { /* Quantity and Price Input&Box */}
@@ -150,42 +193,43 @@ export const PortfolioModalSecond = ({setPage, handleClose, responseCoins})=> {
           </Grid>
           <Grid item>
             <Typography className={classes.inputLabel}>Price Per Coin</Typography>
-            <ResultBox value={selectedCoin?.price} />
+            <ResultBox value={parseFloat(selectedCoin?.price).toFixed(2) + " $"} />
           </Grid>
         </Grid>
 
         { /*  Fee & Notes Buttons */}
-        <Grid item container justify="space-around" alignItems="center" xs={11} >
-          
+        <Grid item container justify="space-around" alignItems="center" xs={12} >
           
           { /* Fee */}
-          <Grid item md={2}>
+          {/* <Grid item md={5} className={classes.fee}>
               <Button className={classes.iconsButton} >
                 <MonetizationOnIcon />
                 <Typography>Fee</Typography>
               </Button>
-          </Grid>
+          </Grid> */}
 
           { /* Notes */}
-          <Grid item md={2}>
+          {/* <Grid item md={5} className={classes.notes}>
             <Button className={classes.iconsButton} >
                 <NotesIcon />
               <Typography>Notes</Typography>
             </Button>
-          </Grid>
+          </Grid> */}
 
         </Grid>
 
         { /* Total Spend Info Box */}
         <Grid item container justify="center" className={classes.spentGridContainer}>
-          <ResultBox value={totalSpent} />
+          <ResultBox 
+            value={parseFloat(totalSpent).toFixed(2) + " $"}
+            width="90%" />
         </Grid>
 
         { /* Add Transaction Button */}
-        <Grid item container>
-          <ButtonSecondary 
+        <Grid item container className={classes.buttonGridContainer}>
+          <ButtonLightPurple 
             contentText="Add Transaction"
-            width="100%"
+            width="90%"
           />
         </Grid>
 

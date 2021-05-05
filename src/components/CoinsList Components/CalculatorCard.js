@@ -1,12 +1,11 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useCallback} from "react"
 
 import Grid from "@material-ui/core/Grid"
 import Tabs from "@material-ui/core/Tabs"
 import Tab from "@material-ui/core/Tab"
 import {makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import { Typography } from "@material-ui/core"
-import openExchangeAPI from "../shared/apis/openExchange"
+import openExchangeAPI from "../shared/apis & socket/openExchange"
 import {CoinListButton} from "../shared/UI components/CoinListButton"
 import {CurrencyListButton} from "../shared/UI components/CurrencyListButton"
 import {QuantityInput} from "../shared/UI components/QuantityInput"
@@ -96,7 +95,7 @@ const useStyles = makeStyles(theme => ({
  
 }))
 
-export const CalculatorCard = ({coinList})=> {
+export const CalculatorCard = ({responseCoins})=> {
   const classes = useStyles();
   const [tabValue, setTabValue] = useState(0)
   const [selectedCoin, setSelectedCoin] = useState("")
@@ -106,6 +105,17 @@ export const CalculatorCard = ({coinList})=> {
   const [calcResult, setCalcResult] = useState();
   const [coinQuantity, setCoinQuantity] = useState("");
 
+  // Calculators
+  const calculatorForFiat =useCallback(() => {
+    const result = coinQuantity*selectedCoin.price*selectedCurrency.currencyRate
+    setCalcResult(currencyFormatter(result, selectedCurrency.currencyCode))
+  }, [coinQuantity, selectedCoin, selectedCurrency])
+ 
+  const calculatorForCrypto = useCallback(() => {
+    const result = (coinQuantity*selectedCoin.price)/selectedCoin2.price
+    setCalcResult(result.toFixed(2) + " " + selectedCoin2.id)
+  }, [coinQuantity, selectedCoin, selectedCoin2])
+ 
 
   useEffect(()=> { // Data Fetching and Editting
     const fetchData = async () => { 
@@ -132,7 +142,7 @@ export const CalculatorCard = ({coinList})=> {
       if(selectedCoin !== "" && selectedCoin2 !== "" && coinQuantity !== "" && tabValue === 0) {
         calculatorForCrypto();
       }
-  }, [selectedCoin,selectedCurrency,coinQuantity, selectedCoin2, tabValue])
+  }, [selectedCoin,selectedCurrency,coinQuantity, selectedCoin2, tabValue, calculatorForFiat, calculatorForCrypto])
 
   useEffect(()=> { // Cleanup for result
       setCalcResult("")
@@ -163,18 +173,7 @@ export const CalculatorCard = ({coinList})=> {
     setCoinQuantity(event.target.value)
   }
 
-  // Calculators
-  const calculatorForFiat = () => {
-    const result = coinQuantity*selectedCoin.price*selectedCurrency.currencyRate
-    console.log(currencyFormatter(result, selectedCurrency.currencyCode))
-    setCalcResult(currencyFormatter(result, selectedCurrency.currencyCode))
-  }
-  const calculatorForCrypto = () => {
-    const result = (coinQuantity*selectedCoin.price)/selectedCoin2.price
-    console.log(currencyFormatter(result) + selectedCoin2.id)
-    setCalcResult(result.toFixed(2) + " " + selectedCoin2.id)
-  }
-
+ 
   // Partial JSX
   const fiatCryptoSwitch = tabValue === 1 ? 
     <CurrencyListButton 
@@ -185,7 +184,7 @@ export const CalculatorCard = ({coinList})=> {
       /> 
     : 
     <CoinListButton 
-      coinList={coinList}
+      responseCoins={responseCoins}
       onChange = {handleChangeCrypto2}
       selected={selectedCoin2}
       width="12em" />
@@ -225,7 +224,7 @@ export const CalculatorCard = ({coinList})=> {
             {/***  Left Coin List ***/}
             <Grid item >
               <CoinListButton 
-                coinList={coinList}
+                responseCoins={responseCoins}
                 onChange = {handleChangeCrypto}
                 selected={selectedCoin}
                 width="12em" />

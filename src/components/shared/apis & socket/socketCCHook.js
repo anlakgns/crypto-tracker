@@ -1,5 +1,5 @@
 // this is where you paste your api key
-import {useState} from "react"
+import {useState, useCallback} from "react"
 
 const apiKey = "8580d10a1c80620968dba21176ae1db67299f5231c7d2af40d28e0ce4ad31b81";
 let ccSocket; 
@@ -9,7 +9,7 @@ export const useSocketCC = ()=> {
 
   const [livePrices, setLivePrices] = useState();
   
-  const startSocketConnection = (requestList) => {
+  const startSocketConnection = useCallback((requestList) => {
     ccSocket = new WebSocket('wss://streamer.cryptocompare.com/v2?api_key=' + apiKey);
      ccSocket.onopen = function onStreamOpen() {
       const subRequest = {
@@ -39,13 +39,13 @@ export const useSocketCC = ()=> {
         }
     }
 
-  }
+  },[])
 
 
-  const closeSocketConnection = () => {
+  const closeSocketConnection =useCallback(() => {
     ccSocket?.close()
     console.log("connection closed.")
-  } 
+  },[])
     
 
 

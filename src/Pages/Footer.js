@@ -11,7 +11,7 @@ import {useHistory} from "react-router-dom"
 
 const useStyles = makeStyles(theme => ({
   footerContainer: {
-    backgroundColor: theme.palette.common.darkPurple,
+    backgroundColor: theme.palette.common.blue2,
     fontFamily: "roboto",
 
 

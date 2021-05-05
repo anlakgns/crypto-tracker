@@ -5,7 +5,7 @@ import {makeStyles} from '@material-ui/styles'
 import Button from '@material-ui/core/Button'
 import {Link} from "react-router-dom"
 import Grid from "@material-ui/core/Grid"
-import {GlobalContext} from "../shared/context/globalContext"
+import {GlobalContext} from "../shared/global state/globalContext"
 
 const useStyles = makeStyles(theme => ({
   tabContainer: {
@@ -85,7 +85,7 @@ const TabsCom = () => {
         <Tab className={classes.tab} value={0} component={Link} to="/features" label="Features"/>
         <Tab className={classes.tab} value={1} component={Link} to="/coinmarkets" label="Coin Market"/>
         <Tab className={classes.tab} value={2} component={Link} to="/news" label="News" />
-        <Tab className={classes.tab} value={3} component={Link} to="/blog" label="Blog"/>
+        <Tab className={classes.tab} value={3} component={Link} to="/portfolio" label="Portfolio"/>
         <Tab className={classes.tab} value={4} component={Link} to="/contract" label="Contact"/>
         
       </Tabs>

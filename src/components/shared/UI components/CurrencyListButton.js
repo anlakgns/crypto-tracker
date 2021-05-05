@@ -1,13 +1,10 @@
-import React, {useState, useEffect} from "react"
+import React from "react"
 import Grid from "@material-ui/core/Grid"
-import Tabs from "@material-ui/core/Tabs"
-import Tab from "@material-ui/core/Tab"
 import MenuItem from "@material-ui/core/MenuItem"
 import {makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
 import { Typography } from "@material-ui/core"
 
 const useStyles = makeStyles(theme => ({
@@ -25,9 +22,10 @@ const useStyles = makeStyles(theme => ({
     opacity:"0.8",
   },
   select:{
-    minHeight:"4em",
     color:"white",
-    background: "linear-gradient(160deg, rgba(87,95,153,1) 20%, rgba(255,147,213,1) 100%)",
+    background: theme.palette.common.textPurple,
+    borderRadius:"30px"
+    
   },
   selectRoot:{
     outline:"none",
@@ -54,7 +52,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-export const CurrencyListButton = ({currencyList, onChange, selectedCurrency, width})=> {
+export const CurrencyListButton = ({currencyList, onChange, selectedCurrency, width, height})=> {
   const classes = useStyles();
 
   return (
@@ -69,8 +67,7 @@ export const CurrencyListButton = ({currencyList, onChange, selectedCurrency, wi
          className={classes.select}
          variant="filled"
          disableUnderline= {true}
-   
-   
+         style={{height: height || "3em"}}   
        >
        <MenuItem value="">
          <em>None</em>

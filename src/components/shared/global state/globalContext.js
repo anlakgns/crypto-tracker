@@ -1,6 +1,5 @@
 import {createContext} from "react"
-import {useAuth} from "../hooks/authHook"
-import {useSocketCC} from "../hooks/socketCCHook"
+import {useAuth} from "./authHook"
 
 
 export const GlobalContext = createContext()
@@ -26,7 +25,6 @@ export const GlobalProvider = (props) => {
     setSnackOpen,
      ] = useAuth();
 
-  const [livePrices, startSocketConnection, closeSocketConnection] = useSocketCC()
 
     return (
       <GlobalContext.Provider value={{
@@ -46,9 +44,6 @@ export const GlobalProvider = (props) => {
         setSnackOpen,
         newUser,
         setEmailSentError,
-        startSocketConnection,
-        livePrices,
-        closeSocketConnection,
       }}>
         {props.children}
       </GlobalContext.Provider>

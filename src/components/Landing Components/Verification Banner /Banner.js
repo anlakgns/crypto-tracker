@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import ButtonPrimary from "../../shared/UI components/ButtonPrimary"
 import {makeStyles} from '@material-ui/styles'
 import Grid from "@material-ui/core/Grid"
-import {GlobalContext} from "../../shared/context/globalContext"
+import {GlobalContext} from "../../shared/global state/globalContext"
 
 
 

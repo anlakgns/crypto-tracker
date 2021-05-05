@@ -1,5 +1,4 @@
-import {useState, useEffect} from "react"
-import Grid from "@material-ui/core/Grid"
+import {useState} from "react"
 import {PortfolioModalFirst} from "./PortfolioModalFirst"
 import {PortfolioModalSecond} from "./PortfolioModalSecond"
 import {makeStyles } from '@material-ui/core/styles';
@@ -21,10 +20,12 @@ const useStyles = makeStyles(theme => ({
 export const PortfolioModal = ({openPortfolioModal, setPortfolioModal, responseCoins}) => {
   const classes = useStyles()
   const [page, setPage] = useState(1)
+  const [selectedCoin, setSelectedCoin] = useState("")
   
 
-  const listItemHandler = ()=> {
+  const listItemHandler = (coin) => {
     setPage(2)
+    setSelectedCoin(coin)
   }
 
   
@@ -47,12 +48,13 @@ export const PortfolioModal = ({openPortfolioModal, setPortfolioModal, responseC
         responseCoins={responseCoins} 
         listItemHandler={listItemHandler}
         handleClose={handleClose}  />
-        : 
+      : 
         <PortfolioModalSecond 
           setPage={setPage} 
           handleClose={handleClose} 
           responseCoins={responseCoins}
-
+          selectedCoin={selectedCoin}
+          setSelectedCoin={setSelectedCoin}
         />
       }
     </Dialog>

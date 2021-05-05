@@ -78,7 +78,7 @@ export const PortfolioModalFirst = ({responseCoins, listItemHandler, handleClose
   useEffect(()=> {
     const topten = sortTopTen(responseCoins)
     const searchResult = responseCoins.filter(coin => coin.name.toLowerCase().trim().includes(searchSubmitTerm)) 
-    setRenderList(searchResult.length === 0 || searchResult.length === responseCoins.length ? topten : searchResult )
+    setRenderList(searchResult.length === 0 || searchResult.length === responseCoins.data.length ? topten : searchResult )
     console.log(searchResult.length)
 
   }, [responseCoins,searchSubmitTerm ])
@@ -119,8 +119,8 @@ export const PortfolioModalFirst = ({responseCoins, listItemHandler, handleClose
           <List component="nav" className={classes.listContainer} >
             {renderList.map(coin => {
               return (
-                <ListItem button key={coin.id} onClick={listItemHandler}>
-                  <img src={coin.logo_url} className={classes.logo} />
+                <ListItem button key={coin.id} onClick={()=> listItemHandler(coin)}>
+                  <img src={coin.logo_url} alt="coin logo" className={classes.logo} />
                   <ListItemText primary={coin.name} />
                   <ListItemIcon classes={{root: classes.iconContainer}} >
                       < ArrowForwardIosIcon style={{fontSize:"small"}}   />

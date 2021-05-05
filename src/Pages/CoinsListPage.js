@@ -8,7 +8,7 @@ import CoinTable from "../components/CoinsList Components/CoinTable"
 
 const useStyles = makeStyles(theme => ({ 
   mainContainer: {
-    backgroundColor: theme.palette.common.darkPurple,
+    backgroundColor: theme.palette.common.blue2,
 
   },
   waves: { 

@@ -10,7 +10,7 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import { useHistory } from "react-router-dom";
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {GlobalContext} from "../shared/context/globalContext"
+import {GlobalContext} from "../shared/global state/globalContext"
 import ModalCard from "../shared/UI components/ModalCard"
 import ButtonPrimary from "../shared/UI components/ButtonPrimary"
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';

@@ -6,7 +6,8 @@ import Footer from "./Pages/Footer"
 import LandingPage from "./Pages/LandingPage"
 import NewsPage from "./Pages/NewsPage"
 import AuthPage from "./Pages/AuthPage"
-import {GlobalProvider} from "./components/shared/context/globalContext"
+import PortfolioPage from "./Pages/PortfolioPage"
+import {GlobalProvider} from "./components/shared/global state/globalContext"
 import CoinListPage from "./Pages/CoinsListPage"
 
 const App = ()=> {
@@ -20,7 +21,7 @@ const App = ()=> {
             <Route exact path="/features" component={()=> <div>Features</div>} />
             <Route exact path="/coinmarkets" component={CoinListPage} />
             <Route exact path="/news" component={NewsPage} />
-            <Route exact path="/blog" component={()=> <div>Blog</div>} />
+            <Route exact path="/portfolio" component={PortfolioPage} />
             <Route exact path="/contact" component={()=> <div>Contact</div>} />
             <Route exact path="/auth" component={AuthPage} />
         </GlobalProvider>

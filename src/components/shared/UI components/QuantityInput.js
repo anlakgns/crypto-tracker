@@ -3,18 +3,20 @@ import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles(theme => ({
   textField:{
-    background: "linear-gradient(320deg, rgba(87,95,153,1) 20%, rgba(255,147,213,1) 100%)",
+    background: theme.palette.common.textPurple,
+    borderRadius:"30px"
+
   },
   textResult:{
     paddingTop:"10px",
     paddingBottom:"10px",
-    height:"2.4em",
     color: "white",
+    height:"30px",
   },
   
 }))
 
-export const QuantityInput= ({onChange, value })=> {
+export const QuantityInput= ({onChange, value, height })=> {
   const classes = useStyles();
 
   return (
@@ -25,6 +27,7 @@ export const QuantityInput= ({onChange, value })=> {
       className={classes.textField} 
       onChange={onChange} 
       value={value}  
+      style={{height: height || "3em"}}
     />
   )
 }

@@ -1,34 +1,41 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
-const purple = "#2E3880";
-const darkPurple = "#293171"
-const lightPurple = "rgb(180,189,255)"
-const textPurple = "#B4BDFF"
-const buttonColor = "#6d70ff"
+const blue1 = "#2E3880";
+const blue2 = "#293171";
+const blue3 = "#232A60";
+const blue4 = "#1D234E";
 
-const pink = "#FF78CB"
-const white= "#FFFFFF"
+const pinkblue = "#9758A6"
+const pink1 = "#FF78CB"
+const pink2= "#FFA2DC"
+
+
+
+const white ="#FFFFFF"
+const textPurple = "#B4BDFF"
+const buttonPurple = "#6d70ff"
+
 
 export default createMuiTheme({
   palette: {
     common: {
-      purple: `${purple}`,
-      pink: `${pink}`,
-      lightPurple: `${lightPurple}`, 
-      darkPurple: `${darkPurple}`, 
+      blue2: `${blue2}`,
+      blue3: `${blue3}`,
+      blue4: `${blue4}`,
+
+      pinkblue: `${pinkblue}`,
+      pink2: `${pink2}`,
+
       textPurple: `${textPurple}`, 
-      buttonPurple : `${buttonColor}`,
+      buttonPurple : `${buttonPurple}`,
       white: `${white}`
     },
     primary: {
-      main: `${purple}`
+      main: `${blue1}`
     },
     secondary: {
-      main: `${pink}`
+      main: `${pink1}`
     },
-    tertiary: {
-      main: `${white}`
-    }
   },
   typography: {
     color:"white",

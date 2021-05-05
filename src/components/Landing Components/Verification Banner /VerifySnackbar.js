@@ -2,7 +2,7 @@ import React, {useContext} from "react"
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import {makeStyles} from '@material-ui/styles'
-import {GlobalContext} from "../../shared/context/globalContext"
+import {GlobalContext} from "../../shared/global state/globalContext"
 
 
 function Alert(props) {
