@@ -8,7 +8,7 @@ import NewsPage from "./Pages/NewsPage"
 import AuthPage from "./Pages/AuthPage"
 import PortfolioPage from "./Pages/PortfolioPage"
 import {GlobalProvider} from "./components/shared/global state/globalContext"
-import CoinListPage from "./Pages/CoinsListPage"
+import CoinListPage from "./Pages/CoinsMarketPage"
 
 const App = ()=> {
 

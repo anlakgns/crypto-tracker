@@ -18,7 +18,7 @@ export const PerformanceGraph = ()=> {
     <Grid 
       container 
       className={classes.mainGrid} 
-      xs={12} >
+       >
       
   
     </Grid>

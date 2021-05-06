@@ -69,13 +69,12 @@ const reducerFn = (state, action) => {
       return {
         ...state,
         userInfo: action.payload,
-        isLoggedIn: true
       }
     }
     case ACTIONS.AUTHCHANGEOFF : {
       return {
         ...state,
-        userInfo: action.payload
+        userInfo: action.payload,
       }
     }
     case ACTIONS.SETSNACK : {

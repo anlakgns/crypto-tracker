@@ -19,11 +19,11 @@ import BookmarkIcon from '@material-ui/icons/Bookmark';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import {useSocketCC} from "../shared/apis & socket/socketCCHook"
-import nomicsAPI from "../shared/apis & socket/nomics"
 import {CoinCard} from "./CoinCard"
 import {FeatureBar} from "./FeaturesBar"
 import HeadUnderline from "../shared/UI components/HeadUnderline"
 import {useFormatter} from "../shared/utils/formatterHook"
+import {useFetchData} from "../shared/apis & socket/fetchDataHook"
 
 const useStyles = makeStyles(theme => ({ 
   table: {
@@ -73,7 +73,8 @@ const useStyles = makeStyles(theme => ({
 const CoinTable = () => {
   const classes = useStyles()
   const [livePrices, startSocketConnection, closeSocketConnection] = useSocketCC()
-  const [percentageFormatter, numberFormatter, currencyFormatter ] = useFormatter()
+  const {percentageFormatter, numberFormatter, currencyFormatter } = useFormatter()
+  const [responseCoins, fetchData ] = useFetchData()
 
   const [searchSubmitTerm, setSearchSubmitTerm] = useState();
   const [livePriceSwitch, setLivePriceSwitch] = useState(false);
@@ -85,7 +86,6 @@ const CoinTable = () => {
   const [cardCoinsInfo, setCardCoinsInfo] = useState([]);
   const [socketList, setSocketList] = useState([])
 
-  const [responseCoins, setResponseCoins] = useState([])
   const [rawRenderList, setRawRenderList] = useState([])
   const [searchedRenderList, setSearchedRenderList] = useState([]) 
   const [finalRenderList, setFinalRenderList] = useState([])
@@ -93,12 +93,8 @@ const CoinTable = () => {
 
   // Data Fetching 
   useEffect( ()=> {
-    const fetchData = async ()=> {
-      const response = await nomicsAPI.get("/currencies/ticker")
-      setResponseCoins(response.data)
-    }
     fetchData();
-  }, [])
+  }, [fetchData])
 
   // Coin Cards Logic
   useEffect(()=> {
@@ -109,7 +105,7 @@ const CoinTable = () => {
       return [...bestTwo, ...worstTwo]
       }
     }
-    const coinsForCards = topMoversByDay(responseCoins.data)
+    const coinsForCards = topMoversByDay(responseCoins)
 
     setCardCoinsInfo(coinsForCards)
   }, [responseCoins])

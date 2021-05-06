@@ -19,7 +19,7 @@ export const ValueGraph = ()=> {
     <Grid 
       container 
       className={classes.mainGrid} 
-      xs={12} >
+      >
       
   
     </Grid>

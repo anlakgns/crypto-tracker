@@ -4,7 +4,7 @@ export const useFormatter = ()=> {
 
    // Number Formatters
    const percentageFormatter = (num) => {
-    const formatDone = Math.abs(num*100).toFixed(2) + "%";
+    const formatDone = (num*100).toFixed(2) + "%";
     return formatDone
   }
   const numberFormatter = (num) => {
@@ -19,5 +19,5 @@ export const useFormatter = ()=> {
   }
 
 
-  return [percentageFormatter, numberFormatter, currencyFormatter ]
+  return {percentageFormatter, numberFormatter, currencyFormatter }
 }

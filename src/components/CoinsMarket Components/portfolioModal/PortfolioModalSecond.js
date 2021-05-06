@@ -130,11 +130,11 @@ export const PortfolioModalSecond = ({setPage, handleClose, responseCoins, selec
   }
 
 
-  useEffect(() => {
-    return () => {
-      setPage(1)
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     setPage(1)
+  //   };
+  // }, []);
 
   return (
     <Grid container className={classes.gridContainer} direction="column" >

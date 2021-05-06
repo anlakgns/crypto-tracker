@@ -1,10 +1,6 @@
 import React, {useState} from "react"
 import {makeStyles} from '@material-ui/styles'
 import Grid from "@material-ui/core/Grid"
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import Tabs from "@material-ui/core/Tabs"
 import Tab from "@material-ui/core/Tab"
 import { Typography } from "@material-ui/core";
@@ -14,29 +10,21 @@ import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOut
 
 
 const useStyles = makeStyles(theme => ({
-  mainGrid: {
-    backgroundColor: theme.palette.common.blue3,
-    borderRadius:"0.6em",
-    color: theme.palette.common.white,
-  },
-  controlBar:{
-    borderTopRightRadius:"0.6em",
-    borderTopLeftRadius:"0.6em",
-    backgroundColor: theme.palette.common.blue2,
-  },
   headline:{
-    fontSize:"0.9em"
+    fontSize:"0.8em"
   },
   headIconContainer: {
-    padding:"1em",
+    paddingTop:"0.7em",
+    paddingLeft:"1em",
+    paddingRight:"1em",
+    paddingBottom:"0.5em",
   },
   controlIcon:{
     marginLeft:"0.6em",
-    fontSize:"1.2em"
+    fontSize:"1em"
   },
   tab:{
-    fontSize:"0.75em",
-    
+    fontSize:"0.7em", 
   },
   tabs:{
   },
@@ -49,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   tabsRoot:{
     padding:"0",
     minHeight:"0",
-    height:"2em",
+    height:"1.5em",
   },
   iconGridContainer:{
     display:"flex",
@@ -58,7 +46,7 @@ const useStyles = makeStyles(theme => ({
   
 }))
 
-export const AssetList = ()=> {
+export const ControlBar = ()=> {
   const classes = useStyles()
   const [tabValue, setTabValue] = useState(0);
 
@@ -69,16 +57,7 @@ export const AssetList = ()=> {
 
 
   return (
-    <>
-    <Grid 
-      container 
-      direction="column"
-      className={classes.mainGrid} 
-      >
-      
-      {/* Control Bar */}
-      <Grid item container direction="column" className={classes.controlBar}>
-        
+    <>  
         {/* Headline & Icons */}
         <Grid item container direction="row" alignItems="center" justify="flex-end" className={classes.headIconContainer}>
           <Grid item md>
@@ -102,25 +81,7 @@ export const AssetList = ()=> {
             <Tab classes={{root: classes.tabRoot}} className={classes.tab} label="Bonds" />    
           </Tabs>
         </Grid>
-        <div className={classes.bottomLine}/>  
-
-      </Grid>
-
-      {/* Asset List */}
-      <Grid item container>
-        <List>
-          <ListItem button> 
-            <ListItemText primary={""} />
-            <ListItemIcon classes={{root: classes.iconContainer}} >
-              Icon
-            </ListItemIcon>
-          </ListItem>
-        </List>
-
-      </Grid>
-  
-    </Grid>
-
+        <div className={classes.bottomLine}/>    
     </>
   )
 }

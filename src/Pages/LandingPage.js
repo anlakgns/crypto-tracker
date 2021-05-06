@@ -30,9 +30,11 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const LandingPage = ()=> {
-  const {spinner, userInfo, isLoggedIn, emailSent} = useContext(GlobalContext)
+  const {state} = useContext(GlobalContext)
+  const {spinner, userInfo, isLoggedIn, emailSent} = state
   const classes = useStyles()
-  console.log(emailSent)
+  console.log(isLoggedIn)
+  console.log(userInfo)
   return (
     <>
     <Grid container direction="column" className={classes.headpage} >

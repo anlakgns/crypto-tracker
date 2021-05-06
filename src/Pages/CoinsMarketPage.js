@@ -3,7 +3,7 @@ import {makeStyles} from '@material-ui/styles'
 import Grid from "@material-ui/core/Grid"
 import HeaderM from "../components/Landing Components/Introduction Section/HeaderM"
 import waves from "../assets/graph-dark.svg"
-import CoinTable from "../components/CoinsList Components/CoinTable"
+import CoinTable from "../components/CoinsMarket Components/CoinTable"
 
 
 const useStyles = makeStyles(theme => ({ 
