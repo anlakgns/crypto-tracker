@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export const PortfolioModalFirst = ({responseCoins, listItemHandler, handleClose}) => {
+export const PortfolioModalFirst = ({coinListResponse, listItemHandler, handleClose}) => {
   const classes = useStyles()
   const [searchChangeTerm, setSearchChangeTerm] = useState();
   const [searchSubmitTerm, setSearchSubmitTerm] = useState();
@@ -72,17 +72,17 @@ export const PortfolioModalFirst = ({responseCoins, listItemHandler, handleClose
 
   // Helper Functions
   const sortTopTen = (data) => {
-    const sortedList = data.sort((a,b)=> b.market_cap - a.market_cap).slice(0,10);
+    const sortedList = data.sort((a,b)=> b.marketCap - a.marketCap).slice(0,10);
     return sortedList
   }
 
+  // Render List Logic
   useEffect(()=> {
-    const topten = sortTopTen(responseCoins)
-    const searchResult = responseCoins.filter(coin => coin.name.toLowerCase().trim().includes(searchSubmitTerm)) 
-    setRenderList(searchResult.length === 0 || searchResult.length === responseCoins.length ? topten : searchResult )
+    const topten = sortTopTen(coinListResponse)
+    const searchResult = coinListResponse.filter(coin => coin.name.toLowerCase().trim().includes(searchSubmitTerm)) 
+    setRenderList(searchResult.length === 0 || searchResult.length === coinListResponse.length ? topten : searchResult )
     console.log(searchResult.length)
-
-  }, [responseCoins,searchSubmitTerm ])
+  }, [coinListResponse,searchSubmitTerm ])
   
   
   // DOM Handlers
@@ -136,7 +136,7 @@ export const PortfolioModalFirst = ({responseCoins, listItemHandler, handleClose
                   animate={{x: 0, opacity: 1}} 
                   transition={{delay: 0.1*i}} 
                   onClick={()=> listItemHandler(coin)}>
-                  <img src={coin.logo_url} alt="coin logo" className={classes.logo} />
+                  <img src={coin.logo} alt="coin logo" className={classes.logo} />
                   <ListItemText primary={coin.name} />
                   <ListItemIcon classes={{root: classes.iconContainer}} >
                       < ArrowForwardIosIcon style={{fontSize:"small"}}   />

@@ -1,6 +1,6 @@
 import {createContext} from "react"
 import {useAuth} from "./authHook"
-
+import {usePortfolio} from "./portfolioHook"
 
 export const GlobalContext = createContext()
 
@@ -16,6 +16,7 @@ export const GlobalProvider = (props) => {
     ACTIONS
   ] = useAuth();
 
+  const {portfolioBuyOrderList, setPortfolioBuyOrderList, totalSpent, totalSpentByCoin, setCoinToDelete, sourceAPI, setSourceAPI } = usePortfolio()
 
     return (
       <GlobalContext.Provider value={{
@@ -25,7 +26,14 @@ export const GlobalProvider = (props) => {
         handleSignUp,
         state,
         dispatch,
-        ACTIONS
+        ACTIONS,
+        portfolioBuyOrderList,
+        setPortfolioBuyOrderList,
+        totalSpent,
+        totalSpentByCoin,
+        setCoinToDelete,
+        sourceAPI, 
+        setSourceAPI
       }}>
         {props.children}
       </GlobalContext.Provider>

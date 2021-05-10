@@ -1,5 +1,5 @@
 import 'date-fns';
-import {useState, useEffect} from "react"
+import {useState, useEffect, useContext} from "react"
 import {makeStyles } from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid"
 import IconButton from '@material-ui/core/IconButton';
@@ -12,6 +12,8 @@ import {ResultBox} from "../../shared/UI components/ResultBox"
 import {QuantityInput} from "../../shared/UI components/QuantityInput"
 import ButtonLightPurple from "../../shared/UI components/ButtonLightPurple"
 import { motion } from "framer-motion";
+import {GlobalContext} from "../../shared/global state/globalContext"
+import {useHistory} from "react-router-dom"
 
 const useStyles = makeStyles(theme => ({
   mainContainer: {
@@ -60,7 +62,6 @@ const useStyles = makeStyles(theme => ({
     borderRadius:"30px",
     width:"7.5em",
     margin:"0.25em",
-    
   },
   inputLabel:{
     color:"white"
@@ -84,8 +85,10 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export const PortfolioModalSecond = ({setPage, handleClose, responseCoins, selectedCoin, setSelectedCoin})=> {
+export const PortfolioModalSecond = ({setPage, handleClose, coinListResponse, selectedCoin, setSelectedCoin, setPortfolioModal})=> {
   const classes = useStyles()
+  const history = useHistory()
+  const {setPortfolioBuyOrderList } = useContext(GlobalContext)
 
   const [transactionType, setTransactionType] = useState(0);
   const [coinQuantity, setCoinQuantity] = useState("");
@@ -99,8 +102,6 @@ export const PortfolioModalSecond = ({setPage, handleClose, responseCoins, selec
     totalSpentCalc()
   }, [selectedCoin,coinQuantity ])
   
-  
-
   const handleTabChange = (e, newValue)=> {
     setTransactionType(newValue)
   }
@@ -109,6 +110,22 @@ export const PortfolioModalSecond = ({setPage, handleClose, responseCoins, selec
   };
   const coinQuantityHandler = (event) => {
     setCoinQuantity(event.target.value)
+  }
+  const addTransactionHandler = () => {
+    setPortfolioBuyOrderList(prev => {
+      return [
+        ...prev,
+        {
+          name: selectedCoin.name,
+          id: selectedCoin.id,
+          quantity: coinQuantity,
+          priceBought: selectedCoin.price,
+          allInfo: selectedCoin,
+        }
+      ]
+    })
+    setPortfolioModal(false)
+    history.push("/portfolio")
   }
 
   const indicatorStyle = () => {
@@ -130,11 +147,11 @@ export const PortfolioModalSecond = ({setPage, handleClose, responseCoins, selec
   }
 
 
-  // useEffect(() => {
-  //   return () => {
-  //     setPage(1)
-  //   };
-  // }, []);
+  useEffect(() => {
+    return () => {
+      setPage(1)
+    };
+  }, [setPage]);
 
   return (
     <Grid container className={classes.gridContainer} direction="column" >
@@ -173,7 +190,7 @@ export const PortfolioModalSecond = ({setPage, handleClose, responseCoins, selec
         { /* Select Coin List */}
         <Grid item container justify="center">
           <CoinListButton 
-            responseCoins={responseCoins}
+            coinListResponse={coinListResponse}
             onChange = {handleChangeCrypto}
             selected={selectedCoin}
             width="90%" />
@@ -226,6 +243,7 @@ export const PortfolioModalSecond = ({setPage, handleClose, responseCoins, selec
           <ButtonLightPurple 
             contentText="Add Transaction"
             width="90%"
+            onClick={addTransactionHandler}
           />
         </Grid>
 

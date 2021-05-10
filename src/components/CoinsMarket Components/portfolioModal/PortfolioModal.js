@@ -1,4 +1,3 @@
-import {useState} from "react"
 import {PortfolioModalFirst} from "./PortfolioModalFirst"
 import {PortfolioModalSecond} from "./PortfolioModalSecond"
 import {makeStyles } from '@material-ui/core/styles';
@@ -17,10 +16,18 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export const PortfolioModal = ({openPortfolioModal, setPortfolioModal, responseCoins}) => {
+export const PortfolioModal = (props) => {
+  const {
+    openPortfolioModal, 
+    setPortfolioModal, 
+    coinListResponse, 
+    page, 
+    setPage, 
+    selectedCoin, 
+    setSelectedCoin} = props 
+
   const classes = useStyles()
-  const [page, setPage] = useState(1)
-  const [selectedCoin, setSelectedCoin] = useState("")
+  
   
 
   const listItemHandler = (coin) => {
@@ -45,16 +52,17 @@ export const PortfolioModal = ({openPortfolioModal, setPortfolioModal, responseC
 
       {page === 1 ? 
           <PortfolioModalFirst 
-          responseCoins={responseCoins} 
+          coinListResponse={coinListResponse} 
           listItemHandler={listItemHandler}
           handleClose={handleClose}  />
       : 
         <PortfolioModalSecond 
           setPage={setPage} 
           handleClose={handleClose} 
-          responseCoins={responseCoins}
+          coinListResponse={coinListResponse}
           selectedCoin={selectedCoin}
           setSelectedCoin={setSelectedCoin}
+          setPortfolioModal = {setPortfolioModal}
         />
       }
     </Dialog>

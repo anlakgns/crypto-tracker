@@ -1,8 +1,10 @@
-import React from "react"
+import React, {useState, useEffect, useContext} from "react"
 import {makeStyles} from '@material-ui/styles'
 import Grid from "@material-ui/core/Grid"
 import {CoinList} from "./CoinList"
 import {ControlBar} from "./ControlBar"
+import {useFetchData} from "../../shared/apis & socket/fetchDataHook"
+import {GlobalContext} from "../../shared/global state/globalContext"
 
 const useStyles = makeStyles(theme => ({
   mainGrid: {
@@ -50,8 +52,19 @@ const useStyles = makeStyles(theme => ({
 
 export const AssetListContainer = ()=> {
   const classes = useStyles()
+  const {sourceAPI} = useContext(GlobalContext)
+  const { coinListResponse, fetchCoinList } = useFetchData()
+  const [submitSearchTerm, setSubmitSearchTerm] = useState()
+  const [tabValue, setTabValue] = useState(0);
+  const [sort, setSort] = useState(false)
+  const [openPortfolioModal, setPortfolioModal] = useState(false);
+  const [page, setPage] = useState(1)
+  const [selectedCoin, setSelectedCoin] = useState("")
 
-
+  // Data Fetching 
+  useEffect( ()=> {
+    fetchCoinList(sourceAPI);
+  }, [fetchCoinList, sourceAPI])
 
   return (
     <>
@@ -63,13 +76,36 @@ export const AssetListContainer = ()=> {
       
       {/* Control Bar */}
       <Grid item container direction="column" className={classes.controlBar}>   
-        <ControlBar /> 
+        <ControlBar 
+          coinListResponse={coinListResponse} 
+          setSubmitSearchTerm={setSubmitSearchTerm} 
+          tabValue={tabValue}
+          setTabValue={setTabValue}
+          setSort={setSort}
+          sort={sort}
+          openPortfolioModal={openPortfolioModal}
+          setPortfolioModal={setPortfolioModal}
+          page={page}
+          setPage={setPage}
+          selectedCoin={selectedCoin}
+          setSelectedCoin={setSelectedCoin}
+
+           /> 
       </Grid>
 
       {/* Asset List */}
       <Grid item container>
-        <CoinList />
+        <CoinList 
+        coinListResponse={coinListResponse}
+          submitSearchTerm={submitSearchTerm}
+          tabValue={tabValue}
+          sort={sort}
+          setPortfolioModal={setPortfolioModal}
+          setPage={setPage}
+          setSelectedCoin={setSelectedCoin} />
       </Grid>
+
+      
   
     </Grid>
 

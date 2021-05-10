@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-export const CoinListButton = ({responseCoins, onChange, selected, width, height})=> {
+export const CoinListButton = ({coinListResponse, onChange, selected, width, height})=> {
   const classes = useStyles();
 
   return (
@@ -76,13 +76,13 @@ export const CoinListButton = ({responseCoins, onChange, selected, width, height
                    <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  {responseCoins.map(coin => {
+                  {coinListResponse.map(coin => {
                     return (
                       <MenuItem value={coin} classes={{gutters: classes.menuItemGuttersRoot}}  key={coin.id} >
                         <Grid container direction="row" alignItems="center" justify="space-between" className={classes.menuItemGridContainer}>
                             <Grid item container alignItems="center"  md={9} >
                               <Grid item md={2}>
-                                <img className={classes.menuItemLogo} src={coin.logo_url} alt={coin.id} />
+                                <img className={classes.menuItemLogo} src={coin.logo} alt={coin.id} />
                               </Grid>
                               <Grid item md={10} >
                                 <Typography align="left">

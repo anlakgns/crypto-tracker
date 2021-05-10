@@ -32,13 +32,14 @@ const useStyles = makeStyles(theme => ({
 
 export const FeatureBar = (props)=> {
   const classes = useStyles() 
-  const {responseCoins, setSearchSubmitTerm, setLivePriceSwitch, livePriceSwitch, setFavoriteCheck, favoriteCheck} = props
+  const {coinListResponse, setSearchSubmitTerm, setLivePriceSwitch, livePriceSwitch, setFavoriteCheck, favoriteCheck} = props
   
   const [calcAnchor, setCalcAnchor] = useState(null);
   const [calculatorModalSwitch, setCalculatorModalSwitch] = useState(false)
   const [openPortfolioModal, setPortfolioModal] = useState(false);
   const [searchChangeTerm, setSearchChangeTerm] = useState();
-  
+  const [page, setPage] = useState(1)
+  const [selectedCoin, setSelectedCoin] = useState("")
 
   // Dom Handlers
   const searchBoxChangeHandler = (e) => {
@@ -106,7 +107,7 @@ export const FeatureBar = (props)=> {
             horizontal: 'center',
           }}
          >
-           <CalculatorCard responseCoins = {responseCoins}  />
+           <CalculatorCard coinListResponse = {coinListResponse}  />
         </Popover>
 
       </Grid>
@@ -120,7 +121,11 @@ export const FeatureBar = (props)=> {
         <PortfolioModal 
           openPortfolioModal={openPortfolioModal} 
           setPortfolioModal={setPortfolioModal} 
-          responseCoins={responseCoins}
+          coinListResponse={coinListResponse}
+          page={page}
+          setPage={setPage}
+          selectedCoin={selectedCoin}
+          setSelectedCoin={setSelectedCoin}
           
           />
       </Grid>
