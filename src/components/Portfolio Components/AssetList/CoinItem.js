@@ -57,40 +57,46 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const CoinItem = ({ name, logo, priceBought, quantity, id, change, tabValue, value, setPortfolioModal, setSelectedCoin, setPage, coin, coinListResponse }) => {
+export const CoinItem = (props) => {
+  
+  const { tabValue, setPortfolioModal, setSelectedCoin, setPage, coin } = props
+  const {name, priceBought, quantity, value, } = coin
+  const {id, logo, priceChangeDayPerc } = coin.allInfo
+
   const theme = useTheme()
-  const { setCoinToDelete, sourceAPI } = useContext(GlobalContext);
+  const { setCoinToDelete, sourceAPI, coinListResponse } = useContext(GlobalContext);
   const { currencyFormatter, percentageFormatter } = useFormatter();
   const [anchorEl, setAnchorEl] = useState(null);
   const [primaryField, setPrimaryField] = useState()
   const [secondaryField, setSecondaryField] = useState()
   const classes = useStyles();
   const open = Boolean(anchorEl);
-  
+
   // Tab Switch 
   useEffect(()=> {
     const findCoin = coinListResponse.filter(c => c.name === name)
-    console.log(priceBought, +findCoin[0]?.price)
+    const profit = (+findCoin[0]?.price - priceBought)*quantity;
+    const profitPerc = (+findCoin[0]?.price - priceBought)/priceBought;
+
     switch(tabValue) {
       case 0: 
         setPrimaryField(currencyFormatter(priceBought))
-        setSecondaryField(percentageFormatter(change, sourceAPI))
+        setSecondaryField(percentageFormatter(priceChangeDayPerc, sourceAPI))
         break;
       case 1: 
         setPrimaryField(currencyFormatter(value))
         setSecondaryField()
         break;
       case 2: 
-        setPrimaryField(currencyFormatter((+findCoin[0].price - priceBought)*quantity))
-        setSecondaryField(percentageFormatter((+findCoin[0]?.price - priceBought)/priceBought, sourceAPI))
+        setPrimaryField(currencyFormatter(profit))
+        setSecondaryField(percentageFormatter(profitPerc, sourceAPI))
         break;
       default:
         setPrimaryField(currencyFormatter(priceBought))
-        setSecondaryField(percentageFormatter(change, sourceAPI))
+        setSecondaryField(percentageFormatter(priceChangeDayPerc, sourceAPI))
     }
 
-  }, [tabValue, currencyFormatter, sourceAPI, change, priceBought, percentageFormatter, value, coinListResponse, name, quantity])
-
+  }, [tabValue, currencyFormatter, sourceAPI, priceChangeDayPerc, priceBought, percentageFormatter, value, coinListResponse, name, quantity])
 
 
   // Dom Handlers
@@ -121,9 +127,6 @@ export const CoinItem = ({ name, logo, priceBought, quantity, id, change, tabVal
   };
   const options = ["Remove Asset", "Buy More", "Sell"];
   const ITEM_HEIGHT = 48;
-
-  
-
 
   return (
     <>

@@ -1,10 +1,15 @@
 import {createContext} from "react"
 import {useAuth} from "./authHook"
 import {usePortfolio} from "./portfolioHook"
+import {useFetchData} from "../apis & socket/fetchDataHook"
 
 export const GlobalContext = createContext()
 
 export const GlobalProvider = (props) => {
+  const { 
+    setSourceAPI, 
+    sourceAPI  
+  } = useFetchData()
 
   const [
     handleLogin,
@@ -16,7 +21,20 @@ export const GlobalProvider = (props) => {
     ACTIONS
   ] = useAuth();
 
-  const {portfolioBuyOrderList, setPortfolioBuyOrderList, totalSpent, totalSpentByCoin, setCoinToDelete, sourceAPI, setSourceAPI } = usePortfolio()
+  const {
+    portfolioBuyOrderList, 
+    setPortfolioBuyOrderList, 
+    totalSpent, 
+    totalSpentByCoin, 
+    setCoinToDelete, 
+    portfolioList,
+    coinListResponse,
+    totalProfit,
+    selectedCoinForGraph,
+    setSelectedCoinForGraph
+     } = usePortfolio()
+
+
 
     return (
       <GlobalContext.Provider value={{
@@ -33,7 +51,12 @@ export const GlobalProvider = (props) => {
         totalSpentByCoin,
         setCoinToDelete,
         sourceAPI, 
-        setSourceAPI
+        setSourceAPI,
+        portfolioList,
+        coinListResponse,
+        totalProfit,
+        selectedCoinForGraph,
+        setSelectedCoinForGraph
       }}>
         {props.children}
       </GlobalContext.Provider>

@@ -20,7 +20,6 @@ export const PortfolioModal = (props) => {
   const {
     openPortfolioModal, 
     setPortfolioModal, 
-    coinListResponse, 
     page, 
     setPage, 
     selectedCoin, 
@@ -52,14 +51,12 @@ export const PortfolioModal = (props) => {
 
       {page === 1 ? 
           <PortfolioModalFirst 
-          coinListResponse={coinListResponse} 
           listItemHandler={listItemHandler}
           handleClose={handleClose}  />
       : 
         <PortfolioModalSecond 
           setPage={setPage} 
           handleClose={handleClose} 
-          coinListResponse={coinListResponse}
           selectedCoin={selectedCoin}
           setSelectedCoin={setSelectedCoin}
           setPortfolioModal = {setPortfolioModal}

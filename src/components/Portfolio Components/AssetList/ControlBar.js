@@ -60,7 +60,22 @@ const useStyles = makeStyles(theme => ({
   
 }))
 
-export const ControlBar = ({coinListResponse, setSubmitSearchTerm, setTabValue, tabValue, sort, setSort, setPortfolioModal, openPortfolioModal, setPage, page, selectedCoin, setSelectedCoin})=> {
+export const ControlBar = (props)=> {
+  
+  const {
+    setSubmitSearchTerm, 
+    setTabValue, 
+    tabValue, 
+    sort, 
+    setSort, 
+    setPortfolioModal, 
+    openPortfolioModal, 
+    setPage, 
+    page, 
+    selectedCoin, 
+    setSelectedCoin} = props
+  
+  
   const classes = useStyles()
   const [inputOpen, setInputOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState()
@@ -140,7 +155,6 @@ export const ControlBar = ({coinListResponse, setSubmitSearchTerm, setTabValue, 
         <PortfolioModal 
           openPortfolioModal={openPortfolioModal} 
           setPortfolioModal={setPortfolioModal} 
-          coinListResponse={coinListResponse}
           page={page}
           setPage={setPage}
           selectedCoin={selectedCoin}

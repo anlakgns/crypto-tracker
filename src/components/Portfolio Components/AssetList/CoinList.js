@@ -17,11 +17,20 @@ const useStyles = makeStyles(theme => ({
   
 }))
 
-export const CoinList = ({submitSearchTerm, tabValue, sort, setPortfolioModal, setPage, setSelectedCoin, coinListResponse})=> {
+export const CoinList = (props)=> {
+  const {
+    submitSearchTerm, 
+    tabValue, 
+    sort, 
+    setPortfolioModal, 
+    setPage, 
+    setSelectedCoin, 
+    coinListResponse} = props
+
   const classes = useStyles()
-  const {totalSpentByCoin} = useContext(GlobalContext)
+  const {totalSpentByCoin, portfolioList, setSelectedCoinForGraph} = useContext(GlobalContext)
   const [renderList, setRenderList] = useState(totalSpentByCoin)
-  console.log(totalSpentByCoin)
+
   useEffect(()=> {
     const searchedList = totalSpentByCoin?.filter((coin) =>
     coin.name.toLowerCase().includes(submitSearchTerm))
@@ -41,20 +50,20 @@ export const CoinList = ({submitSearchTerm, tabValue, sort, setPortfolioModal, s
     let sortedList
     switch(tabValue) {
       case 0: 
-        sortedList = (sort ? renderList.sort((a,b) => b.allInfo.price - a.allInfo.price) : renderList.sort((a,b) => a.allInfo.price - b.allInfo.price))
+        sortedList = (!sort ? renderList.sort((a,b) => b.allInfo.price - a.allInfo.price) : renderList.sort((a,b) => a.allInfo.price - b.allInfo.price))
         break;
       case 1: 
-        sortedList = (sort ? renderList.sort((a,b) => b.value - a.value) : renderList.sort((a,b) => a.value - b.value))
+        sortedList = (!sort ? renderList.sort((a,b) => b.value - a.value) : renderList.sort((a,b) => a.value - b.value))
         break;
       case 2: 
-        sortedList = renderList
+        sortedList = (!sort ? portfolioList.sort((a,b) => b.profit - a.profit) : portfolioList.sort((a,b) => a.profit - b.value))
         break;
       default:
         sortedList = renderList
     }
     setRenderList(sortedList)
 
-  }, [sort, renderList, tabValue])
+  }, [sort, renderList, tabValue, portfolioList])
   
   return (
     <>
@@ -67,18 +76,12 @@ export const CoinList = ({submitSearchTerm, tabValue, sort, setPortfolioModal, s
         return (
           <ListItem 
             button 
+            onClick={()=> {setSelectedCoinForGraph(coin)}}
             disableGutters 
             classes={{root: classes.listItemRoot}}
             key={Math.random()}
             >
             <CoinItem 
-              name={coin.name} 
-              id={coin.allInfo.id} 
-              priceBought={coin.priceBought}
-              logo={coin.allInfo.logo}
-              quantity={coin.quantity}
-              change={coin.allInfo.priceChangeDayPerc}
-              value={coin.value}
               tabValue={tabValue}
               setPortfolioModal={setPortfolioModal}
               setPage={setPage}

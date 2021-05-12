@@ -1,10 +1,11 @@
-import React from "react"
+import React, {useContext, useState, useEffect} from "react"
 import Grid from "@material-ui/core/Grid"
 import MenuItem from "@material-ui/core/MenuItem"
 import {makeStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { Typography } from "@material-ui/core"
+import {GlobalContext} from '../global state/globalContext'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -57,15 +58,23 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-export const CoinListButton = ({coinListResponse, onChange, selected, width, height})=> {
+export const CoinListButton = ({onChange, selected, width, height})=> {
+  const {coinListResponse} = useContext(GlobalContext)
+  const [selectedUpdate, setSelectedUpdate] = useState("")
   const classes = useStyles();
+
+  useEffect(()=> {
+    const selectedFind = coinListResponse.find(c => c.name === selected.name)
+    setSelectedUpdate(selectedFind)
+
+  }, [coinListResponse,selected ])
 
   return (
     <FormControl variant="outlined" className={classes.formControl} style={{width: width ||  "100%"}}>
                  {/* <InputLabel classes={{root: classes.labelRoot}} className={classes.inputLabel} id="crypto">Crypto</InputLabel> */}
                 <Select
                   labelId="crypto"
-                  value={selected}
+                  value={selectedUpdate}
                   onChange={onChange}
                   classes={{outlined: classes.selectRoot, filled: classes.selectFilledRoot}}
                   className={classes.select}

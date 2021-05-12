@@ -23,7 +23,6 @@ import { CoinCard } from "./CoinCard";
 import { FeatureBar } from "./FeaturesBar";
 import HeadUnderline from "../shared/UI components/HeadUnderline";
 import { useFormatter } from "../shared/utils/formatterHook";
-import { useFetchData } from "../shared/apis & socket/fetchDataHook";
 import {GlobalContext} from "../shared/global state/globalContext"
 
 const useStyles = makeStyles((theme) => ({
@@ -80,8 +79,7 @@ const CoinTable = () => {
     numberFormatter,
     currencyFormatter,
   } = useFormatter();
-  const { coinListResponse, fetchCoinList } = useFetchData();
-  const {sourceAPI} = useContext(GlobalContext)
+  const {sourceAPI, coinListResponse} = useContext(GlobalContext)
 
   const [searchSubmitTerm, setSearchSubmitTerm] = useState();
   const [livePriceSwitch, setLivePriceSwitch] = useState(false);
@@ -97,11 +95,7 @@ const CoinTable = () => {
   const [searchedRenderList, setSearchedRenderList] = useState([]);
   const [finalRenderList, setFinalRenderList] = useState([]);
 
-  // Data Fetching
-  useEffect(() => {
-    fetchCoinList(sourceAPI);
-  }, [fetchCoinList, sourceAPI]);
-
+ 
   // Coin Cards Logic
   useEffect(() => {
     const topMoversByDay = (sortData) => {

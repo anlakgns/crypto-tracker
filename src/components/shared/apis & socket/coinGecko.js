@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 export default axios.create({
-  baseURL: "https://api.coingecko.com/api/v3/coins/markets",
+  baseURL: "https://api.coingecko.com/api/v3/coins",
   params: {
     vs_currency: "usd",
     order: "market_cap_desc",

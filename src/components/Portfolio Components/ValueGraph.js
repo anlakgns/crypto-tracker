@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
 import { useTheme } from "@material-ui/core/styles";
@@ -6,13 +6,15 @@ import { motion } from "framer-motion";
 import { Typography } from "@material-ui/core";
 import { Tabs } from "@material-ui/core";
 import { Tab } from "@material-ui/core";
+import { useFetchData } from "../shared/apis & socket/fetchDataHook";
+import {useFormatter} from "../shared/utils/formatterHook"
+import {GlobalContext} from "../shared/global state/globalContext"
 
 import {
-  AreaChart,
-  Area,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
 } from "recharts";
 
@@ -37,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "0.80em",
     color: theme.palette.common.white,
   },
-  tabRoot: {
+  tabTimeRoot: {
     minWidth: "10px",
     textTransform: "none",
     minHeight: "0",
@@ -47,22 +49,58 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "0.4em",
   },
 
-  tabsRoot: {
+  tabsTimeRoot: {
     minHeight: "0",
   },
-  tabs: {
+  tabsTime: {
     color: theme.palette.common.white,
   },
-  tab: {
+  tabTime: {
     fontSize: "0.7em",
     color: theme.palette.common.white,
   },
-  customIndicator: {
+  customTimeIndicator: {
     position: "absolute",
     backgroundColor: theme.palette.secondary.main,
     height: "1.2em",
     borderRadius: "3px",
     width: "1.5em",
+  },
+  tooltipContainer:{
+    background: "linear-gradient(20deg, rgba(87,95,153,1) 50%, rgba(255,147,213,1) 100%)",
+    border: "4px solid",
+    borderColor: theme.palette.primary.main,
+    borderRadius:"1em",
+    padding:"0.5em",
+    color: theme.palette.common.white,
+  },
+  tabsData:{
+    color: theme.palette.primary.main,
+    backgroundColor:"white",
+    borderRadius:"1.5em",
+    minHeight: "0",
+    height:"1.5em"
+
+  },
+  tabData: {
+    width:"7em",
+    fontSize:"0.7em",
+    textTransform:"none"
+
+  },
+  tabDataRoot: {
+    minWidth: 0,
+    minHeight: "0",
+    padding:"0.2em",
+
+  },
+  customDataIndicator:{
+    position:"absolute",
+    backgroundColor: theme.palette.secondary.light,
+    height:"1em",
+    borderRadius:"30px",
+    width:"4.6em",
+    margin:"0.25em",
   },
 }));
 
@@ -70,49 +108,178 @@ export const ValueGraph = () => {
   const theme = useTheme();
   const classes = useStyles();
 
-  const [tabValue, setTabValue] = useState(1);
-  const tabHandler = (_, newValue) => {
-    setTabValue(newValue);
+  const {dateFormatter, currencyFormatter} = useFormatter();
+  const {fetchHistoricData, coinHistoricResponse } = useFetchData();
+  const [chartDataType, setChartDataType] = useState(0);
+  const [chartData, setChartData] = useState([])
+  const {selectedCoinForGraph} = useContext(GlobalContext)
+  const [chartTimeType, setChartTimeType] = useState(1);
+  const [daysToFetch, setDaysToFetch] = useState(1)
+
+  // Dynamic Data Fetching
+  useEffect(() => {
+    if(selectedCoinForGraph) {
+      fetchHistoricData(selectedCoinForGraph.name.toLowerCase(), "usd", daysToFetch);
+    }
+  }, [fetchHistoricData, selectedCoinForGraph, daysToFetch]);
+
+  // Historical Coverage Logic
+  useEffect(()=> {
+    let days 
+    switch(chartTimeType) {
+      case 1: 
+        days = 1;
+        break;
+      case 2: 
+        days = 7
+        break;
+      case 3: 
+        days = 30
+        break;
+      case 4: 
+        days = 180
+        break;
+      case 5:
+        days = 360
+        break;
+      case 6:
+        days = "max"
+        break;
+      default:
+        days = 1
+    }
+    setDaysToFetch(days)
+
+  }, [chartTimeType] )
+
+  // Switch Handlers
+  const chartDataSwitcher = (e, newValue)=> {
+    setChartDataType(newValue)
+  }
+  const timeSwitcher = (_, newValue) => {
+    setChartTimeType(newValue);
   };
 
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+  // Switcher Animation for Framer Motion
+  const indicatorDataStyle = () => {
+    let marginLeft;
+    switch (chartDataType) {
+      case 0: 
+        marginLeft= "0.25em";
+      break;
+      case 1: 
+        marginLeft= "5em";
+      break;
+      case 2: 
+        marginLeft= "9.8em";
+      break;
+      default: 
+        marginLeft= "0.25em"
+    }
+    return marginLeft;
+  }
+  const indicatorTimeStyle = () => {
+    let marginLeft;
+    switch (chartTimeType) {
+      case 1: 
+        marginLeft= "0.35em";
+      break;
+      case 2: 
+        marginLeft= "2.2em";
+      break;
+      case 3: 
+        marginLeft= "4.2em";
+      break;
+      case 4: 
+        marginLeft= "6.2em";
+      break;
+      case 5: 
+        marginLeft= "8.15em";
+      break;
+      case 6: 
+        marginLeft= "10em";
+      break;
+      default: 
+        marginLeft= ""
+    }
+    return marginLeft;
+  }
+
+  // Chart Data
+  useEffect(() => {
+    let data 
+    // Price Data
+    if(chartDataType === 0) {
+       data = coinHistoricResponse?.data?.prices.map((item) => {
+        return {
+          date: dateFormatter(new Date(item[0])),
+          xData: new Date(item[0]).getHours(),
+          yData: item[1],
+        };
+      });
+    }
+    
+    // Market Cap Data
+    if(chartDataType === 1) {
+      console.log(coinHistoricResponse)
+       data = coinHistoricResponse?.data?.market_caps.map((item) => {
+        return {
+          date: dateFormatter(new Date(item[0])),
+          xData: new Date(item[0]).getHours(),
+          yData: item[1],
+        };
+      });
+    }
+
+    // Volume Data
+    if(chartDataType === 2) {
+       data = coinHistoricResponse?.data?.total_volumes.map((item) => {
+        return {
+          date: dateFormatter(new Date(item[0])),
+          xData: new Date(item[0]).getHours(),
+          yData: item[1],
+        };
+      });
+    }
+
+
+    setChartData(data)
+  }, [chartDataType, coinHistoricResponse, dateFormatter])
+  
+  
+
+  // Tooltip 
+  const CustomTooltip = ({ active, payload }) => {
+    let name;
+    switch(chartDataType) {
+      case 0:
+        name = "Price"
+        break;
+      case 1: 
+        name="Market Cap"
+        break;
+      case 2:
+        name="Volume"
+        break;
+      default:
+        name="Price"
+    }
+
+
+    if (active && payload && payload.length) {
+      console.log()
+      return (
+        <div className={classes.tooltipContainer}> 
+          <p className="label">{`${payload[0].payload.date}`}</p>
+          <ul>
+            <li className="price">{` ${name} : ${currencyFormatter(payload[0].value)}`}</li>
+          </ul>
+        </div>
+      );
+    }
+  
+    return null;
+  };
 
   return (
     <>
@@ -134,9 +301,31 @@ export const ValueGraph = () => {
         >
           <Grid item md>
             <Typography className={classes.headline}>
-              Portfolio Value
+              {selectedCoinForGraph?.name || "Portfolio"} Historic Chart
             </Typography>
           </Grid>
+          
+        { /* Switcher -  Among Transaction Types */}
+          <Grid item md container justify="center" >
+            <Tabs
+              value={chartDataType}
+              onChange={chartDataSwitcher}
+              className={classes.tabsData}
+              component={motion.div}
+              TabIndicatorProps={{style: {display:"none"} }}>
+              <motion.div 
+                className={classes.customDataIndicator} 
+                animate={{marginLeft: indicatorDataStyle()}} 
+                transition={{duration: 0.6}} 
+                initial={false} />
+              <Tab disableRipple value={0} label="Price" className={classes.tabData} classes={{root: classes.tabDataRoot}} />
+              <Tab disableRipple value={1} label="Market Cap" className={classes.tabData} classes={{root: classes.tabDataRoot}} />
+              <Tab disableRipple value={2} label="Volume"className={classes.tabData} classes={{root: classes.tabDataRoot}} />
+            </Tabs>
+          </Grid>
+
+
+          {/* Time Tabs */}
           <Grid
             item
             container
@@ -145,85 +334,84 @@ export const ValueGraph = () => {
             className={classes.iconGridContainer}
           >
             <Tabs
-              value={tabValue}
-              onChange={tabHandler}
-              className={classes.tabs}
-              classes={{ root: classes.tabsRoot }}
+              value={chartTimeType}
+              onChange={timeSwitcher}
+              className={classes.tabsTime}
+              classes={{ root: classes.tabsTimeRoot }}
               TabIndicatorProps={{ style: { display: "none" } }}
             >
               <motion.div
-                className={classes.customIndicator}
-                animate={{ marginLeft: tabValue === 1 ? "0.45em" : "4.2em" }}
+                className={classes.customTimeIndicator}
+                animate={{ marginLeft: indicatorTimeStyle() }}
                 transition={{ duration: 0.6 }}
                 initial={false}
               />
               <Tab
-                label="1M"
-                className={classes.tab}
-                classes={{ root: classes.tabRoot }}
+                label="1D"
+                className={classes.tabTime}
+                classes={{ root: classes.tabTimeRoot }}
               />
               <Tab
-                label="3M"
-                className={classes.tab}
-                classes={{ root: classes.tabRoot }}
+                label="7D"
+                className={classes.tabTime}
+                classes={{ root: classes.tabTimeRoot }}
+              />
+              <Tab
+                label="1M"
+                className={classes.tabTime}
+                classes={{ root: classes.tabTimeRoot }}
               />
               <Tab
                 label="6M"
-                className={classes.tab}
-                classes={{ root: classes.tabRoot }}
+                className={classes.tabTime}
+                classes={{ root: classes.tabTimeRoot }}
               />
               <Tab
                 label="1Y"
-                className={classes.tab}
-                classes={{ root: classes.tabRoot }}
+                className={classes.tabTime}
+                classes={{ root: classes.tabTimeRoot }}
               />
-              <Tab
+               <Tab
                 label="All"
-                className={classes.tab}
-                classes={{ root: classes.tabRoot }}
+                className={classes.tabTime}
+                classes={{ root: classes.tabTimeRoot }}
               />
             </Tabs>
           </Grid>
         </Grid>
 
         <Grid item md>
-          <AreaChart
-            width={850}
-            height={250}
-            data={data}
-            stackOffset="wiggle"
-            margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
+          <LineChart
+            width={800}
+            height={220}
+            data={chartData}
+            margin={{ top: 30, right: 30, left: 50, bottom: 0 }}
           >
-            <defs>
-              <linearGradient id="colorUv" x1="1" y1="0" x2="0" y2="1">
-                <stop offset="40%" stopColor="#2E3880" stopOpacity={1} />
-                <stop offset="100%" stopColor="#FF78CB" stopOpacity={1} />
-              </linearGradient>
-            </defs>
-            <XAxis
-              orientation="bottom"
-              reverse="true"
-              dataKey="name"
+            <XAxis 
+              dataKey="xData" 
+              type="category"  
+              tickCount="4"
+              interval={40}
               stroke={theme.palette.common.textPurple}
-              tick={false}
-            />
+
+              />
             <YAxis
-              orientation="left"
+              dataKey="yData"
+              type="number"
+              tickCount="3"
+              domain={["auto", "auto"]}
               stroke={theme.palette.common.textPurple}
+
             />
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke={theme.palette.common.textPurple}
-            />
-            <Tooltip />
-            <Area
-              type="monotone"
-              dataKey="uv"
-              stroke="#8884d8"
-              fillOpacity={1}
-              fill="url(#colorUv)"
-            />
-          </AreaChart>
+            <Tooltip content={<CustomTooltip />} />
+            <Line 
+              type="monotone"  
+              dataKey="yData" 
+              stroke={theme.palette.secondary.main}  
+              dot={false} 
+              name="yData"/>
+          </LineChart>
+         
         </Grid>
       </Grid>
     </>

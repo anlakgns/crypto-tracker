@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react"
+import {useState, useEffect, useContext} from "react"
 import { Typography } from "@material-ui/core"
 import Grid from "@material-ui/core/Grid"
 import CloseIcon from '@material-ui/icons/Close';
@@ -11,6 +11,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import IconButton from '@material-ui/core/IconButton';
 import {motion} from "framer-motion"
+import { GlobalContext } from "../../shared/global state/globalContext";
+
 
 const useStyles = makeStyles(theme => ({
   mainContainer: {
@@ -64,7 +66,9 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export const PortfolioModalFirst = ({coinListResponse, listItemHandler, handleClose}) => {
+export const PortfolioModalFirst = ({listItemHandler, handleClose}) => {
+  const {coinListResponse} = useContext(GlobalContext)
+
   const classes = useStyles()
   const [searchChangeTerm, setSearchChangeTerm] = useState();
   const [searchSubmitTerm, setSearchSubmitTerm] = useState();

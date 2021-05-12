@@ -1,10 +1,8 @@
-import React, {useState, useEffect, useContext} from "react"
+import React, {useState} from "react"
 import {makeStyles} from '@material-ui/styles'
 import Grid from "@material-ui/core/Grid"
 import {CoinList} from "./CoinList"
 import {ControlBar} from "./ControlBar"
-import {useFetchData} from "../../shared/apis & socket/fetchDataHook"
-import {GlobalContext} from "../../shared/global state/globalContext"
 
 const useStyles = makeStyles(theme => ({
   mainGrid: {
@@ -52,20 +50,14 @@ const useStyles = makeStyles(theme => ({
 
 export const AssetListContainer = ()=> {
   const classes = useStyles()
-  const {sourceAPI} = useContext(GlobalContext)
-  const { coinListResponse, fetchCoinList } = useFetchData()
   const [submitSearchTerm, setSubmitSearchTerm] = useState()
   const [tabValue, setTabValue] = useState(0);
   const [sort, setSort] = useState(false)
   const [openPortfolioModal, setPortfolioModal] = useState(false);
   const [page, setPage] = useState(1)
-  const [selectedCoin, setSelectedCoin] = useState("")
+  const [selectedCoin, setSelectedCoin] = useState('')
 
-  // Data Fetching 
-  useEffect( ()=> {
-    fetchCoinList(sourceAPI);
-  }, [fetchCoinList, sourceAPI])
-
+ 
   return (
     <>
     <Grid 
@@ -77,7 +69,6 @@ export const AssetListContainer = ()=> {
       {/* Control Bar */}
       <Grid item container direction="column" className={classes.controlBar}>   
         <ControlBar 
-          coinListResponse={coinListResponse} 
           setSubmitSearchTerm={setSubmitSearchTerm} 
           tabValue={tabValue}
           setTabValue={setTabValue}
@@ -96,7 +87,6 @@ export const AssetListContainer = ()=> {
       {/* Asset List */}
       <Grid item container>
         <CoinList 
-        coinListResponse={coinListResponse}
           submitSearchTerm={submitSearchTerm}
           tabValue={tabValue}
           sort={sort}

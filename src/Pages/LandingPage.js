@@ -33,8 +33,6 @@ const LandingPage = ()=> {
   const {state} = useContext(GlobalContext)
   const {spinner, userInfo, isLoggedIn, emailSent} = state
   const classes = useStyles()
-  console.log(isLoggedIn)
-  console.log(userInfo)
   return (
     <>
     <Grid container direction="column" className={classes.headpage} >

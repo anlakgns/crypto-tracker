@@ -121,7 +121,6 @@ export const FeatureBar = (props)=> {
         <PortfolioModal 
           openPortfolioModal={openPortfolioModal} 
           setPortfolioModal={setPortfolioModal} 
-          coinListResponse={coinListResponse}
           page={page}
           setPage={setPage}
           selectedCoin={selectedCoin}

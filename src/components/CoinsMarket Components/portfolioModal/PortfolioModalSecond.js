@@ -85,11 +85,10 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export const PortfolioModalSecond = ({setPage, handleClose, coinListResponse, selectedCoin, setSelectedCoin, setPortfolioModal})=> {
+export const PortfolioModalSecond = ({setPage, handleClose, selectedCoin, setSelectedCoin, setPortfolioModal})=> {
   const classes = useStyles()
   const history = useHistory()
-  const {setPortfolioBuyOrderList } = useContext(GlobalContext)
-
+  const {setPortfolioBuyOrderList, coinListResponse} = useContext(GlobalContext)
   const [transactionType, setTransactionType] = useState(0);
   const [coinQuantity, setCoinQuantity] = useState("");
   const [totalSpent, setTotalSpent] = useState(0)

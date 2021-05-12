@@ -108,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const AssetGraph = () => {
   const {currencyFormatter} = useFormatter()
-  const {totalSpentByCoin, totalSpent} = useContext(GlobalContext)
+  const {totalSpentByCoin,totalProfit, totalSpent, portfolioList, coinListResponse} = useContext(GlobalContext)
   const classes = useStyles();
   const [tabValue, setTabValue] = useState(1);
   const [data, setData] = useState([])
@@ -116,24 +116,30 @@ export const AssetGraph = () => {
   const tabHandler = (_, newValue) => {
     setTabValue(newValue)
   } 
-  
+  console.log(data)
+
+  // Render Logic 
   useEffect(()=> {
-    const item = totalSpentByCoin.map((coin)=> {
-      return {name : coin.name, value: coin.value}
-    })    
+    
 
-    if(item.length > 4 ) {
-    const sortedTopThree = item.sort((a,b)=> b.value - a.value).slice(0,3)
-    const rest = item.sort((a,b)=> b.value - a.value).slice(3)
-    const restValue = rest.reduce((sum, cur) => sum + cur.value, 0)
-    const renderData = [...sortedTopThree, {name : "Rest", value: restValue }]
-    setData(renderData)
-    } else {
-      setData(item)
-    }
+    const item = portfolioList
+    
+    const renderFunc = (unit) => {
+      if(item.length > 4 ) {
+        const sortedTopThree = item.sort((a,b)=> b.unit - a.unit).slice(0,3)
+        const rest = item.sort((a,b)=> b.unit - a.unit).slice(3)
+        const restValue = rest.reduce((sum, cur) => sum + cur.unit, 0)
+        const renderData = [...sortedTopThree, {name : "Rest", unit: restValue }]
+        setData(renderData)
+        } else {
+          setData(item)
+        }
+      }
+      
+      tabValue === 1 ? renderFunc(["value"]) : renderFunc(["profit"])
 
-
-  }, [totalSpentByCoin])
+      
+  }, [tabValue, totalSpentByCoin, portfolioList, coinListResponse])
   
 
 
@@ -175,8 +181,8 @@ export const AssetGraph = () => {
               animate={{marginLeft: tabValue === 1 ? "0.45em" : "4.2em"}} 
               transition={{duration: 0.6}} 
               initial={false} />
-              <Tab label="By Asset" className={classes.tab} classes={{root: classes.tabRoot}}/>
-              <Tab label="By Type" className={classes.tab} classes={{root: classes.tabRoot}}/>
+              <Tab label="By Value" className={classes.tab} classes={{root: classes.tabRoot}}/>
+              <Tab label="By Profit" className={classes.tab} classes={{root: classes.tabRoot}}/>
             </Tabs>
           </Grid>
         </Grid>
@@ -187,7 +193,7 @@ export const AssetGraph = () => {
           <div className={classes.graphLabel}>
             <Typography className={classes.labelPercentage}>100%</Typography>
             <Typography className={classes.labelValue}>
-              {currencyFormatter(totalSpent)} USD
+              {currencyFormatter(tabValue === 1 ?  totalSpent : totalProfit)} USD
             </Typography>
           </div>
           <PieChart width={180} height={180}>
@@ -196,7 +202,7 @@ export const AssetGraph = () => {
               innerRadius={60}
               outerRadius={80}
               fill="#8884d8"
-              dataKey="value"
+              dataKey= {tabValue === 1 ? "value" : "profit"}
             >
               {data.map((entry, index) => (
                 <Cell
@@ -238,7 +244,7 @@ export const AssetGraph = () => {
                     align="center"
                     className={classes.miniTextPercentage}
                   >
-                    {(coin.value/totalSpent*100).toFixed(2)}%
+                    {tabValue === 1 ? (coin.value/totalSpent*100).toFixed(2) : (coin.profit/totalProfit*100).toFixed(2)}%
                   </Typography>
                 </Grid>
               </Grid>
