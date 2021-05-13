@@ -85,7 +85,6 @@ export const PortfolioModalFirst = ({listItemHandler, handleClose}) => {
     const topten = sortTopTen(coinListResponse)
     const searchResult = coinListResponse.filter(coin => coin.name.toLowerCase().trim().includes(searchSubmitTerm)) 
     setRenderList(searchResult.length === 0 || searchResult.length === coinListResponse.length ? topten : searchResult )
-    console.log(searchResult.length)
   }, [coinListResponse,searchSubmitTerm ])
   
   

@@ -34,7 +34,8 @@ export const useFormatter = ()=> {
       if(source === "coinGecko") {
         return {
           name: coin.name,
-          id: coin.symbol,
+          id: coin.id,
+          code: coin.symbol,
           price: coin.current_price,
           priceChangeDayPerc : coin.price_change_percentage_24h, 
           priceChangeWeekPerc: "not available in this api",
@@ -50,6 +51,7 @@ export const useFormatter = ()=> {
         return {
           name: coin.name,
           id: coin.id,
+          code: coin.id,
           price: coin.price,
           priceChangeDayPerc : coin["1d"].price_change_pct, 
           priceChangeWeekPerc: coin["7d"].price_change_pct,

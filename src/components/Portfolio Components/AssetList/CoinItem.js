@@ -61,7 +61,7 @@ export const CoinItem = (props) => {
   
   const { tabValue, setPortfolioModal, setSelectedCoin, setPage, coin } = props
   const {name, priceBought, quantity, value, } = coin
-  const {id, logo, priceChangeDayPerc } = coin.allInfo
+  const {code, logo, priceChangeDayPerc } = coin.allInfo
 
   const theme = useTheme()
   const { setCoinToDelete, sourceAPI, coinListResponse } = useContext(GlobalContext);
@@ -142,7 +142,7 @@ export const CoinItem = (props) => {
           <Grid item xs={8} container direction="column">
             <Grid item>
               <Typography className={classes.name}>
-                {name} <span className={classes.id}>{id.toUpperCase()}</span>
+                {name} <span className={classes.id}>{code.toUpperCase()}</span>
               </Typography>
             </Grid>
             <Grid item>

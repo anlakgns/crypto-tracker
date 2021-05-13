@@ -116,7 +116,6 @@ export const AssetGraph = () => {
   const tabHandler = (_, newValue) => {
     setTabValue(newValue)
   } 
-  console.log(data)
 
   // Render Logic 
   useEffect(()=> {

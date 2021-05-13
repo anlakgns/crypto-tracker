@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import coinGeckoAPI from "./coinGecko";
 import nomicsAPI from "./nomics";
 import { useFormatter } from "./../utils/formatterHook";
+import axios from "axios"; 
 
 const NOMICS = "nomics";
 const COINGECKO = "coinGecko";
@@ -30,9 +31,9 @@ export const useFetchData = () => {
   );
 
 
-  const fetchHistoricData = useCallback(
+  const fetchHistoricOneData = useCallback(
     async (coinName, currency, days) => {
-        const response = await coinGeckoAPI.get(`/${coinName}/market_chart`, {
+        const response =  await coinGeckoAPI.get(`/${coinName}/market_chart`, {
           params: {
             vs_currency: currency,
             days: days
@@ -42,8 +43,55 @@ export const useFetchData = () => {
     }, []
   )
 
-    
+  const fetchHistoricBundleData = useCallback(
+    (coinArray, currency, days, quantities) => {
+      
+      axios.all(coinArray.map(coin => {
+        return coinGeckoAPI.get(`/${coin}/market_chart`, {
+          params: {
+            vs_currency: currency,
+            days: days
+          }
+        });
+      }))
+      .then(axios.spread((...responses) => {
+        // Both requests are now complete
+        console.log(responses)
+        const responsesDataPrices = responses.map(coin => {
+          return coin.data.prices
+        })
+        if(responsesDataPrices.length !== 0) {
+          const dates = responsesDataPrices.map(coin => {
+            return coin.map(c => {
+              return c[0]
+            } )
+          })
+  
+          const prices = responsesDataPrices.map(coin => {
+            return coin.map(c => {
+              return c[1]
+            } )
+          })
 
-  return { coinListResponse, fetchCoinList, setSourceAPI, sourceAPI, fetchHistoricData,coinHistoricResponse };
+          let results = []
+           for(let j = 0; j < prices[0].length ; j++) {
+            let sum = 0
+            for(let i = 0; i < prices.length; i++){
+            sum += (prices[i][j]*quantities[i])
+            }
+            results.push([dates[0][j], sum])
+           }
+          
+           const list = {data: {prices: results}}
+           
+           setCoinHistoricResponse(list)
+        }
+
+      }));
+      
+
+    },[])
+
+  return { coinListResponse, fetchCoinList, setSourceAPI, sourceAPI, fetchHistoricOneData,coinHistoricResponse , fetchHistoricBundleData};
 };
 

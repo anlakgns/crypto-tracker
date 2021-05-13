@@ -76,10 +76,10 @@ export const CoinList = (props)=> {
         return (
           <ListItem 
             button 
-            onClick={()=> {setSelectedCoinForGraph(coin)}}
+            onClick={()=> {setSelectedCoinForGraph(coin.allInfo.id)}}
             disableGutters 
             classes={{root: classes.listItemRoot}}
-            key={Math.random()}
+            key={coin.price}
             >
             <CoinItem 
               tabValue={tabValue}

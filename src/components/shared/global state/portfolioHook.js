@@ -13,33 +13,26 @@ export const usePortfolio = () => {
   const [portfolioList, setPortfolioList] = useState([])
   const [selectedCoinForGraph, setSelectedCoinForGraph] = useState()
 
-
-  // Data Fetching 
-  useEffect( ()=> {
-    setInterval(()=> {
-      console.log('data requested')
-      fetchCoinList(sourceAPI);
-    }, 30000)
-  }, [fetchCoinList, sourceAPI])
+ 
  
   // Initial Data Fetching 
    useEffect( ()=> {
-     console.log('initial data request')
+      console.log("initial fething rendered")
       fetchCoinList(sourceAPI);
-  }, [fetchCoinList, sourceAPI])
+  }, [fetchCoinList, sourceAPI, portfolioBuyOrderList])
 
 
   // Total Spent 
   useEffect(()=> {
-    console.log(' total spent')
-
+    console.log("total spent rendered")
     const allSpent =  portfolioBuyOrderList.reduce((acc, cur) => acc + (cur.priceBought * cur.quantity), 0)
     setTotalSpent(allSpent)
   }, [portfolioBuyOrderList])
 
   // Total Spent by Coin Detail
   useEffect(()=> {
-    console.log(' total spent coin detail')
+    console.log("total spent by coin detailed rendered")
+
     const list = [];
     portfolioBuyOrderList.forEach(coin => {
       const finder = list.findIndex(c => c.name === coin.name)
@@ -72,7 +65,6 @@ export const usePortfolio = () => {
 
   // Delete coin from portfolio 
   useEffect(()=> {
-    console.log(' delete')
 
     if(coinToDelete) {
       const rest = portfolioBuyOrderList.filter(coin => coinToDelete !== coin.name )
@@ -83,7 +75,6 @@ export const usePortfolio = () => {
 
   // Total Spent by Coin, profits added.
   useEffect(() => {
-    console.log('profit added')
       const list = totalSpentByCoin.map((coin)=> {
         const findCoin = coinListResponse.filter(c => c.name === coin.name)
         const profit = (+findCoin[0]?.price - coin.priceBought)*coin.quantity;
@@ -101,7 +92,6 @@ export const usePortfolio = () => {
 
   // Total Profit.
   useEffect(() => {
-    console.log('rendered total profit')
     const allProfit =  portfolioList.reduce((acc, cur) => acc + cur.profit, 0)
     setTotalProfit(allProfit)
 

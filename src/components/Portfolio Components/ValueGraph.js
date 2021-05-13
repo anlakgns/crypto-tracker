@@ -7,16 +7,10 @@ import { Typography } from "@material-ui/core";
 import { Tabs } from "@material-ui/core";
 import { Tab } from "@material-ui/core";
 import { useFetchData } from "../shared/apis & socket/fetchDataHook";
-import {useFormatter} from "../shared/utils/formatterHook"
-import {GlobalContext} from "../shared/global state/globalContext"
+import { useFormatter } from "../shared/utils/formatterHook";
+import { GlobalContext } from "../shared/global state/globalContext";
 
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -66,41 +60,54 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "3px",
     width: "1.5em",
   },
-  tooltipContainer:{
-    background: "linear-gradient(20deg, rgba(87,95,153,1) 50%, rgba(255,147,213,1) 100%)",
+  tooltipContainer: {
+    background:
+      "linear-gradient(20deg, rgba(87,95,153,1) 50%, rgba(255,147,213,1) 100%)",
     border: "4px solid",
     borderColor: theme.palette.primary.main,
-    borderRadius:"1em",
-    padding:"0.5em",
+    borderRadius: "1em",
+    padding: "0.5em",
     color: theme.palette.common.white,
   },
-  tabsData:{
+  tabsData: {
     color: theme.palette.primary.main,
-    backgroundColor:"white",
-    borderRadius:"1.5em",
+    backgroundColor: "white",
+    borderRadius: "1.5em",
     minHeight: "0",
-    height:"1.5em"
-
+    height: "1.5em",
   },
   tabData: {
-    width:"7em",
-    fontSize:"0.7em",
-    textTransform:"none"
-
+    width: "7em",
+    fontSize: "0.7em",
+    textTransform: "none",
   },
   tabDataRoot: {
     minWidth: 0,
     minHeight: "0",
-    padding:"0.2em",
-
+    padding: "0.2em",
   },
-  customDataIndicator:{
-    position:"absolute",
+  customDataIndicator: {
+    position: "absolute",
     backgroundColor: theme.palette.secondary.light,
-    height:"1em",
-    borderRadius:"30px",
-    width:"4.6em",
-    margin:"0.25em",
+    height: "1em",
+    borderRadius: "30px",
+    width: "4.6em",
+    margin: "0.25em",
+  },
+  chartSelectType: {
+    height: "1em",
+  },
+  chartTypeformControl: {
+    margin: theme.spacing(1),
+    minWidth: 50,
+  },
+  chartTypeSelect: {
+    height: "1.8em",
+    borderRadius: "1em",
+    width: "7em",
+    color: theme.palette.primary.main,
+    paddingLeft: "0.5em",
+    paddingRight: "0.5em",
   },
 }));
 
@@ -108,54 +115,82 @@ export const ValueGraph = () => {
   const theme = useTheme();
   const classes = useStyles();
 
-  const {dateFormatter, currencyFormatter} = useFormatter();
-  const {fetchHistoricData, coinHistoricResponse } = useFetchData();
+  const { dateFormatter, currencyFormatter } = useFormatter();
+  const {
+    fetchHistoricOneData,
+    fetchHistoricBundleData,
+    coinHistoricResponse,
+  } = useFetchData();
   const [chartDataType, setChartDataType] = useState(0);
-  const [chartData, setChartData] = useState([])
-  const {selectedCoinForGraph} = useContext(GlobalContext)
+  const [chartData, setChartData] = useState([]);
+  const {
+    selectedCoinForGraph,
+    setSelectedCoinForGraph,
+    portfolioList,
+    totalSpent,
+  } = useContext(GlobalContext);
   const [chartTimeType, setChartTimeType] = useState(1);
-  const [daysToFetch, setDaysToFetch] = useState(1)
+  const [daysToFetch, setDaysToFetch] = useState(1);
+  const [chartSelectType, setChartSelectType] = useState("All Assets");
 
-  // Dynamic Data Fetching
+  // Dynamic One Coin Data Fetching
   useEffect(() => {
-    if(selectedCoinForGraph) {
-      fetchHistoricData(selectedCoinForGraph.name.toLowerCase(), "usd", daysToFetch);
+    if (selectedCoinForGraph) {
+      fetchHistoricOneData(selectedCoinForGraph, "usd", daysToFetch);
     }
-  }, [fetchHistoricData, selectedCoinForGraph, daysToFetch]);
+  }, [
+    chartSelectType,
+    daysToFetch,
+    fetchHistoricOneData,
+    selectedCoinForGraph,
+  ]);
+
+  // Dynamic Portfolio Fetching
+  useEffect(() => {
+    if (chartSelectType === "All Assets") {
+      const portfolioNameList = portfolioList.map((coin) => coin.allInfo.id);
+      const quantities = portfolioList.map((coin) => coin.quantity);
+      fetchHistoricBundleData(
+        portfolioNameList,
+        "usd",
+        daysToFetch,
+        quantities
+      );
+    }
+  }, [chartSelectType, daysToFetch, fetchHistoricBundleData, portfolioList]);
 
   // Historical Coverage Logic
-  useEffect(()=> {
-    let days 
-    switch(chartTimeType) {
-      case 1: 
+  useEffect(() => {
+    let days;
+    switch (chartTimeType) {
+      case 1:
         days = 1;
         break;
-      case 2: 
-        days = 7
+      case 2:
+        days = 7;
         break;
-      case 3: 
-        days = 30
+      case 3:
+        days = 30;
         break;
-      case 4: 
-        days = 180
+      case 4:
+        days = 180;
         break;
       case 5:
-        days = 360
+        days = 360;
         break;
       case 6:
-        days = "max"
+        days = "max";
         break;
       default:
-        days = 1
+        days = 1;
     }
-    setDaysToFetch(days)
-
-  }, [chartTimeType] )
+    setDaysToFetch(days);
+  }, [chartTimeType]);
 
   // Switch Handlers
-  const chartDataSwitcher = (e, newValue)=> {
-    setChartDataType(newValue)
-  }
+  const chartDataSwitcher = (e, newValue) => {
+    setChartDataType(newValue);
+  };
   const timeSwitcher = (_, newValue) => {
     setChartTimeType(newValue);
   };
@@ -164,53 +199,53 @@ export const ValueGraph = () => {
   const indicatorDataStyle = () => {
     let marginLeft;
     switch (chartDataType) {
-      case 0: 
-        marginLeft= "0.25em";
-      break;
-      case 1: 
-        marginLeft= "5em";
-      break;
-      case 2: 
-        marginLeft= "9.8em";
-      break;
-      default: 
-        marginLeft= "0.25em"
+      case 0:
+        marginLeft = "0.25em";
+        break;
+      case 1:
+        marginLeft = "5em";
+        break;
+      case 2:
+        marginLeft = "9.8em";
+        break;
+      default:
+        marginLeft = "0.25em";
     }
     return marginLeft;
-  }
+  };
   const indicatorTimeStyle = () => {
     let marginLeft;
     switch (chartTimeType) {
-      case 1: 
-        marginLeft= "0.35em";
-      break;
-      case 2: 
-        marginLeft= "2.2em";
-      break;
-      case 3: 
-        marginLeft= "4.2em";
-      break;
-      case 4: 
-        marginLeft= "6.2em";
-      break;
-      case 5: 
-        marginLeft= "8.15em";
-      break;
-      case 6: 
-        marginLeft= "10em";
-      break;
-      default: 
-        marginLeft= ""
+      case 1:
+        marginLeft = "0.35em";
+        break;
+      case 2:
+        marginLeft = "2.2em";
+        break;
+      case 3:
+        marginLeft = "4.2em";
+        break;
+      case 4:
+        marginLeft = "6.2em";
+        break;
+      case 5:
+        marginLeft = "8.15em";
+        break;
+      case 6:
+        marginLeft = "10em";
+        break;
+      default:
+        marginLeft = "";
     }
     return marginLeft;
-  }
+  };
 
   // Chart Data
   useEffect(() => {
-    let data 
+    let data;
     // Price Data
-    if(chartDataType === 0) {
-       data = coinHistoricResponse?.data?.prices.map((item) => {
+    if (chartDataType === 0) {
+      data = coinHistoricResponse?.data?.prices.map((item) => {
         return {
           date: dateFormatter(new Date(item[0])),
           xData: new Date(item[0]).getHours(),
@@ -218,11 +253,11 @@ export const ValueGraph = () => {
         };
       });
     }
-    
+
     // Market Cap Data
-    if(chartDataType === 1) {
-      console.log(coinHistoricResponse)
-       data = coinHistoricResponse?.data?.market_caps.map((item) => {
+    if (chartDataType === 1 && chartSelectType !== "All Assets") {
+      console.log(coinHistoricResponse);
+      data = coinHistoricResponse?.data?.market_caps.map((item) => {
         return {
           date: dateFormatter(new Date(item[0])),
           xData: new Date(item[0]).getHours(),
@@ -232,8 +267,8 @@ export const ValueGraph = () => {
     }
 
     // Volume Data
-    if(chartDataType === 2) {
-       data = coinHistoricResponse?.data?.total_volumes.map((item) => {
+    if (chartDataType === 2 && chartSelectType !== "All Assets") {
+      data = coinHistoricResponse?.data?.total_volumes.map((item) => {
         return {
           date: dateFormatter(new Date(item[0])),
           xData: new Date(item[0]).getHours(),
@@ -242,42 +277,48 @@ export const ValueGraph = () => {
       });
     }
 
+    setChartData(data);
+  }, [chartDataType, chartSelectType, coinHistoricResponse, dateFormatter]);
 
-    setChartData(data)
-  }, [chartDataType, coinHistoricResponse, dateFormatter])
-  
-  
+  const chartSelectHandler = (event) => {
+    event.preventDefault();
+    setChartSelectType(event.target.value);
+    setSelectedCoinForGraph(event.target.value);
+    if (event.target.value === "All Assets") {
+      setChartDataType(0);
+    }
+  };
 
-  // Tooltip 
+  // Tooltip
   const CustomTooltip = ({ active, payload }) => {
     let name;
-    switch(chartDataType) {
+    switch (chartDataType) {
       case 0:
-        name = "Price"
+        name = "Price";
         break;
-      case 1: 
-        name="Market Cap"
+      case 1:
+        name = "Market Cap";
         break;
       case 2:
-        name="Volume"
+        name = "Volume";
         break;
       default:
-        name="Price"
+        name = "Price";
     }
 
-
     if (active && payload && payload.length) {
-      console.log()
       return (
-        <div className={classes.tooltipContainer}> 
+        <div className={classes.tooltipContainer}>
           <p className="label">{`${payload[0].payload.date}`}</p>
           <ul>
-            <li className="price">{` ${name} : ${currencyFormatter(payload[0].value)}`}</li>
+            <li className="price">{` ${name} : ${currencyFormatter(
+              payload[0].value
+            )}`}</li>
           </ul>
         </div>
       );
     }
-  
+
     return null;
   };
 
@@ -301,29 +342,73 @@ export const ValueGraph = () => {
         >
           <Grid item md>
             <Typography className={classes.headline}>
-              {selectedCoinForGraph?.name || "Portfolio"} Historic Chart
+              {selectedCoinForGraph?.name || "Portfolio"} Historic Chart
             </Typography>
           </Grid>
-          
-        { /* Switcher -  Among Transaction Types */}
-          <Grid item md container justify="center" >
-            <Tabs
-              value={chartDataType}
-              onChange={chartDataSwitcher}
-              className={classes.tabsData}
-              component={motion.div}
-              TabIndicatorProps={{style: {display:"none"} }}>
-              <motion.div 
-                className={classes.customDataIndicator} 
-                animate={{marginLeft: indicatorDataStyle()}} 
-                transition={{duration: 0.6}} 
-                initial={false} />
-              <Tab disableRipple value={0} label="Price" className={classes.tabData} classes={{root: classes.tabDataRoot}} />
-              <Tab disableRipple value={1} label="Market Cap" className={classes.tabData} classes={{root: classes.tabDataRoot}} />
-              <Tab disableRipple value={2} label="Volume"className={classes.tabData} classes={{root: classes.tabDataRoot}} />
-            </Tabs>
+
+          {/* Chart Type Select */}
+          <Grid item md>
+            <form>
+              <select
+                name="cars"
+                value={chartSelectType}
+                className={classes.chartTypeSelect}
+                onChange={chartSelectHandler}
+              >
+                <option value="All Assets">All Assets</option>
+                {portfolioList.map((coin) => {
+                  return (
+                    <option value={coin.allInfo.id} key={coin.name}>
+                      {coin.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </form>
           </Grid>
 
+          {/* Switcher -  Among Transaction Types */}
+          <Grid item md container justify="center">
+            {chartSelectType !== "All Assets" ? (
+              <Tabs
+                value={chartDataType}
+                onChange={chartDataSwitcher}
+                className={classes.tabsData}
+                component={motion.div}
+                TabIndicatorProps={{ style: { display: "none" } }}
+              >
+                <motion.div
+                  className={classes.customDataIndicator}
+                  animate={{ marginLeft: indicatorDataStyle() }}
+                  transition={{ duration: 0.6 }}
+                  initial={false}
+                />
+                <Tab
+                  disableRipple
+                  value={0}
+                  label="Price"
+                  className={classes.tabData}
+                  classes={{ root: classes.tabDataRoot }}
+                />
+                <Tab
+                  disableRipple
+                  value={1}
+                  label="Market Cap"
+                  className={classes.tabData}
+                  classes={{ root: classes.tabDataRoot }}
+                />
+                <Tab
+                  disableRipple
+                  value={2}
+                  label="Volume"
+                  className={classes.tabData}
+                  classes={{ root: classes.tabDataRoot }}
+                />
+              </Tabs>
+            ) : (
+              <Typography>{totalSpent}</Typography>
+            )}
+          </Grid>
 
           {/* Time Tabs */}
           <Grid
@@ -371,7 +456,7 @@ export const ValueGraph = () => {
                 className={classes.tabTime}
                 classes={{ root: classes.tabTimeRoot }}
               />
-               <Tab
+              <Tab
                 label="All"
                 className={classes.tabTime}
                 classes={{ root: classes.tabTimeRoot }}
@@ -380,6 +465,7 @@ export const ValueGraph = () => {
           </Grid>
         </Grid>
 
+        {/* Line Chart */}
         <Grid item md>
           <LineChart
             width={800}
@@ -387,31 +473,29 @@ export const ValueGraph = () => {
             data={chartData}
             margin={{ top: 30, right: 30, left: 50, bottom: 0 }}
           >
-            <XAxis 
-              dataKey="xData" 
-              type="category"  
+            <XAxis
+              dataKey="xData"
+              type="category"
               tickCount="4"
               interval={40}
               stroke={theme.palette.common.textPurple}
-
-              />
+            />
             <YAxis
               dataKey="yData"
               type="number"
               tickCount="3"
               domain={["auto", "auto"]}
               stroke={theme.palette.common.textPurple}
-
             />
             <Tooltip content={<CustomTooltip />} />
-            <Line 
-              type="monotone"  
-              dataKey="yData" 
-              stroke={theme.palette.secondary.main}  
-              dot={false} 
-              name="yData"/>
+            <Line
+              type="monotone"
+              dataKey="yData"
+              stroke={theme.palette.secondary.main}
+              dot={false}
+              name="yData"
+            />
           </LineChart>
-         
         </Grid>
       </Grid>
     </>
