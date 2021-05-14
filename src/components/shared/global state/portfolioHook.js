@@ -11,7 +11,7 @@ export const usePortfolio = () => {
   const [totalSpentByCoin,setTotalSpentByCoin] = useState([])
   const [coinToDelete, setCoinToDelete] = useState()
   const [portfolioList, setPortfolioList] = useState([])
-  const [selectedCoinForGraph, setSelectedCoinForGraph] = useState()
+  const [selectedCoinForGraph, setSelectedCoinForGraph] = useState("All Assets")
 
  
  

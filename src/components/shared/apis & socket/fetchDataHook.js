@@ -13,6 +13,7 @@ export const useFetchData = () => {
 
   const { responseFormatter } = useFormatter();
   const [coinListResponse, setCoinListResponse] = useState([]);
+  const [performanceList, setPerformanceList] = useState([]);
 
   const fetchCoinList = useCallback(
     async (source) => {
@@ -56,7 +57,6 @@ export const useFetchData = () => {
       }))
       .then(axios.spread((...responses) => {
         // Both requests are now complete
-        console.log(responses)
         const responsesDataPrices = responses.map(coin => {
           return coin.data.prices
         })
@@ -92,6 +92,36 @@ export const useFetchData = () => {
 
     },[])
 
-  return { coinListResponse, fetchCoinList, setSourceAPI, sourceAPI, fetchHistoricOneData,coinHistoricResponse , fetchHistoricBundleData};
-};
+ 
 
+    const fetchPerformanceData = useCallback(
+      (coinArray, currency, days) => {
+        
+        axios.all(coinArray.map(coin => {
+          return coinGeckoAPI.get(`/${coin}/market_chart`, {
+            params: {
+              vs_currency: currency,
+              days: days
+            }
+          });
+        }))
+        .then(axios.spread((...responses) => {
+          setPerformanceList(responses)
+
+        }))
+    
+      }, [])
+
+
+
+  return { 
+    coinListResponse, 
+    fetchCoinList, 
+    setSourceAPI, 
+    sourceAPI, 
+    fetchHistoricOneData,
+    coinHistoricResponse , 
+    fetchHistoricBundleData,
+    performanceList, 
+    fetchPerformanceData};
+};

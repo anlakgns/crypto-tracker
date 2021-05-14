@@ -26,11 +26,11 @@ export const CoinList = (props)=> {
     setPage, 
     setSelectedCoin, 
     coinListResponse} = props
-
-  const classes = useStyles()
-  const {totalSpentByCoin, portfolioList, setSelectedCoinForGraph} = useContext(GlobalContext)
-  const [renderList, setRenderList] = useState(totalSpentByCoin)
-
+    
+    const classes = useStyles()
+    const {totalSpentByCoin, portfolioList, setSelectedCoinForGraph} = useContext(GlobalContext)
+    const [renderList, setRenderList] = useState(totalSpentByCoin)
+    
   useEffect(()=> {
     const searchedList = totalSpentByCoin?.filter((coin) =>
     coin.name.toLowerCase().includes(submitSearchTerm))
@@ -79,7 +79,7 @@ export const CoinList = (props)=> {
             onClick={()=> {setSelectedCoinForGraph(coin.allInfo.id)}}
             disableGutters 
             classes={{root: classes.listItemRoot}}
-            key={coin.price}
+            key={coin.name}
             >
             <CoinItem 
               tabValue={tabValue}

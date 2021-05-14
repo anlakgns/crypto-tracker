@@ -135,11 +135,10 @@ export const ValueGraph = () => {
 
   // Dynamic One Coin Data Fetching
   useEffect(() => {
-    if (selectedCoinForGraph) {
+    if (selectedCoinForGraph !== "All Assets" ) {
       fetchHistoricOneData(selectedCoinForGraph, "usd", daysToFetch);
     }
   }, [
-    chartSelectType,
     daysToFetch,
     fetchHistoricOneData,
     selectedCoinForGraph,
@@ -147,7 +146,7 @@ export const ValueGraph = () => {
 
   // Dynamic Portfolio Fetching
   useEffect(() => {
-    if (chartSelectType === "All Assets") {
+    if (selectedCoinForGraph === "All Assets") {
       const portfolioNameList = portfolioList.map((coin) => coin.allInfo.id);
       const quantities = portfolioList.map((coin) => coin.quantity);
       fetchHistoricBundleData(
@@ -157,7 +156,7 @@ export const ValueGraph = () => {
         quantities
       );
     }
-  }, [chartSelectType, daysToFetch, fetchHistoricBundleData, portfolioList]);
+  }, [daysToFetch, fetchHistoricBundleData, portfolioList, selectedCoinForGraph]);
 
   // Historical Coverage Logic
   useEffect(() => {
@@ -282,7 +281,7 @@ export const ValueGraph = () => {
 
   const chartSelectHandler = (event) => {
     event.preventDefault();
-    setChartSelectType(event.target.value);
+    setChartSelectType(selectedCoinForGraph);
     setSelectedCoinForGraph(event.target.value);
     if (event.target.value === "All Assets") {
       setChartDataType(0);
@@ -351,7 +350,7 @@ export const ValueGraph = () => {
             <form>
               <select
                 name="cars"
-                value={chartSelectType}
+                value={selectedCoinForGraph}
                 className={classes.chartTypeSelect}
                 onChange={chartSelectHandler}
               >
@@ -369,7 +368,7 @@ export const ValueGraph = () => {
 
           {/* Switcher -  Among Transaction Types */}
           <Grid item md container justify="center">
-            {chartSelectType !== "All Assets" ? (
+            {selectedCoinForGraph !== "All Assets" ? (
               <Tabs
                 value={chartDataType}
                 onChange={chartDataSwitcher}

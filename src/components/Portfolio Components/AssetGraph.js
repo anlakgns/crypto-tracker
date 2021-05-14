@@ -143,10 +143,11 @@ export const AssetGraph = () => {
 
 
   const COLORS = [
-    "#634893",
-    "#9758A6",
     "#FF78CB",
-    "#B4BDFF",];
+    "#B4BDFF",
+    "#9758A6",
+    "#634893"
+    ];
 
 
   return (

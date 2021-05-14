@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useTheme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/styles";
+import { useFetchData } from "../shared/apis & socket/fetchDataHook";
+import { GlobalContext } from "../shared/global state/globalContext";
+
 import { motion } from "framer-motion";
 import { Typography } from "@material-ui/core";
 import { Tabs } from "@material-ui/core";
@@ -59,66 +63,127 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
     height: "1.2em",
     borderRadius: "3px",
-    width: "1.5em",
+    width: "2.8em",
   },
 }));
 
 export const PerformanceGraph = () => {
+  const { fetchPerformanceData, performanceList } = useFetchData();
+  const { portfolioList } = useContext(GlobalContext);
+  const theme = useTheme();
   const classes = useStyles();
   const [tabValue, setTabValue] = useState(1);
+  const [editedData, setEditedData] = useState([])
+  const [portoflioNameList, setPortfolioNameList] = useState([])
+  const [renderData, setRenderData] = useState([])
+  // Data Fetch
+  useEffect(() => {
+    const portfolioNames = portfolioList.map((coin) => coin.allInfo.id);
+    setPortfolioNameList(portfolioNames)
+    fetchPerformanceData(portfolioNames, "usd", 360);
+  }, [fetchPerformanceData, portfolioList]);
+
+  // Data Format
+  useEffect(() => {
+    const prices = performanceList.map((c) => c.data.prices);
+
+    if(prices.length > 0) {
+      const edited = prices.map((item) => {
+        return {
+          weekly: 
+            {
+              performance1: (item[item.length-1][1] - item[item.length - 7][1]) / item[item.length - 7][1] * 100,
+              performance2: (item[item.length - 8][1] - item[item.length - 15][1]) / item[item.length - 15][1] * 100,
+              performance3: (item[item.length - 16][1] - item[item.length - 23][1]) / item[item.length - 23][1] * 100,
+              performance4:( item[item.length - 24][1] - item[item.length - 31][1] ) / item[item.length - 31][1] * 100,
+              performance5: (item[item.length - 32][1] - item[item.length - 39][1]) / item[item.length - 39][1] * 100,
+              performance6: (item[item.length - 40][1] - item[item.length - 47][1]) / item[item.length - 47][1] * 100,
+            },
+          
+        };
+      });
+      setEditedData(edited)
+      console.log(edited)
+    }
+
+  }, [performanceList, portfolioList]);
+
+
+  // Render Data 
+  useEffect(()=> {
+    let week1 = {
+      name: "week1"
+    };
+    editedData.forEach((item, i) => {
+      week1[portoflioNameList[i]] = item.weekly.performance1
+    })
+
+    let week2 = {
+      name: "week2"
+    };
+    editedData.forEach((item, i) => {
+      week2[portoflioNameList[i]] = item.weekly.performance2
+    })
+    let week3 = {
+      name: "week3"
+
+    };
+    editedData.forEach((item, i) => {
+      week3[portoflioNameList[i]] = item.weekly.performance3
+    })
+    let week4 = {
+      name: "week4"
+    };
+    editedData.forEach((item, i) => {
+      week4[portoflioNameList[i]] = item.weekly.performance4
+    })
+    let week5 = {
+      name: "week5"
+
+    };
+    editedData.forEach((item, i) => {
+      week5[portoflioNameList[i]] = item.weekly.performance5
+    })
+    let week6 = {
+      name: "week6"
+    };
+    editedData.forEach((item, i) => {
+      week6[portoflioNameList[i]] = item.weekly.performance6
+    })
+
+    const renderAll = [
+      week1,
+      week2,
+      week3,
+      week4,
+      week5,
+      week6,
+    ]
+
+    setRenderData(renderAll)
+    console.log(renderAll)
+
+
+  }, [editedData, portoflioNameList])
+
+  // Colors for Bars
+  const COLORS = [
+  "#FF78CB",
+  "#B4BDFF",
+  "#9758A6",
+  "#634893",
+  ]
+
   const tabHandler = (_, newValue) => {
     setTabValue(newValue);
   };
 
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Page B",
-      uv: -3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Page C",
-      uv: -2000,
-      pv: -9800,
-      amt: 2290,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      uv: -1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: -3800,
-      amt: 2500,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+ 
 
   return (
     <>
       <Grid container className={classes.mainGrid} direction="column">
-        <Grid item md>
+        <Grid item >
           {/* Control Bar */}
           <Grid
             item
@@ -130,7 +195,7 @@ export const PerformanceGraph = () => {
           >
             <Grid item md>
               <Typography className={classes.headline}>
-                Portfolio Value
+                Performance Chart
               </Typography>
             </Grid>
             <Grid
@@ -154,27 +219,7 @@ export const PerformanceGraph = () => {
                   initial={false}
                 />
                 <Tab
-                  label="1M"
-                  className={classes.tab}
-                  classes={{ root: classes.tabRoot }}
-                />
-                <Tab
-                  label="3M"
-                  className={classes.tab}
-                  classes={{ root: classes.tabRoot }}
-                />
-                <Tab
-                  label="6M"
-                  className={classes.tab}
-                  classes={{ root: classes.tabRoot }}
-                />
-                <Tab
-                  label="1Y"
-                  className={classes.tab}
-                  classes={{ root: classes.tabRoot }}
-                />
-                <Tab
-                  label="All"
+                  label="Weekly"
                   className={classes.tab}
                   classes={{ root: classes.tabRoot }}
                 />
@@ -183,25 +228,28 @@ export const PerformanceGraph = () => {
           </Grid>
         </Grid>
 
-        <Grid item>
+        <Grid item container justify="center" alignItems="center">
           <BarChart
             width={800}
             height={200}
-            data={data}
+            data={renderData}
             margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
+              top: 40,
+              right: 0,
+              left: 0,
+              bottom: 0,
             }}
           >
-            <XAxis dataKey="name" />
-            <YAxis />
+            <XAxis hide dataKey="name" stroke={theme.palette.common.textPurple} />
+            <YAxis stroke={theme.palette.common.textPurple} />
+
             <Tooltip />
-            <Legend />
+            <Legend align="right" iconType="circus" height={200} />
             <ReferenceLine y={0} stroke="#000" />
-            <Bar dataKey="pv" fill="#FF78CB" />
-            <Bar dataKey="uv" fill="#B4BDFF" />
+            {portoflioNameList.map((item,i) => {
+              return <Bar dataKey={item} fill={COLORS[i]} />
+            })}
+            
           </BarChart>
         </Grid>
       </Grid>
