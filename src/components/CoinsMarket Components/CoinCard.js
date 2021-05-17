@@ -2,12 +2,13 @@ import Card from '@material-ui/core/Card';
 import Grid from "@material-ui/core/Grid"
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from "@material-ui/core"
-import graph from "../../assets/sparkline.png"
+
+import {Sparkline} from "./Sparkline"
 
 const useStyles = makeStyles(theme => ({
   cardContainer: {
     maxHeight: "8em",
-    minHeight: "8em",
+    minHeight: "9em",
     marginBottom:"0.4em",
     backgroundColor: "white",
     color: theme.palette.primary.main,
@@ -33,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-export const CoinCard = ({imgSource, alt, coinName, coinCode, percentageChangeByDay, price}) => {
+export const CoinCard = ({imgSource, alt, coinName, coinCode, percentageChangeByDay, price, chartData}) => {
   const classes = useStyles()
 
   return (
@@ -43,30 +44,23 @@ export const CoinCard = ({imgSource, alt, coinName, coinCode, percentageChangeBy
         className={classes.gridContainer}>
 
         {/* Coin Logo & Coin Graph */}
-        <Grid item container direction="row" md={12} alignItems="center" justify="center" className={classes.logoGraphContainer}  >
+        <Grid item container direction="row" xs={12} alignItems="center" justify="space-between" className={classes.logoGraphContainer}  >
           <Grid item md> 
             <img src={imgSource} alt={alt} className={classes.cardLogo} /> 
           </Grid>
-          <Grid item md> 
-            <img src={graph} alt={alt} className={classes.cardGraph} /> 
+          <Grid item md container justify="flex-end"> 
+            <Sparkline chartData={chartData} />
           </Grid>
         </Grid>
 
         {/* Coin Name  */}
-        <Grid item container direction="row" md={12} spacing={1}>
-          <Grid item >
-            <Typography align="left">
-               {coinName}
+        <Grid item container direction="row" md={12} >
+            <Typography  align="left">
+               {coinName} <span style={{opacity:0.7}}>{coinCode}</span>
             </Typography>
-          </Grid>
-          <Grid item >
-            <Typography align="left" style={{opacity: 0.7}}>
-               {coinCode}
-            </Typography>
-          </Grid>
         </Grid>
 
-        {/* Coin Ptice & Percentage  */}
+        {/* Coin Price & Percentage  */}
         <Grid item container direction="row" md={12}>
           <Grid item md>
             <Typography align="left" style={{fontSize:"1.5em"}}>
@@ -74,9 +68,9 @@ export const CoinCard = ({imgSource, alt, coinName, coinCode, percentageChangeBy
             </Typography>
           </Grid>
     
-          <Grid item md container justify="flex-end" alignItems="flex-end" >
+          <Grid item md container justify="flex-end" alignItems="center" >
             <Typography align="right" className={classes.percentage} style={{color : percentageChangeByDay > 0 ? "green" : "red"}}>
-                {percentageChangeByDay > 0 ? "+" : "-"}{Math.abs(percentageChangeByDay*100).toFixed(2)}%
+                {percentageChangeByDay > 0 ? "+" : "-"}{Math.abs(percentageChangeByDay).toFixed(2)}%
             </Typography>
           </Grid>
 

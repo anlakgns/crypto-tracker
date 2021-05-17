@@ -52,64 +52,72 @@ const useStyles = makeStyles((theme) => ({
   iconButtonDot: {
     fontSize: "0.2em",
   },
-  menuItem:{
-    fontSize:"0.8em",
-  }
+  menuItem: {
+    fontSize: "0.8em",
+  },
 }));
 
 export const CoinItem = (props) => {
-  
-  const { tabValue, setPortfolioModal, setSelectedCoin, setPage, coin } = props
-  const {name, priceBought, quantity, value, } = coin
-  const {code, logo, priceChangeDayPerc } = coin.allInfo
+  const { tabValue, setPortfolioModal, setSelectedCoin, setPage, coin } = props;
+  const { name, priceBought, quantity, value } = coin;
+  const { code, logo, priceChangeDayPerc } = coin.allInfo;
 
-  const theme = useTheme()
-  const { setCoinToDelete, sourceAPI, coinListResponse } = useContext(GlobalContext);
+  const theme = useTheme();
+  const { setCoinToDelete, sourceAPI, coinListResponse } =
+    useContext(GlobalContext);
   const { currencyFormatter, percentageFormatter } = useFormatter();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [primaryField, setPrimaryField] = useState()
-  const [secondaryField, setSecondaryField] = useState()
+  const [primaryField, setPrimaryField] = useState();
+  const [secondaryField, setSecondaryField] = useState();
   const classes = useStyles();
   const open = Boolean(anchorEl);
 
-  // Tab Switch 
-  useEffect(()=> {
-    const findCoin = coinListResponse.filter(c => c.name === name)
-    const profit = (+findCoin[0]?.price - priceBought)*quantity;
-    const profitPerc = (+findCoin[0]?.price - priceBought)/priceBought;
+  // Tab Switch
+  useEffect(() => {
+    const findCoin = coinListResponse.filter((c) => c.name === name);
+    const profit = (+findCoin[0]?.price - priceBought) * quantity;
+    const profitPerc = (+findCoin[0]?.price - priceBought) / priceBought;
 
-    switch(tabValue) {
-      case 0: 
-        setPrimaryField(currencyFormatter(priceBought))
-        setSecondaryField(percentageFormatter(priceChangeDayPerc, sourceAPI))
+    switch (tabValue) {
+      case 0:
+        setPrimaryField(currencyFormatter(priceBought));
+        setSecondaryField(percentageFormatter(priceChangeDayPerc, sourceAPI));
         break;
-      case 1: 
-        setPrimaryField(currencyFormatter(value))
-        setSecondaryField()
+      case 1:
+        setPrimaryField(currencyFormatter(value));
+        setSecondaryField();
         break;
-      case 2: 
-        setPrimaryField(currencyFormatter(profit))
-        setSecondaryField(percentageFormatter(profitPerc, sourceAPI))
+      case 2:
+        setPrimaryField(currencyFormatter(profit));
+        setSecondaryField(percentageFormatter(profitPerc, sourceAPI));
         break;
       default:
-        setPrimaryField(currencyFormatter(priceBought))
-        setSecondaryField(percentageFormatter(priceChangeDayPerc, sourceAPI))
+        setPrimaryField(currencyFormatter(priceBought));
+        setSecondaryField(percentageFormatter(priceChangeDayPerc, sourceAPI));
     }
-
-  }, [tabValue, currencyFormatter, sourceAPI, priceChangeDayPerc, priceBought, percentageFormatter, value, coinListResponse, name, quantity])
-
+  }, [
+    tabValue,
+    currencyFormatter,
+    sourceAPI,
+    priceChangeDayPerc,
+    priceBought,
+    percentageFormatter,
+    value,
+    coinListResponse,
+    name,
+    quantity,
+  ]);
 
   // Dom Handlers
   const itemClick = (event, option) => {
-
-    if(option === "Remove Asset") {
-      setCoinToDelete(name)
+    if (option === "Remove Asset") {
+      setCoinToDelete(name);
     }
 
-    if(option === "Buy More") {
-      setPortfolioModal(true)
-      setSelectedCoin(coin.allInfo)
-      setPage(2)
+    if (option === "Buy More") {
+      setPortfolioModal(true);
+      setSelectedCoin(coin.allInfo);
+      setPage(2);
     }
 
     // if(option === "Sell") {
@@ -119,9 +127,9 @@ export const CoinItem = (props) => {
     // }
     setAnchorEl(null);
   };
-  const handleClick= (event) =>  {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-  }
+  };
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -130,7 +138,13 @@ export const CoinItem = (props) => {
 
   return (
     <>
-      <Grid item container className={classes.itemContainer} justify="center" alignItems="center">
+      <Grid
+        item
+        container
+        className={classes.itemContainer}
+        justify="center"
+        alignItems="center"
+      >
         {/* Logo & Coin Name */}
         <Grid item container md={6} alignItems="center">
           {/* Logo */}
@@ -151,7 +165,7 @@ export const CoinItem = (props) => {
               </Typography>
             </Grid>
           </Grid>
-          </Grid>
+        </Grid>
 
         {/* Price & Icon */}
         <Grid item container md={5} justify="center" alignItems="center">
@@ -164,7 +178,10 @@ export const CoinItem = (props) => {
             <Grid item>
               <Typography
                 className={classes.change}
-                style={{ color: parseFloat(secondaryField) >= 0  ? "#7CFC00" : "#FF5733 " }}
+                style={{
+                  color:
+                    parseFloat(secondaryField) >= 0 ? "#7CFC00" : "#FF5733 ",
+                }}
                 align="right"
               >
                 {secondaryField}
@@ -201,15 +218,21 @@ export const CoinItem = (props) => {
                 maxHeight: ITEM_HEIGHT * 4.5,
                 width: "20ch",
                 backgroundColor: theme.palette.secondary.light,
-                color: theme.palette.common.white
+                color: theme.palette.common.white,
               },
             }}
           >
-             {options.map((option, i) => (
-                <MenuItem key={option} onClick={ (event)=> {itemClick(event, option)}} className={classes.menuItem}>
-                  {option}
-                </MenuItem>
-              ))}
+            {options.map((option, i) => (
+              <MenuItem
+                key={option}
+                onClick={(event) => {
+                  itemClick(event, option);
+                }}
+                className={classes.menuItem}
+              >
+                {option}
+              </MenuItem>
+            ))}
           </Menu>
         </Grid>
       </Grid>

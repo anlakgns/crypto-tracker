@@ -191,9 +191,9 @@ export const AssetGraph = () => {
         {/* Chart */}
         <Grid item   className={classes.chartContainers}>
           <div className={classes.graphLabel}>
-            <Typography className={classes.labelPercentage}>100%</Typography>
+            <Typography className={classes.labelPercentage}>{portfolioList.length === 0 ? "": "100%"}</Typography>
             <Typography className={classes.labelValue}>
-              {currencyFormatter(tabValue === 1 ?  totalSpent : totalProfit)} USD
+              {portfolioList.length === 0 ? "" : `${currencyFormatter(tabValue === 1 ?  totalSpent : totalProfit)} USD`} 
             </Typography>
           </div>
           <PieChart width={180} height={180}>

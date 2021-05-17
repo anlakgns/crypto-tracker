@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const CoinListPage = ()=> {
+const CoinMarketPage = ()=> {
   const classes = useStyles()
   return (
     <>
@@ -41,4 +41,4 @@ const CoinListPage = ()=> {
   )
 }
 
-export default CoinListPage
+export default CoinMarketPage

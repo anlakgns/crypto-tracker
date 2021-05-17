@@ -65,21 +65,31 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "3px",
     width: "2.8em",
   },
+  tooltipContainer: {
+    background:
+      "linear-gradient(20deg, rgba(87,95,153,1) 50%, rgba(255,147,213,1) 100%)",
+    border: "4px solid",
+    borderColor: theme.palette.primary.main,
+    borderRadius: "1em",
+    padding: "0.5em",
+    color: theme.palette.common.white,
+  },
 }));
 
 export const PerformanceGraph = () => {
   const { fetchPerformanceData, performanceList } = useFetchData();
+
   const { portfolioList } = useContext(GlobalContext);
   const theme = useTheme();
   const classes = useStyles();
   const [tabValue, setTabValue] = useState(1);
-  const [editedData, setEditedData] = useState([])
-  const [portoflioNameList, setPortfolioNameList] = useState([])
-  const [renderData, setRenderData] = useState([])
+  const [editedData, setEditedData] = useState([]);
+  const [portoflioNameList, setPortfolioNameList] = useState([]);
+  const [renderData, setRenderData] = useState([]);
   // Data Fetch
   useEffect(() => {
     const portfolioNames = portfolioList.map((coin) => coin.allInfo.id);
-    setPortfolioNameList(portfolioNames)
+    setPortfolioNameList(portfolioNames);
     fetchPerformanceData(portfolioNames, "usd", 360);
   }, [fetchPerformanceData, portfolioList]);
 
@@ -87,103 +97,121 @@ export const PerformanceGraph = () => {
   useEffect(() => {
     const prices = performanceList.map((c) => c.data.prices);
 
-    if(prices.length > 0) {
+    if (prices.length > 0) {
       const edited = prices.map((item) => {
         return {
-          weekly: 
-            {
-              performance1: (item[item.length-1][1] - item[item.length - 7][1]) / item[item.length - 7][1] * 100,
-              performance2: (item[item.length - 8][1] - item[item.length - 15][1]) / item[item.length - 15][1] * 100,
-              performance3: (item[item.length - 16][1] - item[item.length - 23][1]) / item[item.length - 23][1] * 100,
-              performance4:( item[item.length - 24][1] - item[item.length - 31][1] ) / item[item.length - 31][1] * 100,
-              performance5: (item[item.length - 32][1] - item[item.length - 39][1]) / item[item.length - 39][1] * 100,
-              performance6: (item[item.length - 40][1] - item[item.length - 47][1]) / item[item.length - 47][1] * 100,
-            },
-          
+          weekly: {
+            performance1:
+              ((item[item.length - 1][1] - item[item.length - 7][1]) /
+                item[item.length - 7][1]) *
+              100,
+            performance2:
+              ((item[item.length - 8][1] - item[item.length - 15][1]) /
+                item[item.length - 15][1]) *
+              100,
+            performance3:
+              ((item[item.length - 16][1] - item[item.length - 23][1]) /
+                item[item.length - 23][1]) *
+              100,
+            performance4:
+              ((item[item.length - 24][1] - item[item.length - 31][1]) /
+                item[item.length - 31][1]) *
+              100,
+            performance5:
+              ((item[item.length - 32][1] - item[item.length - 39][1]) /
+                item[item.length - 39][1]) *
+              100,
+            performance6:
+              ((item[item.length - 40][1] - item[item.length - 47][1]) /
+                item[item.length - 47][1]) *
+              100,
+          },
         };
       });
-      setEditedData(edited)
-      console.log(edited)
+      setEditedData(edited);
+      console.log(edited);
     }
-
   }, [performanceList, portfolioList]);
 
-
-  // Render Data 
-  useEffect(()=> {
+  // Render Data
+  useEffect(() => {
     let week1 = {
-      name: "week1"
+      name: "Week 1",
     };
     editedData.forEach((item, i) => {
-      week1[portoflioNameList[i]] = item.weekly.performance1
-    })
+      week1[portoflioNameList[i]] = item.weekly.performance1;
+    });
 
     let week2 = {
-      name: "week2"
+      name: "Week 2",
     };
     editedData.forEach((item, i) => {
-      week2[portoflioNameList[i]] = item.weekly.performance2
-    })
+      week2[portoflioNameList[i]] = item.weekly.performance2;
+    });
     let week3 = {
-      name: "week3"
-
+      name: "Week 3",
     };
     editedData.forEach((item, i) => {
-      week3[portoflioNameList[i]] = item.weekly.performance3
-    })
+      week3[portoflioNameList[i]] = item.weekly.performance3;
+    });
     let week4 = {
-      name: "week4"
+      name: "Week 4",
     };
     editedData.forEach((item, i) => {
-      week4[portoflioNameList[i]] = item.weekly.performance4
-    })
+      week4[portoflioNameList[i]] = item.weekly.performance4;
+    });
     let week5 = {
-      name: "week5"
-
+      name: "Week 5",
     };
     editedData.forEach((item, i) => {
-      week5[portoflioNameList[i]] = item.weekly.performance5
-    })
+      week5[portoflioNameList[i]] = item.weekly.performance5;
+    });
     let week6 = {
-      name: "week6"
+      name: "Week 6",
     };
     editedData.forEach((item, i) => {
-      week6[portoflioNameList[i]] = item.weekly.performance6
-    })
+      week6[portoflioNameList[i]] = item.weekly.performance6;
+    });
 
-    const renderAll = [
-      week1,
-      week2,
-      week3,
-      week4,
-      week5,
-      week6,
-    ]
+    const renderAll = [week1, week2, week3, week4, week5, week6];
 
-    setRenderData(renderAll)
-    console.log(renderAll)
-
-
-  }, [editedData, portoflioNameList])
+    setRenderData(renderAll);
+    console.log(renderAll);
+  }, [editedData, portoflioNameList]);
 
   // Colors for Bars
-  const COLORS = [
-  "#FF78CB",
-  "#B4BDFF",
-  "#9758A6",
-  "#634893",
-  ]
+  const COLORS = ["#FF78CB", "#B4BDFF", "#9758A6", "#634893"];
 
   const tabHandler = (_, newValue) => {
     setTabValue(newValue);
   };
 
- 
+  const CustomTooltip = ({ active, payload, label }) => {
+    console.log(payload)
+    if (active && payload && payload.length) {
+      return (
+        <div className={classes.tooltipContainer}>
+          <p className="intro">{label}</p>
+          <ul>
+            {payload.map(c => {
+              return (
+                <li>{c.name}: {c.value.toFixed(2)}%</li>
+              )
+            })}
+          </ul>
+        </div>
+      );
+    }
+  
+    return null;
+  };
+
+
 
   return (
     <>
       <Grid container className={classes.mainGrid} direction="column">
-        <Grid item >
+        <Grid item>
           {/* Control Bar */}
           <Grid
             item
@@ -240,16 +268,21 @@ export const PerformanceGraph = () => {
               bottom: 0,
             }}
           >
-            <XAxis hide dataKey="name" stroke={theme.palette.common.textPurple} />
-            <YAxis stroke={theme.palette.common.textPurple} />
+            <XAxis
+              hide
+              dataKey="name"
+              stroke={theme.palette.common.textPurple}
+            />
+            <YAxis
+              hide={portfolioList.length === 0 ? true : false}
+              stroke={theme.palette.common.textPurple} />
 
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             <Legend align="right" iconType="circus" height={200} />
             <ReferenceLine y={0} stroke="#000" />
-            {portoflioNameList.map((item,i) => {
-              return <Bar dataKey={item} fill={COLORS[i]} />
+            {portoflioNameList.map((item, i) => {
+              return <Bar dataKey={item} fill={COLORS[i]} />;
             })}
-            
           </BarChart>
         </Grid>
       </Grid>

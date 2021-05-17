@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
-import coinGeckoAPI from "./coinGecko";
-import nomicsAPI from "./nomics";
+import coinGeckoAPI from "./coinGeckoAPI";
+import nomicsAPI from "./nomicsAPI";
 import { useFormatter } from "./../utils/formatterHook";
 import axios from "axios"; 
 
@@ -14,6 +14,7 @@ export const useFetchData = () => {
   const { responseFormatter } = useFormatter();
   const [coinListResponse, setCoinListResponse] = useState([]);
   const [performanceList, setPerformanceList] = useState([]);
+  const [coinSingleResponse, setCoinSingleResponse] = useState()
 
   const fetchCoinList = useCallback(
     async (source) => {
@@ -113,6 +114,22 @@ export const useFetchData = () => {
       }, [])
 
 
+    const fetchCoinSingle = useCallback(
+      async (coinName) => {
+          const response =  await coinGeckoAPI.get(`https://api.coingecko.com/api/v3/coins/${coinName}?
+          `, {
+            params: {
+              localization: false,
+              tickers:true,
+              market_data:true,
+              community_data:true,
+              developer_data:true,
+              sparkline:true
+            }
+          });
+          setCoinSingleResponse(response)
+      }, []
+    )
 
   return { 
     coinListResponse, 
@@ -123,5 +140,9 @@ export const useFetchData = () => {
     coinHistoricResponse , 
     fetchHistoricBundleData,
     performanceList, 
-    fetchPerformanceData};
+    fetchPerformanceData,
+    fetchCoinSingle,
+    coinSingleResponse,
+
+  };
 };

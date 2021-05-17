@@ -5,7 +5,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-import openExchangeAPI from "../shared/apis & socket/openExchange";
+import openExchangeAPI from "../shared/apis & socket/openExchangeAPI";
 import { CoinListButton } from "../shared/UI components/CoinListButton";
 import { CurrencyListButton } from "../shared/UI components/CurrencyListButton";
 import { QuantityInput } from "../shared/UI components/QuantityInput";
@@ -115,8 +115,8 @@ export const CalculatorCard = ({ coinListResponse }) => {
     setCalcResult(result.toFixed(2) + " " + selectedCoin2.id);
   }, [coinQuantity, selectedCoin, selectedCoin2]);
 
+  // Data Fetching and Editting
   useEffect(() => {
-    // Data Fetching and Editting
     const fetchData = async () => {
       const currencyRatesResponse = await openExchangeAPI.get("/latest.json");
       const currencyNameListResponse = await openExchangeAPI.get(
@@ -140,8 +140,8 @@ export const CalculatorCard = ({ coinListResponse }) => {
     };
   }, []);
 
+  // Switch Logic for Calculator.
   useEffect(() => {
-    // Switch Logic for Calculator.
     if (
       selectedCoin !== "" &&
       selectedCurrency !== "" &&
@@ -168,8 +168,8 @@ export const CalculatorCard = ({ coinListResponse }) => {
     calculatorForCrypto,
   ]);
 
+  // Cleanup for result
   useEffect(() => {
-    // Cleanup for result
     setCalcResult("");
   }, [tabValue]);
 
@@ -220,6 +220,7 @@ export const CalculatorCard = ({ coinListResponse }) => {
   return (
     <>
       <Grid container className={classes.calcContainer}>
+        
         {/* Calculator Switch Fiat & Crypto */}
         <Grid item container justify="center">
           <Tabs
@@ -283,6 +284,7 @@ export const CalculatorCard = ({ coinListResponse }) => {
             </Typography>
           ) : null}
         </Grid>
+      
       </Grid>
     </>
   );

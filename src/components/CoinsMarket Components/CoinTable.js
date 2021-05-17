@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 
 import Grid from "@material-ui/core/Grid";
 import Table from "@material-ui/core/Table";
@@ -19,11 +20,12 @@ import BookmarkIcon from "@material-ui/icons/Bookmark";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
 import { useSocketCC } from "../shared/apis & socket/socketCCHook";
-import { CoinCard } from "./CoinCard";
-import { FeatureBar } from "./FeaturesBar";
 import HeadUnderline from "../shared/UI components/HeadUnderline";
 import { useFormatter } from "../shared/utils/formatterHook";
-import {GlobalContext} from "../shared/global state/globalContext"
+import { GlobalContext } from "../shared/global state/globalContext";
+import { CoinCard } from "./CoinCard";
+import { FeatureBar } from "./FeaturesBar";
+import { Sparkline } from "./Sparkline";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -69,17 +71,12 @@ const useStyles = makeStyles((theme) => ({
 
 const CoinTable = () => {
   const classes = useStyles();
-  const [
-    livePrices,
-    startSocketConnection,
-    closeSocketConnection,
-  ] = useSocketCC();
-  const {
-    percentageFormatter,
-    numberFormatter,
-    currencyFormatter,
-  } = useFormatter();
-  const {sourceAPI, coinListResponse} = useContext(GlobalContext)
+  const history = useHistory();
+  const [livePrices, startSocketConnection, closeSocketConnection] =
+    useSocketCC();
+  const { percentageFormatter, numberFormatter, currencyFormatter } =
+    useFormatter();
+  const { sourceAPI, coinListResponse } = useContext(GlobalContext);
 
   const [searchSubmitTerm, setSearchSubmitTerm] = useState();
   const [livePriceSwitch, setLivePriceSwitch] = useState(false);
@@ -95,7 +92,6 @@ const CoinTable = () => {
   const [searchedRenderList, setSearchedRenderList] = useState([]);
   const [finalRenderList, setFinalRenderList] = useState([]);
 
- 
   // Coin Cards Logic
   useEffect(() => {
     const topMoversByDay = (sortData) => {
@@ -131,7 +127,7 @@ const CoinTable = () => {
   // Socket Request
   useEffect(() => {
     const listForSocket = finalRenderList?.map((coin) => {
-      return `5~CCCAGG~${coin.id}~USD`;
+      return `5~CCCAGG~${coin.code.toUpperCase()}~USD`;
     });
     setSocketList(listForSocket);
   }, [finalRenderList]);
@@ -261,6 +257,12 @@ const CoinTable = () => {
       });
     }
   };
+  const tableClickHandler = (event) => {
+    const cell = event.target.closest("tr");
+    const coinName =
+      cell.firstChild.firstChild.lastChild.firstChild.innerHTML.toLowerCase();
+    history.push(`/currencies/${coinName}`);
+  };
 
   return (
     <>
@@ -281,6 +283,7 @@ const CoinTable = () => {
                 coinCode={coin.id}
                 percentageChangeByDay={coin.priceChangeDayPerc}
                 price={currencyFormatter(coin.price)}
+                chartData={coin.sparkline}
               />
             </Grid>
           );
@@ -342,18 +345,7 @@ const CoinTable = () => {
                   24h
                 </Button>
               </TableCell>
-              <TableCell align="center">
-                <Button
-                  onClick={() =>
-                    sortToggleHandler(
-                      "changePercentageWeekDescending",
-                      "changePercentageWeekAscending"
-                    )
-                  }
-                >
-                  7d
-                </Button>
-              </TableCell>
+
               <TableCell align="center">
                 <Button
                   onClick={() =>
@@ -390,9 +382,10 @@ const CoinTable = () => {
                   Circulating Supply
                 </Button>
               </TableCell>
+              <TableCell align="center">&nbsp; LAST 7 DAYS &nbsp;</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody onClick={tableClickHandler}>
             {finalRenderList.map((coin) => (
               <TableRow key={coin.id}>
                 <TableCell component="th">
@@ -403,7 +396,12 @@ const CoinTable = () => {
                     alignItems="center"
                   >
                     <Grid item xs={4}>
-                      <Button onClick={() => bookmarkHandler(coin)}>
+                      <Button
+                        onClick={(e) => {
+                          bookmarkHandler(coin);
+                          e.stopPropagation();
+                        }}
+                      >
                         {bookmarks.find(
                           (bookmark) => coin.id === bookmark.id
                         ) === undefined ? (
@@ -434,7 +432,8 @@ const CoinTable = () => {
                   }}
                 >
                   {currencyFormatter(
-                    (livePriceSwitch && livePrices?.[coin.id]?.price) ||
+                    (livePriceSwitch &&
+                      livePrices?.[coin.code.toUpperCase()]?.price) ||
                       coin.price
                   )}
                 </TableCell>
@@ -458,31 +457,6 @@ const CoinTable = () => {
                   </Grid>
                 </TableCell>
 
-                <TableCell
-                  align="center"
-                  style={{
-                    color: coin.priceChangeWeekPerc > 0 ? "green" : "red",
-                  }}
-                >
-                  <Grid container justify="center" alignItems="center">
-                    <Grid item>
-                      {sourceAPI === "coinGecko"
-                        ? "Not Available on CoinGecko API"
-                        : percentageFormatter(
-                            coin.priceChangeWeekPerc,
-                            sourceAPI
-                          )}
-                    </Grid>
-                    <Grid item style={{ marginBottom: "-0.3em" }}>
-                      {coin.priceChangeWeekPerc > 0 ? (
-                        <ArrowDropUpIcon />
-                      ) : (
-                        <ArrowDropDownIcon />
-                      )}
-                    </Grid>
-                  </Grid>
-                </TableCell>
-
                 <TableCell align="center">
                   {currencyFormatter(coin.marketCap, 13)}
                 </TableCell>
@@ -490,7 +464,12 @@ const CoinTable = () => {
                   {currencyFormatter(coin.marketCapChangeDay, 10)}
                 </TableCell>
                 <TableCell align="center">
-                  <Grid container justify="center" alignItems="center">
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                  >
                     <Grid item xs className={classes.progressContainer}>
                       <LinearProgress
                         color="primary"
@@ -505,6 +484,9 @@ const CoinTable = () => {
                       <span>{numberFormatter(coin.circulatingSupply)}</span>
                     </Grid>
                   </Grid>
+                </TableCell>
+                <TableCell align="center">
+                  <Sparkline chartData={coin.sparkline} />
                 </TableCell>
               </TableRow>
             ))}

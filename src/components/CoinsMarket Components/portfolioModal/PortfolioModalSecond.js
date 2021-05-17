@@ -100,7 +100,15 @@ export const PortfolioModalSecond = ({setPage, handleClose, selectedCoin, setSel
     }
     totalSpentCalc()
   }, [selectedCoin,coinQuantity ])
+
+  useEffect(() => {
+    return () => {
+      setPage(1)
+    };
+  }, [setPage]);
   
+
+  // Dom Handlers
   const handleTabChange = (e, newValue)=> {
     setTransactionType(newValue)
   }
@@ -127,6 +135,7 @@ export const PortfolioModalSecond = ({setPage, handleClose, selectedCoin, setSel
     history.push("/portfolio")
   }
 
+  // Indicator Style Logic
   const indicatorStyle = () => {
     let marginLeft;
     switch (transactionType) {
@@ -146,11 +155,6 @@ export const PortfolioModalSecond = ({setPage, handleClose, selectedCoin, setSel
   }
 
 
-  useEffect(() => {
-    return () => {
-      setPage(1)
-    };
-  }, [setPage]);
 
   return (
     <Grid container className={classes.gridContainer} direction="column" >

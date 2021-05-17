@@ -33,7 +33,7 @@ const TabsCom = () => {
 
   const {handleLogout, state} = useContext(GlobalContext)
 
-  const [tabValue, setTabValue] = useState(0) // tabs state
+  const [tabValue, setTabValue] = useState(1) // tabs state
 
   const classes = useStyles();   // Local CSS
 
@@ -82,11 +82,9 @@ const TabsCom = () => {
         value={tabValue}
         className={classes.tabContainer}
         indicatorColor="primary">
-        <Tab className={classes.tab} value={0} component={Link} to="/features" label="Features"/>
         <Tab className={classes.tab} value={1} component={Link} to="/coinmarkets" label="Coin Market"/>
-        <Tab className={classes.tab} value={2} component={Link} to="/news" label="News" />
-        <Tab className={classes.tab} value={3} component={Link} to="/portfolio" label="Portfolio"/>
-        <Tab className={classes.tab} value={4} component={Link} to="/contract" label="Contact"/>
+        <Tab className={classes.tab} value={2} component={Link} to="/portfolio" label="Portfolio"/>
+        <Tab className={classes.tab} value={3} component={Link} to="/contract" label="Contact"/>
         
       </Tabs>
       </Grid>

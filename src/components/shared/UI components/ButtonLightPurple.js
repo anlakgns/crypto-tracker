@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 
-const ButtonSecondary = ({contentText, color, width, marginTop, height, onClick, marginRight})=> {
+const ButtonLightPurple = ({contentText, color, width, marginTop, height, onClick, marginRight, marginBottom})=> {
   const classes = useStyles();
 
   return (
@@ -29,7 +29,8 @@ const ButtonSecondary = ({contentText, color, width, marginTop, height, onClick,
         width: width || "24em",
         marginTop: marginTop || "1.5em",
         height: height || "3em",
-        marginRight: marginRight
+        marginRight: marginRight,
+        marginBottom: marginBottom
       }}
      className={classes.viewButton} 
      classes={{root: classes.outlineButton}}
@@ -39,4 +40,4 @@ const ButtonSecondary = ({contentText, color, width, marginTop, height, onClick,
   )
 }
 
-export default ButtonSecondary
+export default ButtonLightPurple

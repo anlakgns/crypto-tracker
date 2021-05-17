@@ -28,18 +28,15 @@ export const PortfolioModal = (props) => {
   const classes = useStyles()
   
   
-
   const listItemHandler = (coin) => {
     setPage(2)
     setSelectedCoin(coin)
   }
-
   
   const handleClose = () => {
     setPortfolioModal(false)
   };
 
-  
   return(
     <Dialog 
       open={openPortfolioModal} 

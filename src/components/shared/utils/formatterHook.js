@@ -30,7 +30,7 @@ export const useFormatter = ()=> {
   // Coin Response API formatter
   const responseFormatter =useCallback((response, source) => {
     const formattedResponse = response.map((coin) => {
-      
+      console.log(response)
       if(source === "coinGecko") {
         return {
           name: coin.name,
@@ -43,7 +43,9 @@ export const useFormatter = ()=> {
           marketCap: coin.market_cap,
           marketCapChangeDay: coin.market_cap_change_24h, 
           circulatingSupply: coin.circulating_supply,
-          maxSupply: coin.max_supply
+          maxSupply: coin.max_supply,
+          sparkline: coin.sparkline_in_7d.price
+
         }
       }
 
@@ -59,7 +61,7 @@ export const useFormatter = ()=> {
           marketCap: coin.market_cap,
           marketCapChangeDay: coin["1d"].volume_change, 
           circulatingSupply: coin.circulating_supply,
-          maxSupply: coin.max_supply
+          maxSupply: coin.max_supply,
         }
       }
       return "Please enter your API source correctly.";

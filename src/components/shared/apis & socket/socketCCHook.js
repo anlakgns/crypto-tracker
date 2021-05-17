@@ -1,4 +1,3 @@
-// this is where you paste your api key
 import {useState, useCallback} from "react"
 
 const apiKey = "8580d10a1c80620968dba21176ae1db67299f5231c7d2af40d28e0ce4ad31b81";
@@ -22,7 +21,6 @@ export const useSocketCC = ()=> {
 
     ccSocket.onmessage = function onStreamMessage(event) {
       const data = JSON.parse(event.data)
-      // console.log("messages started to come.")
         if(data.TYPE === "5" && data.PRICE) {
           setLivePrices(prevState => {
             const coinName = data.FROMSYMBOL

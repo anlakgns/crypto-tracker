@@ -6,7 +6,6 @@ import { AssetListContainer } from "../components/Portfolio Components/AssetList
 import { PerformanceGraph } from "../components/Portfolio Components/PerformanceGraph";
 import { ValueGraph } from "../components/Portfolio Components/ValueGraph";
 
-
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
     backgroundColor: theme.palette.common.blue4,
@@ -16,8 +15,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PortfolioPage = () => {
-  
   const classes = useStyles();
+  
+  
   return (
     <>
       <Grid
@@ -26,14 +26,18 @@ const PortfolioPage = () => {
         justify="center"
         className={classes.mainGrid}
       >
+
+      
+          
         {/* Left */}
         <Grid item container xs={9}>
-          {/* Portfolio Value Graph */}
+          
+          {/*  Value Graph */}
           <Grid item container>
             <ValueGraph />
           </Grid>
 
-          {/* Portfolio Performance Graph */}
+          {/*  Performance Graph */}
           <Grid item container>
             <PerformanceGraph />
           </Grid>
@@ -41,15 +45,17 @@ const PortfolioPage = () => {
 
         {/* Right */}
         <Grid item container xs={3} direction="column">
-          {/* Portfolio Asset List */}
+          
+          {/*  Asset List */}
           <Grid item container xs className={classes.assetListContainer}>
             <AssetListContainer  />
           </Grid>
 
-          {/* Portfolio Asset Circle Graph */}
+          {/*  Asset Circle Graph */}
           <Grid item container xs>
             <AssetGraph />
           </Grid>
+        
         </Grid>
       </Grid>
     </>

@@ -109,6 +109,13 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "0.5em",
     paddingRight: "0.5em",
   },
+  totalSpent: {
+    color: theme.palette.common.white,
+    fontSize: "0.8em",
+  },
+  totalProfit: {
+    fontSize: "0.8em",
+  },
 }));
 
 export const ValueGraph = () => {
@@ -128,21 +135,19 @@ export const ValueGraph = () => {
     setSelectedCoinForGraph,
     portfolioList,
     totalSpent,
+    totalProfit,
   } = useContext(GlobalContext);
   const [chartTimeType, setChartTimeType] = useState(1);
   const [daysToFetch, setDaysToFetch] = useState(1);
   const [chartSelectType, setChartSelectType] = useState("All Assets");
-
+  
+  console.log(selectedCoinForGraph);
   // Dynamic One Coin Data Fetching
   useEffect(() => {
-    if (selectedCoinForGraph !== "All Assets" ) {
+    if (selectedCoinForGraph !== "All Assets") {
       fetchHistoricOneData(selectedCoinForGraph, "usd", daysToFetch);
     }
-  }, [
-    daysToFetch,
-    fetchHistoricOneData,
-    selectedCoinForGraph,
-  ]);
+  }, [daysToFetch, fetchHistoricOneData, selectedCoinForGraph]);
 
   // Dynamic Portfolio Fetching
   useEffect(() => {
@@ -156,7 +161,12 @@ export const ValueGraph = () => {
         quantities
       );
     }
-  }, [daysToFetch, fetchHistoricBundleData, portfolioList, selectedCoinForGraph]);
+  }, [
+    daysToFetch,
+    fetchHistoricBundleData,
+    portfolioList,
+    selectedCoinForGraph,
+  ]);
 
   // Historical Coverage Logic
   useEffect(() => {
@@ -254,7 +264,7 @@ export const ValueGraph = () => {
     }
 
     // Market Cap Data
-    if (chartDataType === 1 && chartSelectType !== "All Assets") {
+    if (chartDataType === 1 && selectedCoinForGraph !== "All Assets") {
       console.log(coinHistoricResponse);
       data = coinHistoricResponse?.data?.market_caps.map((item) => {
         return {
@@ -266,7 +276,7 @@ export const ValueGraph = () => {
     }
 
     // Volume Data
-    if (chartDataType === 2 && chartSelectType !== "All Assets") {
+    if (chartDataType === 2 && selectedCoinForGraph !== "All Assets") {
       data = coinHistoricResponse?.data?.total_volumes.map((item) => {
         return {
           date: dateFormatter(new Date(item[0])),
@@ -277,7 +287,20 @@ export const ValueGraph = () => {
     }
 
     setChartData(data);
-  }, [chartDataType, chartSelectType, coinHistoricResponse, dateFormatter]);
+  }, [
+    chartDataType,
+    coinHistoricResponse,
+    dateFormatter,
+    selectedCoinForGraph,
+  ]);
+
+  // Clean Chart Data
+  useEffect(() => {
+    if (portfolioList.length === 0) {
+      setChartData([]);
+      setSelectedCoinForGraph("All Assets");
+    }
+  }, [portfolioList, setSelectedCoinForGraph]);
 
   const chartSelectHandler = (event) => {
     event.preventDefault();
@@ -405,7 +428,21 @@ export const ValueGraph = () => {
                 />
               </Tabs>
             ) : (
-              <Typography>{totalSpent}</Typography>
+              <Grid container>
+                <Grid item>
+                  <Typography className={classes.totalSpent}>
+                    {totalSpent === 0
+                      ? ""
+                      : `${currencyFormatter(totalSpent)} USD`}{" "}
+                  </Typography>
+                  <Typography
+                    style={{ color: totalProfit > 0 ? "green" : "red" }}
+                    className={classes.totalProfit}
+                  >
+                    {totalProfit === 0 ? "" : currencyFormatter(totalProfit)}
+                  </Typography>
+                </Grid>
+              </Grid>
             )}
           </Grid>
 
@@ -473,6 +510,7 @@ export const ValueGraph = () => {
             margin={{ top: 30, right: 30, left: 50, bottom: 0 }}
           >
             <XAxis
+              hide={portfolioList.length === 0 ? true : false}
               dataKey="xData"
               type="category"
               tickCount="4"
@@ -480,6 +518,7 @@ export const ValueGraph = () => {
               stroke={theme.palette.common.textPurple}
             />
             <YAxis
+              hide={portfolioList.length === 0 ? true : false}
               dataKey="yData"
               type="number"
               tickCount="3"

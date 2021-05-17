@@ -1,15 +1,17 @@
 import React, {useState} from "react"
+
 import Grid from "@material-ui/core/Grid"
 import {makeStyles } from '@material-ui/core/styles';
 import Checkbox from "@material-ui/core/Checkbox"
 import IsoIcon from '@material-ui/icons/Iso';
 import Popover from '@material-ui/core/Popover';
-import {CalculatorCard} from "./CalculatorCard"
-import {PortfolioModal} from "./portfolioModal/PortfolioModal"
-import {SearchBar} from "../shared/UI components/SearchBar"
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from '@material-ui/core/Button';
+
+import {SearchBar} from "../shared/UI components/SearchBar"
+import {PortfolioModal} from "./portfolioModal/PortfolioModal"
+import {CalculatorCard} from "./CalculatorCard"
 
 const useStyles = makeStyles(theme => ({
   favoritesCheckbox:{
@@ -69,9 +71,12 @@ export const FeatureBar = (props)=> {
 
   return (
     <>
+      {/* Search Box */}
       <Grid item md={4} container justify="flex-end"  >
-            <SearchBar onChange={searchBoxChangeHandler} onSubmit={searchBoxSubmitHandler} />
+        <SearchBar onChange={searchBoxChangeHandler} onSubmit={searchBoxSubmitHandler} />
       </Grid>
+      
+      {/* Favorite Checkbox */}
       <Grid item container justify="center" md={2}>
         <FormControlLabel
           control={<Checkbox checked={favoriteCheck} onChange={()=> setFavoriteCheck(!favoriteCheck)} name="jason" color="primary" />}
@@ -80,6 +85,8 @@ export const FeatureBar = (props)=> {
           classes={{label: classes.labelCheckboxSwitch}}
         />
       </Grid>
+      
+      {/* Live Price Switch */}
       <Grid item container justify="center" md={2} >
         <FormControlLabel 
             control={<Switch checked={livePriceSwitch} onChange={switchHandler} color="primary" />}
@@ -87,8 +94,9 @@ export const FeatureBar = (props)=> {
             classes={{label: classes.labelCheckboxSwitch}}
          />
       </Grid>
-      <Grid item container justify="center" md={2}>
-        
+      
+      {/* Calculator Button */}
+      <Grid item container justify="center" md={2}>   
         <Button className={classes.btnCalc} onClick={calcHandlerOpen}>
           <IsoIcon color="primary" style={{marginRight:"0.3em"}} />
             Calculator
@@ -111,6 +119,8 @@ export const FeatureBar = (props)=> {
         </Popover>
 
       </Grid>
+      
+      {/* Create Portfolio Button */}
       <Grid item container justify="center" md={2}>
         <Button 
           variant="contained" 
@@ -124,8 +134,7 @@ export const FeatureBar = (props)=> {
           page={page}
           setPage={setPage}
           selectedCoin={selectedCoin}
-          setSelectedCoin={setSelectedCoin}
-          
+          setSelectedCoin={setSelectedCoin}   
           />
       </Grid>
     </>

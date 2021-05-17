@@ -104,8 +104,6 @@ export const PortfolioModalFirst = ({listItemHandler, handleClose}) => {
         container 
         className={classes.gridContainer} 
         direction="column" 
-      
-        
          >
 
         { /* Headline & Cross */}
@@ -149,6 +147,7 @@ export const PortfolioModalFirst = ({listItemHandler, handleClose}) => {
             })}
           </List>
         </Grid>
+      
       </Grid>
   )
 }
