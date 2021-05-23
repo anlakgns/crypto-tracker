@@ -3,7 +3,7 @@ import {makeStyles} from '@material-ui/styles'
 import {CoinItem} from "./CoinItem"
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import {GlobalContext} from "../../shared/global state/globalContext"
+import {PortfolioContext} from "../../shared/contexts/PortfolioContext"
 
 const useStyles = makeStyles(theme => ({
   listItemRoot: {
@@ -28,7 +28,7 @@ export const CoinList = (props)=> {
     coinListResponse} = props
     
     const classes = useStyles()
-    const {totalSpentByCoin, portfolioList, setSelectedCoinForGraph} = useContext(GlobalContext)
+    const {totalSpentByCoin, portfolioList, setSelectedCoinForGraph} = useContext(PortfolioContext)
     const [renderList, setRenderList] = useState(totalSpentByCoin)
     
   useEffect(()=> {

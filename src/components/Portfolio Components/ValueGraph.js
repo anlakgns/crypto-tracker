@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
+import { motion } from "framer-motion";
+
 import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
 import { useTheme } from "@material-ui/core/styles";
-import { motion } from "framer-motion";
 import { Typography } from "@material-ui/core";
 import { Tabs } from "@material-ui/core";
 import { Tab } from "@material-ui/core";
-import { useFetchData } from "../shared/apis & socket/fetchDataHook";
+
+import { useFetchData } from "../shared/hooks/fetchDataHook";
 import { useFormatter } from "../shared/utils/formatterHook";
-import { GlobalContext } from "../shared/global state/globalContext";
+import { PortfolioContext } from "../shared/contexts/PortfolioContext";
 
 import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
 
@@ -125,26 +127,28 @@ export const ValueGraph = () => {
   const {
     fetchHistoricOneData,
     fetchHistoricBundleData,
-    coinHistoricResponse,
   } = useFetchData();
   const [chartDataType, setChartDataType] = useState(0);
   const [chartData, setChartData] = useState([]);
+  const [coinHistoricResponse, setCoinHistoricResponse] = useState([])
   const {
     selectedCoinForGraph,
     setSelectedCoinForGraph,
     portfolioList,
     totalSpent,
     totalProfit,
-  } = useContext(GlobalContext);
+  } = useContext(PortfolioContext);
   const [chartTimeType, setChartTimeType] = useState(1);
   const [daysToFetch, setDaysToFetch] = useState(1);
-  const [chartSelectType, setChartSelectType] = useState("All Assets");
   
-  console.log(selectedCoinForGraph, chartSelectType);
   // Dynamic One Coin Data Fetching
   useEffect(() => {
     if (selectedCoinForGraph !== "All Assets") {
-      fetchHistoricOneData(selectedCoinForGraph, "usd", daysToFetch);
+      const fetch = async () => {
+        const response = await fetchHistoricOneData(selectedCoinForGraph, "usd", daysToFetch);
+        setCoinHistoricResponse(response)
+      }
+      fetch()
     }
   }, [daysToFetch, fetchHistoricOneData, selectedCoinForGraph]);
 
@@ -153,12 +157,16 @@ export const ValueGraph = () => {
     if (selectedCoinForGraph === "All Assets") {
       const portfolioNameList = portfolioList.map((coin) => coin.allInfo.id);
       const quantities = portfolioList.map((coin) => coin.quantity);
-      fetchHistoricBundleData(
-        portfolioNameList,
-        "usd",
-        daysToFetch,
-        quantities
-      );
+      const fetch = async () => {
+        const response = await fetchHistoricBundleData(
+            portfolioNameList,
+            "usd",
+            daysToFetch,
+            quantities
+          )
+        setCoinHistoricResponse(response)
+      }
+      fetch()
     }
   }, [
     daysToFetch,
@@ -303,7 +311,6 @@ export const ValueGraph = () => {
 
   const chartSelectHandler = (event) => {
     event.preventDefault();
-    setChartSelectType(selectedCoinForGraph);
     setSelectedCoinForGraph(event.target.value);
     if (event.target.value === "All Assets") {
       setChartDataType(0);
@@ -352,6 +359,7 @@ export const ValueGraph = () => {
         alignItems="center"
         direction="column"
       >
+        
         {/* Control Bar */}
         <Grid
           item
@@ -377,9 +385,9 @@ export const ValueGraph = () => {
                 onChange={chartSelectHandler}
               >
                 <option value="All Assets">All Assets</option>
-                {portfolioList.map((coin) => {
+                {portfolioList.map((coin, i) => {
                   return (
-                    <option value={coin.allInfo.id} key={coin.name}>
+                    <option value={coin.allInfo.id} key={i}>
                       {coin.name}
                     </option>
                   );
@@ -534,6 +542,7 @@ export const ValueGraph = () => {
             />
           </LineChart>
         </Grid>
+      
       </Grid>
     </>
   );

@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -10,7 +11,8 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import { useHistory } from "react-router-dom";
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {GlobalContext} from "../shared/global state/globalContext"
+
+import {AuthContext} from "../shared/contexts/AuthContext"
 import ModalCard from "../shared/UI components/ModalCard"
 import ButtonPrimary from "../shared/UI components/ButtonPrimary"
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
@@ -38,20 +40,20 @@ const useStyles = makeStyles((theme) => ({
     height:"3em",
     color:theme.palette.common.textPurple,
     marginTop: "1.5em"
-   },
-   outlineButton: {
+  },
+  outlineButton: {
      border: `2px solid ${theme.palette.common.buttonPurple}`,
      '&:hover': {
        backgroundColor: theme.palette.primary.buttonPurple,
        color: "white",
      },
-   },
-   forgetText:{
-    color: theme.palette.common.textPurple,
-    fontSize:"0.9em",
-    opacity:"0.7"
-   },
-   underline: {
+  },
+  forgetText:{
+   color: theme.palette.common.textPurple,
+   fontSize:"0.9em",
+   opacity:"0.7"
+  },
+  underline: {
     '&:after': {
       borderBottom: `2px solid ${theme.palette.common.buttonPurple}`,
     },
@@ -80,7 +82,7 @@ const LogIn = ({logStatus})=> {
       state,
       dispatch,
       ACTIONS, 
-      } = useContext(GlobalContext)
+      } = useContext(AuthContext)
   const { spinner, errorMessage, newUser, isLoggedIn, snackOpen } = state  
 
   const history = useHistory();
@@ -95,17 +97,19 @@ const LogIn = ({logStatus})=> {
     dispatch({type: ACTIONS.SETERRORMESSAGE, payload: false})
   };
 
+  // Redirecting to Home Logic
   useEffect(()=> {
     if(isLoggedIn && !newUser) history.push("/")
   })
 
+  // Error Card Logic
   useEffect(()=> {
     if(errorMessage) setModalOpen(true)
   }, [errorMessage])
 
   const onLogin = ()=> {
      handleLogin(email, password)
-}
+  }
 
   const submitHandler = (e) => {
     e.preventDefault();

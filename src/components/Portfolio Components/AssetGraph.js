@@ -6,7 +6,7 @@ import { Typography } from "@material-ui/core";
 import { Tabs } from "@material-ui/core";
 import { Tab } from "@material-ui/core";
 import {motion} from "framer-motion"
-import {GlobalContext} from "../shared/global state/globalContext"
+import {PortfolioContext} from "../shared/contexts/PortfolioContext"
 import {useFormatter} from "../shared/utils/formatterHook"
 
 const useStyles = makeStyles((theme) => ({
@@ -108,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const AssetGraph = () => {
   const {currencyFormatter} = useFormatter()
-  const {totalSpentByCoin,totalProfit, totalSpent, portfolioList, coinListResponse} = useContext(GlobalContext)
+  const {totalSpentByCoin,totalProfit, totalSpent, portfolioList, coinListResponse} = useContext(PortfolioContext)
   const classes = useStyles();
   const [tabValue, setTabValue] = useState(1);
   const [data, setData] = useState([])

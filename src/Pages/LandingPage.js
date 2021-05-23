@@ -11,7 +11,7 @@ import Trustedfolks from "../components/Landing Components/WhyUs Section/Trusted
 import News from "../components/Landing Components/News Section/NewsComponent"
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {GlobalContext} from "../components/shared/global state/globalContext"
+import {AuthContext} from "../components/shared/contexts/AuthContext"
 import Banner from "../components/Landing Components/Verification Banner /Banner"
 import VerifySnackbar from "../components/Landing Components/Verification Banner /VerifySnackbar"
 
@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const LandingPage = ()=> {
-  const {state} = useContext(GlobalContext)
+  const {state} = useContext(AuthContext)
   const {spinner, userInfo, isLoggedIn, emailSent} = state
   const classes = useStyles()
   return (

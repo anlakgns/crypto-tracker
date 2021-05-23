@@ -5,7 +5,7 @@ import {makeStyles} from '@material-ui/styles'
 import Button from '@material-ui/core/Button'
 import {Link} from "react-router-dom"
 import Grid from "@material-ui/core/Grid"
-import {GlobalContext} from "../shared/global state/globalContext"
+import {AuthContext} from "../shared/contexts/AuthContext"
 
 const useStyles = makeStyles(theme => ({
   tabContainer: {
@@ -26,12 +26,9 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-
-
-
 const TabsCom = () => {
 
-  const {handleLogout, state} = useContext(GlobalContext)
+  const {handleLogout, state} = useContext(AuthContext)
 
   const [tabValue, setTabValue] = useState(1) // tabs state
 
@@ -65,8 +62,6 @@ const TabsCom = () => {
     }
 
   }, [tabValue])
-
-
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import Grid from "@material-ui/core/Grid";
@@ -22,10 +22,11 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Hidden from "@material-ui/core/Hidden";
 
-import { useSocketCC } from "../shared/apis & socket/socketCCHook";
+import { useSocketCC } from "../shared/hooks/socketCCHook";
 import HeadUnderline from "../shared/UI components/HeadUnderline";
 import { useFormatter } from "../shared/utils/formatterHook";
-import { GlobalContext } from "../shared/global state/globalContext";
+import {useFetchData} from "../shared/hooks/fetchDataHook"
+
 import { CoinCard } from "./CoinCard";
 import { FeatureBar } from "./FeaturesBar";
 import { Sparkline } from "./Sparkline";
@@ -90,7 +91,7 @@ const CoinTable = () => {
   useSocketCC();
   const { percentageFormatter, numberFormatter, currencyFormatter } =
   useFormatter();
-  const { sourceAPI, coinListResponse } = useContext(GlobalContext);
+  const { fetchCoinList, sourceAPI } = useFetchData();
   const isSmDown = useMediaQuery(theme.breakpoints.down("sm"))
   const isMdDown = useMediaQuery(theme.breakpoints.down("md"));
   
@@ -114,6 +115,17 @@ const CoinTable = () => {
   const [searchedRenderList, setSearchedRenderList] = useState([]);
   const [finalRenderList, setFinalRenderList] = useState([]);
   const [feedbackMessage, setFeedBackMessage] = useState("");
+  const [coinListResponse, setCoinListResponse] = useState([])
+
+
+  // Data Fetching
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await fetchCoinList(sourceAPI)
+      setCoinListResponse(response)
+    }
+    fetch()
+  }, [fetchCoinList, sourceAPI])
 
   // Coin Cards Logic
   useEffect(() => {
@@ -564,8 +576,7 @@ const CoinTable = () => {
                       direction = {matches780Down ? "column" : "row"}>
                       <Grid item>
                         {percentageFormatter(
-                          coin.priceChangeDayPerc,
-                          sourceAPI
+                          coin.priceChangeDayPerc
                         )}
                       </Grid>
                       <Grid item style={{ marginBottom: "-0.3em" }}>
@@ -643,6 +654,7 @@ const CoinTable = () => {
               </TableRow>
             )}
           </TableBody>
+        
         </Table>
         
         <Pagination
@@ -653,6 +665,7 @@ const CoinTable = () => {
           page={page}
         />
       </TableContainer>
+    
     </>
   );
 };

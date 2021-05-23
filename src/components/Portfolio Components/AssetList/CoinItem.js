@@ -8,7 +8,7 @@ import { useFormatter } from "../../shared/utils/formatterHook";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { GlobalContext } from "../../shared/global state/globalContext";
+import { PortfolioContext } from "../../shared/contexts/PortfolioContext";
 
 const useStyles = makeStyles((theme) => ({
   underline: {
@@ -63,7 +63,7 @@ export const CoinItem = (props) => {
 
   const theme = useTheme();
   const { setCoinToDelete, sourceAPI, coinListResponse } =
-    useContext(GlobalContext);
+    useContext(PortfolioContext);
   const { currencyFormatter, percentageFormatter } = useFormatter();
   const [anchorEl, setAnchorEl] = useState(null);
   const [primaryField, setPrimaryField] = useState();

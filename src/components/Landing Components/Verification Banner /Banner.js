@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import ButtonPrimary from "../../shared/UI components/ButtonPrimary"
 import {makeStyles} from '@material-ui/styles'
 import Grid from "@material-ui/core/Grid"
-import {GlobalContext} from "../../shared/global state/globalContext"
+import {PortfolioContext} from "../../shared/contexts/PortfolioContext"
 
 
 
@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
 const Banner = ()=> {
   const classes = useStyles()
   const [verifyBanner, setVerifyBanner] = useState(true)
-  const {handleVerify} = useContext(GlobalContext)
+  const {handleVerify} = useContext(PortfolioContext)
 
 
   return (

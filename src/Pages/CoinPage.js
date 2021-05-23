@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
 import {IntroductionBar} from "../components/Coin Page Components/IntroductionBar"
@@ -7,7 +7,7 @@ import {MainArea} from "../components/Coin Page Components/MainArea"
 import {TopMoverCards} from "../components/Coin Page Components/TopMoverCards"
 import {Transactions} from "../components/Coin Page Components/Transactions"
 import { useParams } from "react-router-dom";
-import {useFetchData} from "../components/shared/apis & socket/fetchDataHook"
+import {useFetchData} from "../components/shared/hooks/fetchDataHook"
 import HeaderM from "../components/Landing Components/Introduction Section/HeaderM"
 
 const useStyles = makeStyles((theme) => ({
@@ -19,13 +19,18 @@ const useStyles = makeStyles((theme) => ({
 
 const PortfolioPage = () => {
   const classes = useStyles();
+  const [coinSingleResponse, setCoinSingleResponse] = useState()
   let { id } = useParams();
 
   console.log(id)
-  const {fetchCoinSingle, coinSingleResponse} = useFetchData()
+  const {fetchCoinSingle} = useFetchData()
 
   useEffect(()=> {
-    fetchCoinSingle(id)
+    const fetch = async ()=> {
+      const response = await fetchCoinSingle(id)
+      setCoinSingleResponse(response)
+    }
+    fetch()
   }, [fetchCoinSingle, id])
   
   return (

@@ -8,7 +8,7 @@ import Select from "@material-ui/core/Select";
 import { Typography } from "@material-ui/core";
 import InputBase from "@material-ui/core/InputBase";
 
-import { GlobalContext } from "../global state/globalContext";
+import { PortfolioContext } from "../contexts/PortfolioContext";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const CoinListButton = ({ onChange, selected, width, height }) => {
   const classes = useStyles();
-  const { coinListResponse } = useContext(GlobalContext);
+  const { coinListResponse } = useContext(PortfolioContext);
 
   // Custamizable Input Styles
   const BootstrapInput = withStyles((theme) => ({

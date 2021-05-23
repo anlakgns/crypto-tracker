@@ -2,7 +2,7 @@ import React, {useContext} from "react"
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import {makeStyles} from '@material-ui/styles'
-import {GlobalContext} from "../../shared/global state/globalContext"
+import {PortfolioContext} from "../../shared/contexts/PortfolioContext"
 
 
 function Alert(props) {
@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
 
 const VerifySnackbar = () => {
   const classes = useStyles()
-  const {emailSent, emailSentError, snackOpen, setSnackOpen} = useContext(GlobalContext)
+  const {emailSent, emailSentError, snackOpen, setSnackOpen} = useContext(PortfolioContext)
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {

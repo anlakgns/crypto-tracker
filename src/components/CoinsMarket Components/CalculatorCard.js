@@ -5,7 +5,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-import openExchangeAPI from "../shared/apis & socket/openExchangeAPI";
+import openExchangeAPI from "../shared/apis/openExchangeAPI";
 import { CoinListButton } from "../shared/UI components/CoinListButton";
 import { CurrencyListButton } from "../shared/UI components/CurrencyListButton";
 import { QuantityInput } from "../shared/UI components/QuantityInput";

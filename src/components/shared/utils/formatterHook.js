@@ -3,15 +3,9 @@ import {useCallback} from "react"
 export const useFormatter = ()=> {
 
    // Number Formatters
-   const percentageFormatter = useCallback((num, source) => {
-    if(source === "coinGecko") {
+   const percentageFormatter = useCallback((num) => {
       const formatDone = (+num).toFixed(2) + "%";
       return formatDone
-    }
-    if(source === "nomics") {
-      const formatDone = (num*100).toFixed(2) + "%";
-      return formatDone
-    }
   }, [])
 
   const numberFormatter = useCallback((num) => {
@@ -28,42 +22,21 @@ export const useFormatter = ()=> {
 
 
   // Coin Response API formatter
-  const responseFormatter =useCallback((response, source) => {
+  const responseFormatter =useCallback((response) => {
     const formattedResponse = response.map((coin) => {
-      if(source === "coinGecko") {
         return {
           name: coin.name,
           id: coin.id,
           code: coin.symbol.toUpperCase(),
           price: coin.current_price,
           priceChangeDayPerc : coin.price_change_percentage_24h, 
-          priceChangeWeekPerc: "not available in this api",
           logo: coin.image,
           marketCap: coin.market_cap,
           marketCapChangeDay: coin.market_cap_change_24h, 
           circulatingSupply: coin.circulating_supply,
           maxSupply: coin.max_supply,
           sparkline: coin.sparkline_in_7d.price
-
-        }
       }
-
-      if(source === "nomics") {
-        return {
-          name: coin.name,
-          id: coin.id,
-          code: coin.id,
-          price: coin.price,
-          priceChangeDayPerc : coin["1d"].price_change_pct, 
-          priceChangeWeekPerc: coin["7d"].price_change_pct,
-          logo: coin.logo_url,
-          marketCap: coin.market_cap,
-          marketCapChangeDay: coin["1d"].volume_change, 
-          circulatingSupply: coin.circulating_supply,
-          maxSupply: coin.max_supply,
-        }
-      }
-      return "Please enter your API source correctly.";
     })
     return formattedResponse
   }, [])

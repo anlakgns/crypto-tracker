@@ -42,7 +42,6 @@ export const useSocketCC = ()=> {
 
   const closeSocketConnection =useCallback(() => {
     ccSocket?.close()
-    console.log("connection closed.")
   },[])
     
 

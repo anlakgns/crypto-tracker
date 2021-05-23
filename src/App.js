@@ -6,7 +6,8 @@ import Footer from "./Pages/Footer"
 import LandingPage from "./Pages/LandingPage"
 import AuthPage from "./Pages/AuthPage"
 import PortfolioPage from "./Pages/PortfolioPage"
-import {GlobalProvider} from "./components/shared/global state/globalContext"
+import {PortfolioProvider} from "./components/shared/contexts/PortfolioContext"
+import {AuthProvider} from "./components/shared/contexts/AuthContext"
 import CoinMarketPage from "./Pages/CoinsMarketPage"
 import CoinPage from "./Pages/CoinPage"
 
@@ -16,14 +17,16 @@ const App = ()=> {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Switch>
-        <GlobalProvider>
+        <PortfolioProvider>
+          <AuthProvider>
             <Route exact path="/" component={LandingPage} />
             <Route exact path="/coinmarkets" component={CoinMarketPage} />
             <Route exact path="/portfolio" component={PortfolioPage} />
             <Route exact path="/contact" component={()=> <div>Contact</div>} />
             <Route exact path="/auth" component={AuthPage} />
             <Route exact path="/currencies/:id" component={CoinPage} />
-        </GlobalProvider>
+          </AuthProvider>
+        </PortfolioProvider>
         </Switch>
         <Footer />
       </BrowserRouter>

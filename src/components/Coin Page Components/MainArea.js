@@ -7,7 +7,7 @@ import { Typography } from "@material-ui/core";
 import { useFormatter } from "../shared/utils/formatterHook";
 import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
 import { useTheme } from "@material-ui/core/styles";
-import { useFetchData } from "../shared/apis & socket/fetchDataHook";
+import { useFetchData } from "../shared/hooks/fetchDataHook";
 
 const useStyles = makeStyles(theme => ({
   listContainer: {
@@ -85,62 +85,65 @@ export const MainArea = ({ coinSingleResponse })=> {
   const { currencyFormatter, dateFormatter } = useFormatter();
   const theme = useTheme();
   const classes = useStyles()
-  const { fetchHistoricOneData, coinHistoricResponse,} = useFetchData();
+  const { fetchHistoricOneData,} = useFetchData();
   const [daysToFetch, setDaysToFetch] = useState(1);
   const [chartData, setChartData] = useState([]);
   const [chartDataType, setChartDataType] = useState(0);
   const [chartTimeType, setChartTimeType] = useState(1);
-  console.log(setChartDataType, setChartTimeType )
+  const [coinHistoricResponse, setCoinHistoricResponse] = useState([])
 
 
   // Data Fetching
   useEffect(()=> {
-    fetchHistoricOneData(coinSingleResponse?.data.id, "usd", daysToFetch);
+    const fetch = async () => {
+      const response = await fetchHistoricOneData(coinSingleResponse?.data.id, "usd", daysToFetch);
+      setCoinHistoricResponse(response)
+    }
+    fetch()
   },[coinSingleResponse, daysToFetch, fetchHistoricOneData])
-  console.log(coinHistoricResponse)
 
-    // Historical Coverage Logic
-    useEffect(() => {
-      let days;
-      switch (chartTimeType) {
-        case 1:
-          days = 1;
-          break;
-        case 2:
-          days = 7;
-          break;
-        case 3:
-          days = 30;
-          break;
-        case 4:
-          days = 180;
-          break;
-        case 5:
-          days = 360;
-          break;
-        case 6:
-          days = "max";
-          break;
-        default:
-          days = 1;
-      }
-      setDaysToFetch(days);
-    }, [chartTimeType]);
+  // Historical Coverage Logic
+  useEffect(() => {
+    let days;
+    switch (chartTimeType) {
+      case 1:
+        days = 1;
+        break;
+      case 2:
+        days = 7;
+        break;
+      case 3:
+        days = 30;
+        break;
+      case 4:
+        days = 180;
+        break;
+      case 5:
+        days = 360;
+        break;
+      case 6:
+        days = "max";
+        break;
+      default:
+        days = 1;
+    }
+    setDaysToFetch(days);
+  }, [chartTimeType]);
   
 
-    // Chart Data
-    useEffect(() => {
-      let data;
-      // Price Data
-      if (chartDataType === 0) {
-        data = coinHistoricResponse?.data?.prices.map((item) => {
-          return {
-            date: dateFormatter(new Date(item[0])),
-            xData: new Date(item[0]).getHours(),
-            yData: item[1],
-          };
-        });
-      }
+  // Chart Data
+  useEffect(() => {
+    let data;
+    // Price Data
+    if (chartDataType === 0) {
+      data = coinHistoricResponse?.data?.prices.map((item) => {
+        return {
+          date: dateFormatter(new Date(item[0])),
+          xData: new Date(item[0]).getHours(),
+          yData: item[1],
+        };
+      });
+    }
   
       // Market Cap Data
       if (chartDataType === 1) {
@@ -171,40 +174,38 @@ export const MainArea = ({ coinSingleResponse })=> {
       dateFormatter,
     ]);
   
-    // Tooltip
-    const CustomTooltip = ({ active, payload }) => {
-     let name;
-     switch (chartDataType) {
-       case 0:
-         name = "Price";
-         break;
-       case 1:
-         name = "Market Cap";
-         break;
-       case 2:
-         name = "Volume";
-         break;
-       default:
-         name = "Price";
-     }
-   
-     if (active && payload && payload.length) {
-       return (
-         <div className={classes.tooltipContainer}>
-           <p className="label">{`${payload[0].payload.date}`}</p>
-           <ul>
-             <li className="price">{` ${name} : ${currencyFormatter(
-               payload[0].value
-             )}`}</li>
-           </ul>
-         </div>
-       );
-     }
-   
-     return null;
-   };
-
-
+  // Tooltip
+  const CustomTooltip = ({ active, payload }) => {
+   let name;
+   switch (chartDataType) {
+     case 0:
+       name = "Price";
+       break;
+     case 1:
+       name = "Market Cap";
+       break;
+     case 2:
+       name = "Volume";
+       break;
+     default:
+       name = "Price";
+   }
+ 
+   if (active && payload && payload.length) {
+     return (
+       <div className={classes.tooltipContainer}>
+         <p className="label">{`${payload[0].payload.date}`}</p>
+         <ul>
+           <li className="price">{` ${name} : ${currencyFormatter(
+             payload[0].value
+           )}`}</li>
+         </ul>
+       </div>
+     );
+   }
+ 
+   return null;
+  };
 
   // API Extractions
   const coinCode = coinSingleResponse?.data.symbol.toUpperCase();
@@ -222,10 +223,7 @@ export const MainArea = ({ coinSingleResponse })=> {
   const priceChange60d = coinSingleResponse?.data.market_data.price_change_percentage_60d.toFixed(2) + "%"
   const priceChange200d = coinSingleResponse?.data.market_data.price_change_percentage_200d.toFixed(2) + "%"
   const coinInfo = coinSingleResponse?.data.description.en.replace(/<[^>]*>?/gm, '')
-  console.log(coinInfo)
   
-
- 
   return (
     <>
       <Grid container>
@@ -486,6 +484,7 @@ export const MainArea = ({ coinSingleResponse })=> {
             </List>
           </Grid>
         </Grid>
+      
       </Grid>
     </>
   )

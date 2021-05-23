@@ -15,7 +15,7 @@ export const Sparkline = ({chartData}) => {
   const theme = useTheme();
   const matchMd = useMediaQuery(theme.breakpoints.down("md"))
 
-  const data = chartData.map(item => {
+  const data = chartData?.map(item => {
     return {
       price: item
     }

@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
 import { Typography } from "@material-ui/core";
-import { GlobalContext } from "../shared/global state/globalContext";
+import { PortfolioContext } from "../shared/contexts/PortfolioContext";
 import { CoinCard } from "../CoinsMarket Components/CoinCard";
 import { useFormatter } from "../shared/utils/formatterHook";
 
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const TopMoverCards = () => {
   const classes = useStyles();
-  const { coinListResponse } = useContext(GlobalContext);
+  const { coinListResponse } = useContext(PortfolioContext);
   const [cardCoinsInfo, setCardCoinsInfo] = useState([]);
   const { currencyFormatter } = useFormatter();
 

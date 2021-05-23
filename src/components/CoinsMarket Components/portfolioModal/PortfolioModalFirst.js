@@ -14,7 +14,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import { motion } from "framer-motion";
 
-import { GlobalContext } from "../../shared/global state/globalContext";
+import { PortfolioContext } from "../../shared/contexts/PortfolioContext";
 import { SearchBar } from "../../shared/UI components/SearchBar";
 
 const useStyles = makeStyles((theme) => ({
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const PortfolioModalFirst = ({ listItemHandler, handleClose }) => {
-  const { coinListResponse } = useContext(GlobalContext);
+  const { coinListResponse } = useContext(PortfolioContext);
   const classes = useStyles();
 
   const [searchChangeTerm, setSearchChangeTerm] = useState();

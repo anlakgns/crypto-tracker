@@ -1,9 +1,9 @@
 import {useState, useEffect} from "react"
-import {useFetchData} from "../apis & socket/fetchDataHook"
+import {useFetchData} from "./fetchDataHook"
 
 
 export const usePortfolio = () => {
-  const { coinListResponse, fetchCoinList, sourceAPI } = useFetchData();
+  const { fetchCoinList, sourceAPI } = useFetchData();
 
   const [portfolioBuyOrderList, setPortfolioBuyOrderList] = useState([]) 
   const [totalSpent, setTotalSpent] = useState()
@@ -12,17 +12,19 @@ export const usePortfolio = () => {
   const [coinToDelete, setCoinToDelete] = useState()
   const [portfolioList, setPortfolioList] = useState([])
   const [selectedCoinForGraph, setSelectedCoinForGraph] = useState("All Assets")
-
+  const [coinListResponse, setCoinListResponse] = useState([])
  
   // Initial Data Fetching 
    useEffect( ()=> {
-      console.log("initial fething rendered")
-      fetchCoinList(sourceAPI);
-  }, [fetchCoinList, sourceAPI])
+     const fetch = async  ()=> {
+       const response = await fetchCoinList();
+       setCoinListResponse(response)
+     }
+     fetch()
+  }, [fetchCoinList])
 
   // Total Spent 
   useEffect(()=> {
-    console.log("total spent rendered")
     const allSpent =  portfolioBuyOrderList.reduce((acc, cur) => acc + (cur.priceBought * cur.quantity), 0)
     setTotalSpent(allSpent)
   }, [portfolioBuyOrderList])

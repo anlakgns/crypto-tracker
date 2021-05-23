@@ -16,7 +16,7 @@ import { ResultBox } from "../../shared/UI components/ResultBox";
 import { QuantityInput } from "../../shared/UI components/QuantityInput";
 import ButtonLightPurple from "../../shared/UI components/ButtonLightPurple";
 import { motion } from "framer-motion";
-import { GlobalContext } from "../../shared/global state/globalContext";
+import { PortfolioContext } from "../../shared/contexts/PortfolioContext";
 import { useFormatter } from "../../shared/utils/formatterHook";
 
 const useStyles = makeStyles((theme) => ({
@@ -121,7 +121,7 @@ export const PortfolioModalSecond = (props) => {
     handleBack,
   } = props;
   const { setPortfolioBuyOrderList, coinListResponse } =
-    useContext(GlobalContext);
+    useContext(PortfolioContext);
   const [transactionType, setTransactionType] = useState(0);
   const [coinQuantity, setCoinQuantity] = useState("");
   const [totalSpent, setTotalSpent] = useState(0);

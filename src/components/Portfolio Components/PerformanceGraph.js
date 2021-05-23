@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useTheme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/styles";
-import { useFetchData } from "../shared/apis & socket/fetchDataHook";
-import { GlobalContext } from "../shared/global state/globalContext";
+import { useFetchData } from "../shared/hooks/fetchDataHook";
+import { PortfolioContext } from "../shared/contexts/PortfolioContext";
 
 import { motion } from "framer-motion";
 import { Typography } from "@material-ui/core";
@@ -77,27 +77,36 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const PerformanceGraph = () => {
-  const { fetchPerformanceData, performanceList } = useFetchData();
-
-  const { portfolioList } = useContext(GlobalContext);
+  // console.log("PerformanceGraph rendered.")
   const theme = useTheme();
   const classes = useStyles();
+  
+  const { fetchPerformanceData } = useFetchData();
+  const { portfolioList } = useContext(PortfolioContext);
+  
   const [tabValue, setTabValue] = useState(1);
   const [editedData, setEditedData] = useState([]);
   const [portoflioNameList, setPortfolioNameList] = useState([]);
   const [renderData, setRenderData] = useState([]);
+  const [performanceList, setPerformanceList] = useState([])
+  
   // Data Fetch
   useEffect(() => {
     const portfolioNames = portfolioList.map((coin) => coin.allInfo.id);
     setPortfolioNameList(portfolioNames);
-    fetchPerformanceData(portfolioNames, "usd", 360);
+    const fetch = async () => {
+      const response = await fetchPerformanceData(portfolioNames, "usd", 360);
+      setPerformanceList(response)
+    }
+    fetch()
   }, [fetchPerformanceData, portfolioList]);
+
 
   // Data Format
   useEffect(() => {
-    const prices = performanceList.map((c) => c.data.prices);
+    const prices = performanceList?.map((c) => c.data.prices);
 
-    if (prices.length > 0) {
+    if (prices?.length > 0) {
       const edited = prices.map((item) => {
         return {
           weekly: {
@@ -129,45 +138,44 @@ export const PerformanceGraph = () => {
         };
       });
       setEditedData(edited);
-      console.log(edited);
     }
   }, [performanceList, portfolioList]);
 
   // Render Data
   useEffect(() => {
     let week1 = {
-      name: "Week 1",
+      name: "Last 7 Days",
     };
     editedData.forEach((item, i) => {
       week1[portoflioNameList[i]] = item.weekly.performance1;
     });
 
     let week2 = {
-      name: "Week 2",
+      name: "Two Weeks Ago",
     };
     editedData.forEach((item, i) => {
       week2[portoflioNameList[i]] = item.weekly.performance2;
     });
     let week3 = {
-      name: "Week 3",
+      name: "Three Weeks Ago",
     };
     editedData.forEach((item, i) => {
       week3[portoflioNameList[i]] = item.weekly.performance3;
     });
     let week4 = {
-      name: "Week 4",
+      name: "Four Weeks Ago",
     };
     editedData.forEach((item, i) => {
       week4[portoflioNameList[i]] = item.weekly.performance4;
     });
     let week5 = {
-      name: "Week 5",
+      name: "Five Weeks Ago",
     };
     editedData.forEach((item, i) => {
       week5[portoflioNameList[i]] = item.weekly.performance5;
     });
     let week6 = {
-      name: "Week 6",
+      name: "Six Weeks Ago",
     };
     editedData.forEach((item, i) => {
       week6[portoflioNameList[i]] = item.weekly.performance6;
@@ -176,7 +184,6 @@ export const PerformanceGraph = () => {
     const renderAll = [week1, week2, week3, week4, week5, week6];
 
     setRenderData(renderAll);
-    console.log(renderAll);
   }, [editedData, portoflioNameList]);
 
   // Colors for Bars
@@ -186,8 +193,8 @@ export const PerformanceGraph = () => {
     setTabValue(newValue);
   };
 
+  // Tooltip JSX
   const CustomTooltip = ({ active, payload, label }) => {
-    console.log(payload)
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipContainer}>
@@ -206,56 +213,54 @@ export const PerformanceGraph = () => {
     return null;
   };
 
-
-
   return (
     <>
       <Grid container className={classes.mainGrid} direction="column">
-        <Grid item>
-          {/* Control Bar */}
+          
+        {/* Control Bar */}
+        <Grid
+          item
+          md
+          container
+          alignItems="center"
+          justify="flex-end"
+          className={classes.controlBar}
+        >
+          <Grid item md>
+            <Typography className={classes.headline}>
+              Performance Chart
+            </Typography>
+          </Grid>
           <Grid
             item
-            md
             container
-            alignItems="center"
             justify="flex-end"
-            className={classes.controlBar}
+            md
+            className={classes.iconGridContainer}
           >
-            <Grid item md>
-              <Typography className={classes.headline}>
-                Performance Chart
-              </Typography>
-            </Grid>
-            <Grid
-              item
-              container
-              justify="flex-end"
-              md
-              className={classes.iconGridContainer}
+            <Tabs
+              value={tabValue}
+              onChange={tabHandler}
+              className={classes.tabs}
+              classes={{ root: classes.tabsRoot }}
+              TabIndicatorProps={{ style: { display: "none" } }}
             >
-              <Tabs
-                value={tabValue}
-                onChange={tabHandler}
-                className={classes.tabs}
-                classes={{ root: classes.tabsRoot }}
-                TabIndicatorProps={{ style: { display: "none" } }}
-              >
-                <motion.div
-                  className={classes.customIndicator}
-                  animate={{ marginLeft: tabValue === 1 ? "0.45em" : "4.2em" }}
-                  transition={{ duration: 0.6 }}
-                  initial={false}
-                />
-                <Tab
-                  label="Weekly"
-                  className={classes.tab}
-                  classes={{ root: classes.tabRoot }}
-                />
-              </Tabs>
-            </Grid>
+              <motion.div
+                className={classes.customIndicator}
+                animate={{ marginLeft: tabValue === 1 ? "0.45em" : "4.2em" }}
+                transition={{ duration: 0.6 }}
+                initial={false}
+              />
+              <Tab
+                label="Weekly"
+                className={classes.tab}
+                classes={{ root: classes.tabRoot }}
+              />
+            </Tabs>
           </Grid>
         </Grid>
-
+ 
+        {/* Chart */}
         <Grid item container justify="center" alignItems="center">
           <BarChart
             width={800}
@@ -276,7 +281,7 @@ export const PerformanceGraph = () => {
             <YAxis
               hide={portfolioList.length === 0 ? true : false}
               stroke={theme.palette.common.textPurple} />
-
+ 
             <Tooltip content={<CustomTooltip />} />
             <Legend align="right" iconType="circus" height={200} />
             <ReferenceLine y={0} stroke="#000" />
@@ -285,6 +290,7 @@ export const PerformanceGraph = () => {
             })}
           </BarChart>
         </Grid>
+    
       </Grid>
     </>
   );
