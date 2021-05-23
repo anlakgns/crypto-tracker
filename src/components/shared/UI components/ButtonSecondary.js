@@ -1,7 +1,7 @@
 import React from "react"
 import Button from "@material-ui/core/Button";
 import { makeStyles } from '@material-ui/core/styles';
-import {useTheme} from '@material-ui/core/styles';
+
 const useStyles = makeStyles((theme) => ({
   viewButton: {
     textTransform: "none"
@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
 
 
 const ButtonSecondary = ({contentText, color, width, marginTop, height, onClick, marginRight})=> {
-  const theme = useTheme();
   const classes = useStyles();
 
   return (

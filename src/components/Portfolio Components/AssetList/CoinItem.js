@@ -11,7 +11,6 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { GlobalContext } from "../../shared/global state/globalContext";
 
 const useStyles = makeStyles((theme) => ({
-  itemContainer: {},
   underline: {
     borderBottom: "2px solid",
     color: theme.palette.common.blue4,

@@ -11,7 +11,6 @@ import Paper from '@material-ui/core/Paper';
 import { Typography } from "@material-ui/core";
 import { useFormatter } from "../shared/utils/formatterHook";
 import ButtonSecondary from "../shared/UI components/ButtonSecondary"
-import { useTheme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   mainContainer:{
@@ -49,7 +48,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const Transactions = ({ coinSingleResponse })=> {
-  const theme = useTheme();
   const classes = useStyles()
   const [tickerListNumber, setTickerListNumber] = useState(6)
   const [tickerList, setTickerList] = useState([])

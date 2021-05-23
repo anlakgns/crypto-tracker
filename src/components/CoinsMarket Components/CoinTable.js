@@ -6,7 +6,7 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import Button from "@material-ui/core/Button";
 import TableCell from "@material-ui/core/TableCell";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -18,6 +18,9 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
 import BookmarkIcon from "@material-ui/icons/Bookmark";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Hidden from "@material-ui/core/Hidden";
 
 import { useSocketCC } from "../shared/apis & socket/socketCCHook";
 import HeadUnderline from "../shared/UI components/HeadUnderline";
@@ -29,7 +32,7 @@ import { Sparkline } from "./Sparkline";
 
 const useStyles = makeStyles((theme) => ({
   table: {
-    minWidth: 650,
+    minWidth: 350,
     border: "0.4em solid ",
     borderColor: theme.palette.primary.light,
   },
@@ -46,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
     borderLeftColor: theme.palette.primary.light,
     borderRightColor: theme.palette.primary.light,
     borderBottomColor: theme.palette.primary.light,
+    "@media (max-width:390px)": {
+      padding: "0.3em",
+    }
   },
   progressContainer: {
     width: "8em",
@@ -67,18 +73,34 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     marginLeft: "auto",
   },
+  progressLine: {
+    width: "100%",
+    padding: "5em",
+  },
 }));
 
 const CoinTable = () => {
+  console.log("rendered")
+
+  // Hooks 
+  const theme = useTheme();
   const classes = useStyles();
   const history = useHistory();
   const [livePrices, startSocketConnection, closeSocketConnection] =
-    useSocketCC();
+  useSocketCC();
   const { percentageFormatter, numberFormatter, currencyFormatter } =
-    useFormatter();
+  useFormatter();
   const { sourceAPI, coinListResponse } = useContext(GlobalContext);
+  const isSmDown = useMediaQuery(theme.breakpoints.down("sm"))
+  const isMdDown = useMediaQuery(theme.breakpoints.down("md"));
+  
+  // Responsive Varibles
+  const matches680Down = useMediaQuery('(max-width:680px)');
+  const matches530Down = useMediaQuery('(max-width:530px)');
+  const matches780Down = useMediaQuery('(max-width:780px)');
 
-  const [searchSubmitTerm, setSearchSubmitTerm] = useState();
+  // Component States
+  const [searchSubmitTerm, setSearchSubmitTerm] = useState("");
   const [livePriceSwitch, setLivePriceSwitch] = useState(false);
   const [bookmarks, setBookmarks] = useState([]);
   const [favoriteCheck, setFavoriteCheck] = useState(false);
@@ -91,6 +113,7 @@ const CoinTable = () => {
   const [rawRenderList, setRawRenderList] = useState([]);
   const [searchedRenderList, setSearchedRenderList] = useState([]);
   const [finalRenderList, setFinalRenderList] = useState([]);
+  const [feedbackMessage, setFeedBackMessage] = useState("");
 
   // Coin Cards Logic
   useEffect(() => {
@@ -110,14 +133,6 @@ const CoinTable = () => {
     setCardCoinsInfo(coinsForCards);
   }, [coinListResponse]);
 
-  // Search Logic
-  useEffect(() => {
-    const results = rawRenderList?.filter((coin) =>
-      coin.name.toLowerCase().includes(searchSubmitTerm)
-    );
-    setSearchedRenderList(results);
-  }, [searchSubmitTerm, rawRenderList]);
-
   // Render Logic
   useEffect(() => {
     const searchCandidates = favoriteCheck ? bookmarks : coinListResponse;
@@ -131,6 +146,15 @@ const CoinTable = () => {
     });
     setSocketList(listForSocket);
   }, [finalRenderList]);
+
+  // Search Logic
+  useEffect(() => {
+    const results = rawRenderList?.filter((coin) =>
+      coin.name.toLowerCase().includes(searchSubmitTerm)
+    );
+
+    setSearchedRenderList(results);
+  }, [searchSubmitTerm, rawRenderList]);
 
   // Sort & Render Logic
   useEffect(() => {
@@ -206,8 +230,27 @@ const CoinTable = () => {
         return renderList;
       }
     };
-    const listForSort =
-      searchedRenderList.length === 0 ? rawRenderList : searchedRenderList;
+
+    let listForSort;
+    // No found coin
+    if (searchedRenderList?.length === 0 && searchSubmitTerm?.length > 0) {
+      listForSort = [];
+      setFeedBackMessage("No coin found!");
+    }
+    // No favorites coin selected yet.
+    if (bookmarks?.length === 0 && favoriteCheck) {
+      listForSort = [];
+      setFeedBackMessage("No favorites coin selected yet");
+    }
+    
+    // Default, no searching
+    if (searchedRenderList?.length === 0 && searchSubmitTerm?.length === 0) {
+      listForSort = rawRenderList;
+    }
+    // Search with results
+    if (searchedRenderList?.length > 0) {
+      listForSort = searchedRenderList;
+    }
 
     const sortedList = sortHandler(listForSort, sortType);
 
@@ -219,6 +262,7 @@ const CoinTable = () => {
     favoriteCheck,
     bookmarks,
     searchedRenderList,
+    searchSubmitTerm,
   ]);
 
   // Live Price Switch Logic
@@ -264,32 +308,77 @@ const CoinTable = () => {
     history.push(`/currencies/${coinName}`);
   };
 
+  // Responsive Style
+  const fontSizeHeadline = () => {
+    // Order is important
+
+    if(matches530Down) {
+      return "1.4em"
+    }
+    if(matches780Down) {
+      return "1.5em"
+    }
+    if(isMdDown) {
+      return "1.6em"
+    }
+    return "1.8em"
+
+  }
+
+  // Pagination Count for different cases
+  const paginationCount = () => {
+    
+    let count = 10
+    // Searched : No found coin
+    if (searchedRenderList?.length === 0 && searchSubmitTerm?.length > 0) {
+      count = 0
+    }
+    // Searched :  with results
+    if (searchedRenderList?.length > 0 && searchSubmitTerm?.length > 0) {
+      count = Math.ceil((searchedRenderList.length / 10))
+    }
+    // Favorites 
+    if (favoriteCheck) {
+      count = Math.ceil(bookmarks.length / 10)
+    }
+    return count
+  }
+
   return (
     <>
       {/* Headline */}
       <HeadUnderline
         headline="Today's Cryptocurrency Prices by Market Cap"
-        long="20em"
+        long={isMdDown ? "25em" : "30em"}
+        marginBottom="2em"
+        fontSize={fontSizeHeadline()}
       />
-      {/* Cards */}
-      <Grid container justify="center" alignItems="center" spacing={2}>
-        {cardCoinsInfo?.map((coin) => {
-          return (
-            <Grid item md key={coin.id}>
-              <CoinCard
-                imgSource={coin.logo}
-                alt={coin.id}
-                coinName={coin.name}
-                coinCode={coin.id}
-                percentageChangeByDay={coin.priceChangeDayPerc}
-                price={currencyFormatter(coin.price)}
-                chartData={coin.sparkline}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
 
+      {/* Cards */}
+      <Hidden mdDown> 
+        <Grid 
+          container 
+          justify="center" 
+          alignItems="center" 
+          spacing={isSmDown ? 0 : 2}>
+          {cardCoinsInfo?.map((coin) => {
+            return (
+              <Grid item xs key={coin.id}>
+                <CoinCard
+                  imgSource={coin.logo}
+                  alt={coin.id}
+                  coinName={coin.name}
+                  coinCode={coin.code.toUpperCase()}
+                  percentageChangeByDay={coin.priceChangeDayPerc}
+                  price={currencyFormatter(coin.price)}
+                  chartData={coin.sparkline}
+                />
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Hidden>
+      
       {/* Functional Navitagiton */}
       <Grid
         container
@@ -310,9 +399,11 @@ const CoinTable = () => {
       {/* Table  */}
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
+          
+          {/* Table Head */}
           <TableHead>
             <TableRow>
-              <TableCell>
+              <TableCell align="center">
                 <Button
                   onClick={() =>
                     sortToggleHandler(
@@ -346,154 +437,216 @@ const CoinTable = () => {
                 </Button>
               </TableCell>
 
-              <TableCell align="center">
-                <Button
-                  onClick={() =>
-                    sortToggleHandler(
-                      "marketCapDescending",
-                      "marketCapAscending"
-                    )
-                  }
-                >
-                  Market Cap
-                </Button>
-              </TableCell>
-              <TableCell align="center">
-                <Button
-                  onClick={() =>
-                    sortToggleHandler(
-                      "changeVolumeDayDescending",
-                      "changeVolumeDayAscending"
-                    )
-                  }
-                >
-                  Volume(24h)
-                </Button>
-              </TableCell>
-              <TableCell align="center">
-                <Button
-                  onClick={() =>
-                    sortToggleHandler(
-                      "circulatingSupplyDescending",
-                      "circulatingSupplyAscending"
-                    )
-                  }
-                >
-                  Circulating Supply
-                </Button>
-              </TableCell>
-              <TableCell align="center">&nbsp; LAST 7 DAYS &nbsp;</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody onClick={tableClickHandler}>
-            {finalRenderList.map((coin) => (
-              <TableRow key={coin.id}>
-                <TableCell component="th">
-                  <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
+              <Hidden smDown>
+                <TableCell align="center">
+                  <Button
+                    onClick={() =>
+                      sortToggleHandler(
+                        "marketCapDescending",
+                        "marketCapAscending"
+                      )
+                    }
                   >
-                    <Grid item xs={4}>
-                      <Button
-                        onClick={(e) => {
-                          bookmarkHandler(coin);
-                          e.stopPropagation();
-                        }}
-                      >
-                        {bookmarks.find(
-                          (bookmark) => coin.id === bookmark.id
-                        ) === undefined ? (
-                          <BookmarkBorderIcon />
-                        ) : (
-                          <BookmarkIcon />
-                        )}
-                        {/* <BookmarkBorderIcon/>  */}
-                      </Button>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <img
-                        src={coin.logo}
-                        style={{ width: "2.5em" }}
-                        alt={coin.id}
-                      />
-                    </Grid>
-                    <Grid item xs={4}>
-                      <Typography align="left">{coin.name}</Typography>
-                    </Grid>
-                  </Grid>
+                    Market Cap
+                  </Button>
                 </TableCell>
-                <TableCell
-                  className={classes.price}
-                  align="center"
-                  style={{
-                    color: livePrices?.[coin.id]?.isPlus ? "green" : "black",
-                  }}
-                >
-                  {currencyFormatter(
-                    (livePriceSwitch &&
-                      livePrices?.[coin.code.toUpperCase()]?.price) ||
-                      coin.price
-                  )}
-                </TableCell>
-                <TableCell
-                  align="center"
-                  style={{
-                    color: coin.priceChangeDayPerc > 0 ? "green" : "red",
-                  }}
-                >
-                  <Grid container justify="center" alignItems="center">
-                    <Grid item>
-                      {percentageFormatter(coin.priceChangeDayPerc, sourceAPI)}
-                    </Grid>
-                    <Grid item style={{ marginBottom: "-0.3em" }}>
-                      {coin.priceChangeDayPerc > 0 ? (
-                        <ArrowDropUpIcon />
-                      ) : (
-                        <ArrowDropDownIcon />
-                      )}
-                    </Grid>
-                  </Grid>
+              </Hidden>
+                <TableCell 
+                align="center"
+                style={{display: matches680Down ? "none" : "table-cell"}}>
+                  <Button
+                    onClick={() =>
+                      sortToggleHandler(
+                        "changeVolumeDayDescending",
+                        "changeVolumeDayAscending"
+                      )
+                    }
+                  >
+                    Volume(24h)
+                  </Button>
                 </TableCell>
 
+              <Hidden mdDown>
                 <TableCell align="center">
-                  {currencyFormatter(coin.marketCap, 13)}
-                </TableCell>
-                <TableCell align="center">
-                  {currencyFormatter(coin.marketCapChangeDay, 10)}
-                </TableCell>
-                <TableCell align="center">
-                  <Grid
-                    container
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
+                  <Button
+                    onClick={() =>
+                      sortToggleHandler(
+                        "circulatingSupplyDescending",
+                        "circulatingSupplyAscending"
+                      )
+                    }
                   >
-                    <Grid item xs className={classes.progressContainer}>
-                      <LinearProgress
-                        color="primary"
-                        className={classes.progress}
-                        variant="determinate"
-                        value={Number(
-                          (coin.circulatingSupply / coin.maxSupply) * 100
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs>
-                      <span>{numberFormatter(coin.circulatingSupply)}</span>
-                    </Grid>
-                  </Grid>
+                    Circulating Supply
+                  </Button>
                 </TableCell>
-                <TableCell align="center">
-                  <Sparkline chartData={coin.sparkline} />
+              </Hidden>
+              <TableCell 
+                align="center"
+                style={{display: matches530Down ? "none" : "table-cell"}}>
+                
+                &nbsp; LAST 7 DAYS &nbsp;
+              </TableCell>
+            </TableRow>
+          </TableHead>
+
+          {/* Table Body */}
+          <TableBody onClick={tableClickHandler}>
+            {finalRenderList.length > 0 ? (
+              finalRenderList.map((coin) => (
+                <TableRow key={coin.id} style={{ cursor: "pointer" }}>
+                  
+                  {/* Bookmark & Logo Cell */}
+                  <TableCell>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <Grid item container justify="center" xs={4}>
+                        <Button
+                          onClick={(e) => {
+                            bookmarkHandler(coin);
+                            e.stopPropagation();
+                          }}
+                        >
+                          {bookmarks.find(
+                            (bookmark) => coin.id === bookmark.id
+                          ) === undefined ? (
+                            <BookmarkBorderIcon />
+                          ) : (
+                            <BookmarkIcon />
+                          )}
+                        </Button>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <img
+                          src={coin.logo}
+                          style={{ width: "2.5em" }}
+                          alt={coin.id}
+                        />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Typography align="left">{coin.name}</Typography>
+                      </Grid>
+                    </Grid>
+                  </TableCell>
+                  
+                  {/* Price Cell */}
+                  <TableCell
+                    className={classes.price}
+                    align="center"
+                    style={{
+                      color: livePrices?.[coin.id]?.isPlus
+                        ? "green"
+                        : "black",
+                    }}
+                  >
+                    {currencyFormatter(
+                      (livePriceSwitch &&
+                        livePrices?.[coin.code.toUpperCase()]?.price) ||
+                        coin.price
+                    )}
+                  </TableCell>
+                  
+                  {/* Price Change Cell */}
+                  <TableCell
+                    align="center"
+                    style={{
+                      color: coin.priceChangeDayPerc > 0 ? "green" : "red",
+
+                    }}
+                  >
+                    <Grid 
+                      container 
+                      justify="center" 
+                      alignItems="center"
+                      direction = {matches780Down ? "column" : "row"}>
+                      <Grid item>
+                        {percentageFormatter(
+                          coin.priceChangeDayPerc,
+                          sourceAPI
+                        )}
+                      </Grid>
+                      <Grid item style={{ marginBottom: "-0.3em" }}>
+                        {coin.priceChangeDayPerc > 0 ? (
+                          <ArrowDropUpIcon />
+                        ) : (
+                          <ArrowDropDownIcon />
+                        )}
+                      </Grid>
+                    </Grid>
+                  </TableCell>
+
+                  {/* Market Cap Cell */}
+                  <Hidden smDown>
+                    <TableCell align="center">
+                      {currencyFormatter(coin.marketCap, 13)}
+                    </TableCell>
+                  </Hidden>
+                  
+                  {/* MarketCap Volume Change Cell */}
+                  <TableCell 
+                    align="center"
+                    style={{display: matches680Down ? "none" : "table-cell"}} >
+                    {currencyFormatter(coin.marketCapChangeDay, 10)}
+                  </TableCell>
+                  
+                  {/* Supply Progress Cell */}
+                  <Hidden mdDown>
+                    <TableCell align="center">
+                      <Grid
+                        container
+                        direction="column"
+                        justify="center"
+                        alignItems="center"
+                      >
+                        <Grid item xs className={classes.progressContainer}>
+                          <LinearProgress
+                            color="primary"
+                            className={classes.progress}
+                            variant="determinate"
+                            value={Number(
+                              (coin.circulatingSupply / coin.maxSupply) * 100
+                            )}
+                          />
+                        </Grid>
+                        <Grid item xs>
+                          <span>{numberFormatter(coin.circulatingSupply)}</span>
+                        </Grid>
+                      </Grid>
+                    </TableCell>
+                  </Hidden>
+                  
+                  {/* Sparkline Cell */}
+                  <TableCell 
+                    align="center"
+                    style={{display: matches530Down ? "none" : "table-cell"}}>
+                    <Sparkline chartData={coin.sparkline} />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              // Feedback Option for spinner, no found vs..
+              <TableRow>
+                <TableCell
+                  colSpan={7}
+                  align="center"
+                  className={classes.progressLine}
+                >
+                  {feedbackMessage ? (
+                    feedbackMessage
+                  ) : (
+                    <CircularProgress color="secondary" />
+                  )}
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
+        
         <Pagination
-          count={10}
+          count={paginationCount()}
           color="primary"
           onChange={paginationHandler}
           classes={{ ul: classes.pagination }}

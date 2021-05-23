@@ -1,33 +1,41 @@
-import {makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
+import {makeStyles, withStyles } from '@material-ui/core/styles';
+import InputBase from '@material-ui/core/InputBase';
+import FormControl from '@material-ui/core/FormControl';
 
 const useStyles = makeStyles(theme => ({
-  textField:{
-    background: theme.palette.common.textPurple,
-    width: "100%",
-    borderRadius:"30px"
-  },
-  textResult:{
-    paddingTop:"10px",
-    paddingBottom:"10px",
-    height:"30px",
-    color: "white",
-  },
   
 }))
 
-export const ResultBox= ({value, width, label, height})=> {
+export const ResultBox= ({value, height})=> {
   const classes = useStyles();
 
+  const BootstrapInput = withStyles((theme) => ({
+    input: {
+      borderRadius: 20,
+      position: 'relative',
+      backgroundColor: theme.palette.secondary.main,
+      color: theme.palette.common.white,
+      border: '1px solid #ced4da',
+      fontSize: 16,
+      height: height || "1.5em", 
+      padding: '0.7em',
+      transition: theme.transitions.create(['border-color', 'box-shadow']),
+      '&:focus': {
+        borderRadius: 20,
+        borderColor: '#80bdff',
+        boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+      },
+    },
+  }))(InputBase);
+
   return (
-    <TextField  
-      variant="filled"   
-      className={classes.textField} style={{width : width || "100%", height: height || "3em" }}
-      InputProps={{disableUnderline: true, classes: {input : classes.textResult}}}             
-      value={value}
-      label={label ? "Total Spent": ""}
-      >
-      {value} 
-    </TextField>
-  )
+    <div>
+      <FormControl className={classes.margin}>
+        <BootstrapInput 
+          value={value}
+          readOnly 
+           />
+      </FormControl>
+    </div>
+  );
 }

@@ -1,3 +1,4 @@
+import {forwardRef} from "react"
 import { makeStyles,fade } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
@@ -38,7 +39,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-export const SearchBar = ({onChange, onSubmit})=> {
+export const SearchBar = forwardRef((props, ref) => {
+  const {onSubmit} = props
   const classes = useStyles()
 
   return (
@@ -48,7 +50,7 @@ export const SearchBar = ({onChange, onSubmit})=> {
               </div>
               <InputBase
                 placeholder="Search…"
-                onChange= {onChange}
+                inputRef={ref}
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
@@ -56,6 +58,6 @@ export const SearchBar = ({onChange, onSubmit})=> {
               />
   </form>
   )
-}
+})
 
 

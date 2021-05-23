@@ -30,12 +30,11 @@ export const useFormatter = ()=> {
   // Coin Response API formatter
   const responseFormatter =useCallback((response, source) => {
     const formattedResponse = response.map((coin) => {
-      console.log(response)
       if(source === "coinGecko") {
         return {
           name: coin.name,
           id: coin.id,
-          code: coin.symbol,
+          code: coin.symbol.toUpperCase(),
           price: coin.current_price,
           priceChangeDayPerc : coin.price_change_percentage_24h, 
           priceChangeWeekPerc: "not available in this api",

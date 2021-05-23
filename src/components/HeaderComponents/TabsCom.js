@@ -44,14 +44,8 @@ const TabsCom = () => {
 
   useEffect(()=>{
     switch(window.location.pathname) {
-      case "/" :
-        setTabValue(0)
-        break;
       case "/features" :
         setTabValue(1)
-        break;
-      case "/usecases" :
-      setTabValue(2)
         break;
       case "/tokensale" :
         setTabValue(3)
@@ -66,6 +60,7 @@ const TabsCom = () => {
         setTabValue(6)
         break;
       default: 
+        setTabValue(1)
         break;
     }
 

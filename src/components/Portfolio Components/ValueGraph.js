@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: "0.5em",
     marginLeft: "0.4em",
   },
-
   tabsTimeRoot: {
     minHeight: "0",
   },
@@ -141,7 +140,7 @@ export const ValueGraph = () => {
   const [daysToFetch, setDaysToFetch] = useState(1);
   const [chartSelectType, setChartSelectType] = useState("All Assets");
   
-  console.log(selectedCoinForGraph);
+  console.log(selectedCoinForGraph, chartSelectType);
   // Dynamic One Coin Data Fetching
   useEffect(() => {
     if (selectedCoinForGraph !== "All Assets") {

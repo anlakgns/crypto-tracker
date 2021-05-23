@@ -90,7 +90,7 @@ export const MainArea = ({ coinSingleResponse })=> {
   const [chartData, setChartData] = useState([]);
   const [chartDataType, setChartDataType] = useState(0);
   const [chartTimeType, setChartTimeType] = useState(1);
-
+  console.log(setChartDataType, setChartTimeType )
 
 
   // Data Fetching

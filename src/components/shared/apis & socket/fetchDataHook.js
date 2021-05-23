@@ -18,6 +18,7 @@ export const useFetchData = () => {
 
   const fetchCoinList = useCallback(
     async (source) => {
+
       if (source === NOMICS) {
         const response = await nomicsAPI.get("/currencies/ticker");
         const formatted = responseFormatter(response.data, source);
@@ -31,7 +32,6 @@ export const useFetchData = () => {
     },
     [responseFormatter]
   );
-
 
   const fetchHistoricOneData = useCallback(
     async (coinName, currency, days) => {
@@ -93,43 +93,40 @@ export const useFetchData = () => {
 
     },[])
 
- 
+  const fetchPerformanceData = useCallback(
+    (coinArray, currency, days) => {
+      
+      axios.all(coinArray.map(coin => {
+        return coinGeckoAPI.get(`/${coin}/market_chart`, {
+          params: {
+            vs_currency: currency,
+            days: days
+          }
+        });
+      }))
+      .then(axios.spread((...responses) => {
+        setPerformanceList(responses)
 
-    const fetchPerformanceData = useCallback(
-      (coinArray, currency, days) => {
-        
-        axios.all(coinArray.map(coin => {
-          return coinGeckoAPI.get(`/${coin}/market_chart`, {
-            params: {
-              vs_currency: currency,
-              days: days
-            }
-          });
-        }))
-        .then(axios.spread((...responses) => {
-          setPerformanceList(responses)
+      }))
+  
+    },[])
 
-        }))
-    
-      }, [])
-
-
-    const fetchCoinSingle = useCallback(
-      async (coinName) => {
-          const response =  await coinGeckoAPI.get(`https://api.coingecko.com/api/v3/coins/${coinName}?
-          `, {
-            params: {
-              localization: false,
-              tickers:true,
-              market_data:true,
-              community_data:true,
-              developer_data:true,
-              sparkline:true
-            }
-          });
-          setCoinSingleResponse(response)
-      }, []
-    )
+  const fetchCoinSingle = useCallback(
+    async (coinName) => {
+        const response =  await coinGeckoAPI.get(`https://api.coingecko.com/api/v3/coins/${coinName}?
+        `, {
+          params: {
+            localization: false,
+            tickers:true,
+            market_data:true,
+            community_data:true,
+            developer_data:true,
+            sparkline:true
+          }
+        });
+        setCoinSingleResponse(response)
+    }, []
+  )
 
   return { 
     coinListResponse, 
@@ -143,6 +140,5 @@ export const useFetchData = () => {
     fetchPerformanceData,
     fetchCoinSingle,
     coinSingleResponse,
-
   };
 };

@@ -99,7 +99,6 @@ const reducerFn = (state, action) => {
       return state
     }
   }
-
 }
 
 export const useAuth = () => {

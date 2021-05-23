@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 
   },
   linkContainer: {
-    padding: "4em",
+    padding: "3em",
     color: theme.palette.common.textPurple,
     lineHeight: "1.4em",
  
@@ -72,7 +72,7 @@ const Footer = ()=> {
   return (
     <footer className={classes.footerContainer}>
       <Grid container direciton="row" justify="center" >
-        <Grid item lg={3} md={4} sm={12} xs={12}  className={classes.mainItem} >
+        <Grid item container lg={3} md={4} sm={12} xs={12}  className={classes.mainItem} >
           <Grid 
             container 
             direction="column" 

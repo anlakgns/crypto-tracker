@@ -152,6 +152,8 @@ export const ControlBar = (props)=> {
             <Tab classes={{root: classes.tabRoot}} className={classes.tab} label="Profit" />
           </Tabs>
         </Grid>
+
+        {/* Portfolio */}
         <PortfolioModal 
           openPortfolioModal={openPortfolioModal} 
           setPortfolioModal={setPortfolioModal} 
@@ -160,6 +162,8 @@ export const ControlBar = (props)=> {
           selectedCoin={selectedCoin}
           setSelectedCoin={setSelectedCoin}
         />
+
+        {/* Bottom Line */}
         <div className={classes.bottomLine}/>    
     </>
   )

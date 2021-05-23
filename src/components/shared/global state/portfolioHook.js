@@ -14,13 +14,11 @@ export const usePortfolio = () => {
   const [selectedCoinForGraph, setSelectedCoinForGraph] = useState("All Assets")
 
  
- 
   // Initial Data Fetching 
    useEffect( ()=> {
       console.log("initial fething rendered")
       fetchCoinList(sourceAPI);
-  }, [fetchCoinList, sourceAPI, portfolioBuyOrderList])
-
+  }, [fetchCoinList, sourceAPI])
 
   // Total Spent 
   useEffect(()=> {
@@ -31,8 +29,6 @@ export const usePortfolio = () => {
 
   // Total Spent by Coin Detail
   useEffect(()=> {
-    console.log("total spent by coin detailed rendered")
-
     const list = [];
     portfolioBuyOrderList.forEach(coin => {
       const finder = list.findIndex(c => c.name === coin.name)
@@ -45,7 +41,6 @@ export const usePortfolio = () => {
         priceBought: +coin.priceBought,
         quantity: coin.quantity, 
         allInfo: coin.allInfo
-
       })
       
       // Existing Coin addition
@@ -65,7 +60,6 @@ export const usePortfolio = () => {
 
   // Delete coin from portfolio 
   useEffect(()=> {
-
     if(coinToDelete) {
       const rest = portfolioBuyOrderList.filter(coin => coinToDelete !== coin.name )
       setPortfolioBuyOrderList(rest)

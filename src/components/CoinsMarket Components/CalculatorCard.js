@@ -10,11 +10,10 @@ import { CoinListButton } from "../shared/UI components/CoinListButton";
 import { CurrencyListButton } from "../shared/UI components/CurrencyListButton";
 import { QuantityInput } from "../shared/UI components/QuantityInput";
 import { ResultBox } from "../shared/UI components/ResultBox";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const useStyles = makeStyles((theme) => ({
   calcContainer: {
-    height: "20em",
-    width: "30em",
     fontSize: "1em",
     // background: "linear-gradient(20deg, rgba(87,95,153,1) 0%, rgba(255,147,213,1) 100%)",
     backgroundColor: theme.palette.primary.light,
@@ -29,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.main,
     backgroundColor: "white",
     borderRadius: "2em",
-    width: "20.3em",
     marginTop: "2em",
     marginBottom: "1em",
   },
@@ -89,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
   calcPriceInfo: {
     width: "80%",
     margin: "auto",
-    color: theme.palette.primary.main,
+    color: theme.palette.common.white,
   },
 }));
 
@@ -102,18 +100,36 @@ export const CalculatorCard = ({ coinListResponse }) => {
   const [renderCurrencyList, setRenderCurrencyList] = useState([]);
   const [calcResult, setCalcResult] = useState();
   const [coinQuantity, setCoinQuantity] = useState("");
+  const [isValid, setIsValid] = useState(false);
+
+
+  const matches550Down = useMediaQuery('(max-width:550px)');
+
+  // Validation for numbers
+  useEffect(() => {
+    if (+coinQuantity >= 0 || coinQuantity === "") {
+      setIsValid(true);
+    } else {
+      setCalcResult("Positive Numbers Only ");
+      setIsValid(false);
+    }
+  }, [coinQuantity, isValid]);
 
   // Calculators
   const calculatorForFiat = useCallback(() => {
     const result =
       coinQuantity * selectedCoin.price * selectedCurrency.currencyRate;
-    setCalcResult(currencyFormatter(result, selectedCurrency.currencyCode));
-  }, [coinQuantity, selectedCoin, selectedCurrency]);
+    if (isValid) {
+      setCalcResult(currencyFormatter(result, selectedCurrency.currencyCode));
+    }
+  }, [coinQuantity, selectedCoin, selectedCurrency, isValid]);
 
   const calculatorForCrypto = useCallback(() => {
     const result = (coinQuantity * selectedCoin.price) / selectedCoin2.price;
-    setCalcResult(result.toFixed(2) + " " + selectedCoin2.id);
-  }, [coinQuantity, selectedCoin, selectedCoin2]);
+    if (isValid) {
+      setCalcResult(result.toFixed(2) + " " + selectedCoin2.code);
+    }
+  }, [coinQuantity, selectedCoin, selectedCoin2, isValid]);
 
   // Data Fetching and Editting
   useEffect(() => {
@@ -187,19 +203,27 @@ export const CalculatorCard = ({ coinListResponse }) => {
     setTabValue(newValue);
   };
   const handleChangeCrypto = (event) => {
-    setSelectedCoin(event.target.value);
+    const selectedFind = coinListResponse.find(
+      (c) => c.name === event.target.value
+    );
+    setSelectedCoin(selectedFind);
   };
   const handleChangeCrypto2 = (event) => {
-    setSelectedCoin2(event.target.value);
+    const selectedFind = coinListResponse.find(
+      (c) => c.name === event.target.value
+    );
+
+    setSelectedCoin2(selectedFind);
   };
   const handleChangeCurrency = (event) => {
     setSelectedCurrency(event.target.value);
   };
   const coinQuantityHandler = (event) => {
+    setCalcResult("");
     setCoinQuantity(event.target.value);
   };
 
-  // Partial JSX
+  // Buttons JSX
   const fiatCryptoSwitch =
     tabValue === 1 ? (
       <CurrencyListButton
@@ -219,7 +243,13 @@ export const CalculatorCard = ({ coinListResponse }) => {
 
   return (
     <>
-      <Grid container className={classes.calcContainer}>
+      <Grid 
+        container 
+        className={classes.calcContainer}
+        style={{
+          height: matches550Down ? "30em" : "20em",
+          width:  matches550Down ? "20em" : "30em",
+        }}>
         
         {/* Calculator Switch Fiat & Crypto */}
         <Grid item container justify="center">
@@ -228,22 +258,31 @@ export const CalculatorCard = ({ coinListResponse }) => {
             value={tabValue}
             onChange={tabHandleChange}
             className={classes.tabContainer}
-            classes={{ indicator: classes.indicator }}
+            classes={{ 
+              indicator: classes.indicator }}
+            style={{
+              width: matches550Down ? "15.3em" : "20.3em",
+            }}
             TabIndicatorProps={{
               style: {
-                width: "160px",
+                width: matches550Down ? "145px" : "160px",
               },
             }}
           >
             <Tab value={0} label="Crypto to Fiat" />
-            <Tab value={1} label="Crypto to Crypto" />
+            <Tab value={1}  label="Crypto to Crypto" />
           </Tabs>
         </Grid>
 
         {/* Mini Form for Converting */}
-        <Grid item container justify="space-evenly">
+        <Grid 
+          item container 
+          justify="space-evenly" 
+          direction={matches550Down ? "column" : "row"}
+          spacing={matches550Down ? 2 : 0}>
+          
           {/** Left **/}
-          <Grid item container direction="column" alignItems="center" md>
+          <Grid item container direction="column" alignItems="center" xs>
             {/***  Left Coin List ***/}
             <Grid item>
               <CoinListButton
@@ -264,7 +303,7 @@ export const CalculatorCard = ({ coinListResponse }) => {
           </Grid>
 
           {/** Right **/}
-          <Grid item container alignItems="center" direction="column" md>
+          <Grid item container alignItems="center" direction="column" xs>
             {/*** Fiat&Crypto List ***/}
             <Grid item>{fiatCryptoSwitch}</Grid>
 
@@ -273,13 +312,14 @@ export const CalculatorCard = ({ coinListResponse }) => {
               <ResultBox value={calcResult} />
             </Grid>
           </Grid>
+        
         </Grid>
 
         {/* Coin Info Text */}
         <Grid item xs={12} className={classes.calcPriceInfoContainer}>
           {selectedCoin ? (
             <Typography className={classes.calcPriceInfo} align="center">
-              1 {selectedCoin.name} ({selectedCoin.id}) ={" "}
+              1 {selectedCoin.name} ({selectedCoin.code.toUpperCase()}) ={" "}
               {currencyFormatter(selectedCoin.price)}
             </Typography>
           ) : null}

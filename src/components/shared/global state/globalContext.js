@@ -1,15 +1,12 @@
-import {createContext} from "react"
-import {useAuth} from "./authHook"
-import {usePortfolio} from "./portfolioHook"
-import {useFetchData} from "../apis & socket/fetchDataHook"
+import { createContext } from "react";
+import { useAuth } from "./authHook";
+import { usePortfolio } from "./portfolioHook";
+import { useFetchData } from "../apis & socket/fetchDataHook";
 
-export const GlobalContext = createContext()
+export const GlobalContext = createContext();
 
 export const GlobalProvider = (props) => {
-  const { 
-    setSourceAPI, 
-    sourceAPI  
-  } = useFetchData()
+  const { setSourceAPI, sourceAPI } = useFetchData();
 
   const [
     handleLogin,
@@ -18,26 +15,25 @@ export const GlobalProvider = (props) => {
     handleSignUp,
     state,
     dispatch,
-    ACTIONS
+    ACTIONS,
   ] = useAuth();
 
   const {
-    portfolioBuyOrderList, 
-    setPortfolioBuyOrderList, 
-    totalSpent, 
-    totalSpentByCoin, 
-    setCoinToDelete, 
+    portfolioBuyOrderList,
+    setPortfolioBuyOrderList,
+    totalSpent,
+    totalSpentByCoin,
+    setCoinToDelete,
     portfolioList,
     coinListResponse,
     totalProfit,
     selectedCoinForGraph,
-    setSelectedCoinForGraph
-     } = usePortfolio()
+    setSelectedCoinForGraph,
+  } = usePortfolio();
 
-
-
-    return (
-      <GlobalContext.Provider value={{
+  return (
+    <GlobalContext.Provider
+      value={{
         handleLogin,
         handleLogout,
         handleVerify,
@@ -50,15 +46,16 @@ export const GlobalProvider = (props) => {
         totalSpent,
         totalSpentByCoin,
         setCoinToDelete,
-        sourceAPI, 
+        sourceAPI,
         setSourceAPI,
         portfolioList,
         coinListResponse,
         totalProfit,
         selectedCoinForGraph,
-        setSelectedCoinForGraph
-      }}>
-        {props.children}
-      </GlobalContext.Provider>
-    )
-}
+        setSelectedCoinForGraph,
+      }}
+    >
+      {props.children}
+    </GlobalContext.Provider>
+  );
+};
