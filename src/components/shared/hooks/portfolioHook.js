@@ -3,7 +3,7 @@ import {useFetchData} from "./fetchDataHook"
 
 
 export const usePortfolio = () => {
-  const { fetchCoinList, sourceAPI } = useFetchData();
+  const { fetchCoinList } = useFetchData();
 
   const [portfolioBuyOrderList, setPortfolioBuyOrderList] = useState([]) 
   const [totalSpent, setTotalSpent] = useState()

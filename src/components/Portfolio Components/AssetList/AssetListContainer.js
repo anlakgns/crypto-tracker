@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
     borderTopRightRadius:"0.6em",
     borderTopLeftRadius:"0.6em",
     backgroundColor: theme.palette.common.blue2,
+    minHeight:"6vh",
   },
   headline:{
     fontSize:"0.9em"

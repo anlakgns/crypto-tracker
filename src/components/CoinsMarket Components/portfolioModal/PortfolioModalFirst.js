@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 
 import { Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -67,8 +67,7 @@ const useStyles = makeStyles((theme) => ({
 export const PortfolioModalFirst = ({ listItemHandler, handleClose }) => {
   const { coinListResponse } = useContext(PortfolioContext);
   const classes = useStyles();
-
-  const [searchChangeTerm, setSearchChangeTerm] = useState();
+  const searchRef = useRef()
   const [searchSubmitTerm, setSearchSubmitTerm] = useState("");
   const [renderList, setRenderList] = useState([]);
   const matches450Down = useMediaQuery('(max-width:450px)');
@@ -111,13 +110,10 @@ export const PortfolioModalFirst = ({ listItemHandler, handleClose }) => {
   }, [coinListResponse, searchSubmitTerm]);
 
   // DOM Handlers
-  const searchBoxChangeHandler = (e) => {
-    setSearchChangeTerm(e.target.value);
-  };
   const searchBoxSubmitHandler = (e) => {
     e.preventDefault();
-    const lowerChanger = searchChangeTerm.toLowerCase();
-    setSearchSubmitTerm(lowerChanger);
+    const query = searchRef.current.value.toLowerCase()
+    setSearchSubmitTerm(query);
   };
 
   return (
@@ -149,7 +145,7 @@ export const PortfolioModalFirst = ({ listItemHandler, handleClose }) => {
       {/* Search Bar */}
       <Grid item container className={classes.searchBarContainer}>
         <SearchBar
-          onChange={searchBoxChangeHandler}
+          ref={searchRef}
           onSubmit={searchBoxSubmitHandler}
         />
       </Grid>

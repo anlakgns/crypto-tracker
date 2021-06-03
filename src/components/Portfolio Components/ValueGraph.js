@@ -12,7 +12,7 @@ import { useFetchData } from "../shared/hooks/fetchDataHook";
 import { useFormatter } from "../shared/utils/formatterHook";
 import { PortfolioContext } from "../shared/contexts/PortfolioContext";
 
-import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "2.5em",
     minHeight: "3.8em",
     marginBottom: "1em",
+    [theme.breakpoints.up("xl")]: {
+      fontSize:"1.2em"
+    }
   },
   headline: {
     fontSize: "0.80em",
@@ -509,38 +512,40 @@ export const ValueGraph = () => {
         </Grid>
 
         {/* Line Chart */}
-        <Grid item md>
-          <LineChart
-            width={800}
-            height={220}
-            data={chartData}
-            margin={{ top: 30, right: 30, left: 50, bottom: 0 }}
-          >
-            <XAxis
-              hide={portfolioList.length === 0 ? true : false}
-              dataKey="xData"
-              type="category"
-              tickCount="4"
-              interval={40}
-              stroke={theme.palette.common.textPurple}
-            />
-            <YAxis
-              hide={portfolioList.length === 0 ? true : false}
-              dataKey="yData"
-              type="number"
-              tickCount="3"
-              domain={["auto", "auto"]}
-              stroke={theme.palette.common.textPurple}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Line
-              type="monotone"
-              dataKey="yData"
-              stroke={theme.palette.secondary.main}
-              dot={false}
-              name="yData"
-            />
-          </LineChart>
+        <Grid 
+          item container xs 
+          justify="center" 
+          alignItems="center" >
+          <ResponsiveContainer height={315} width="90%">
+            <LineChart
+              data={chartData}
+            >
+              <XAxis
+                hide={portfolioList.length === 0 ? true : false}
+                dataKey="xData"
+                type="category"
+                tickCount="4"
+                interval={40}
+                stroke={theme.palette.common.textPurple}
+              />
+              <YAxis
+                hide={portfolioList.length === 0 ? true : false}
+                dataKey="yData"
+                type="number"
+                tickCount="3"
+                domain={["auto", "auto"]}
+                stroke={theme.palette.common.textPurple}
+              />
+              <Tooltip content={<CustomTooltip />} />
+              <Line
+                type="monotone"
+                dataKey="yData"
+                stroke={theme.palette.secondary.main}
+                dot={false}
+                name="yData"
+              />
+            </LineChart>
+          </ResponsiveContainer>
         </Grid>
       
       </Grid>

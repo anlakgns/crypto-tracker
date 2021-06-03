@@ -27,8 +27,6 @@ const PortfolioPage = () => {
         className={classes.mainGrid}
       >
 
-      
-          
         {/* Left */}
         <Grid item container xs={9}>
           

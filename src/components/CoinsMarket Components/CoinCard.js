@@ -4,6 +4,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Sparkline } from "./Sparkline";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   cardContainer: {
@@ -59,6 +60,7 @@ export const CoinCard = (props) => {
   const theme = useTheme()
   const classes = useStyles();
   const isMdDown = useMediaQuery(theme.breakpoints.down("md"));
+  const history = useHistory();
 
   const {
     imgSource,
@@ -70,6 +72,10 @@ export const CoinCard = (props) => {
     chartData,
   } = props;
 
+  const cardHandler = (coinName) => {
+    console.log(coinName)
+    history.push(`/currencies/${coinName.toLowerCase()}`);
+  } 
 
   const fontSizePrice = (coinName) => {
     if(isMdDown) {
@@ -91,6 +97,7 @@ export const CoinCard = (props) => {
           alignItems="center"
           justify="space-between"
           className={classes.logoGraphContainer}
+          onClick={() => cardHandler(coinName)}
         >
           {/* Logo */}
           <Grid item xs>

@@ -237,7 +237,7 @@ export const FeatureBar = (props) => {
             },
           }}
         >
-          {/* Portfolio DotMenu Item */}
+          {/** Portfolio DotMenu Item **/}
           <MenuItem onClick={createPortfolioHandler}>
             Create a Portfolio
           </MenuItem>

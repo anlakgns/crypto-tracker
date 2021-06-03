@@ -11,6 +11,12 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { PortfolioContext } from "../../shared/contexts/PortfolioContext";
 
 const useStyles = makeStyles((theme) => ({
+  itemContainer: {
+    fontSize:"1em",
+    [theme.breakpoints.up("xl")]: {
+      fontSize:"1.2em"
+    }
+  },
   underline: {
     borderBottom: "2px solid",
     color: theme.palette.common.blue4,

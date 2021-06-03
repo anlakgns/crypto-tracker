@@ -188,6 +188,7 @@ export const PortfolioModalSecond = (props) => {
     return marginLeft;
   };
 
+  console.log(selectedCoin)
   return (
     <Grid 
       container 

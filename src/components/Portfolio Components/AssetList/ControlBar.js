@@ -20,6 +20,9 @@ const useStyles = makeStyles(theme => ({
     paddingLeft:"1em",
     paddingRight:"1em",
     paddingBottom:"0.5em",
+    [theme.breakpoints.up("xl")]: {
+      fontSize:"1.2em"
+    }
   },
   btnIcon:{
     color: theme.palette.common.white
@@ -40,12 +43,18 @@ const useStyles = makeStyles(theme => ({
     minWidth: "100px",
     padding:"0",
     textTransform:"none",
-    minHeight:"0"
+    minHeight:"0",
+    [theme.breakpoints.up("xl")]: {
+      minWidth: "150px",
+    }
   },
   tabsRoot:{
     padding:"0",
     minHeight:"0",
     height:"1.5em",
+    [theme.breakpoints.up("xl")]: {
+      fontSize:"1.2em"
+    }
   },
   iconGridContainer:{
     display:"flex",

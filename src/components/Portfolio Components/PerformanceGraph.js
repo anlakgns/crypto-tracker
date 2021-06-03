@@ -17,6 +17,7 @@ import {
   Tooltip,
   Legend,
   ReferenceLine,
+  ResponsiveContainer
 } from "recharts";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "2.5em",
     minHeight: "3.8em",
     marginBottom: "1em",
+    [theme.breakpoints.up("xl")]: {
+      fontSize:"1.2em"
+    }
   },
   headline: {
     fontSize: "0.80em",
@@ -262,33 +266,32 @@ export const PerformanceGraph = () => {
  
         {/* Chart */}
         <Grid item container justify="center" alignItems="center">
-          <BarChart
-            width={800}
-            height={200}
-            data={renderData}
-            margin={{
-              top: 40,
-              right: 0,
-              left: 0,
-              bottom: 0,
-            }}
-          >
-            <XAxis
-              hide
-              dataKey="name"
-              stroke={theme.palette.common.textPurple}
-            />
-            <YAxis
-              hide={portfolioList.length === 0 ? true : false}
-              stroke={theme.palette.common.textPurple} />
- 
-            <Tooltip content={<CustomTooltip />} />
-            <Legend align="right" iconType="circus" height={200} />
-            <ReferenceLine y={0} stroke="#000" />
-            {portoflioNameList.map((item, i) => {
-              return <Bar dataKey={item} fill={COLORS[i]} />;
-            })}
-          </BarChart>
+          <ResponsiveContainer height={300} width="90%">
+            <BarChart
+              data={renderData}
+              margin={{
+                top: 40,
+                right: 0,
+                left: 0,
+                bottom: 0,
+              }}
+            >
+              <XAxis
+                hide
+                dataKey="name"
+                stroke={theme.palette.common.textPurple}
+              />
+              <YAxis
+                hide={portfolioList.length === 0 ? true : false}
+                stroke={theme.palette.common.textPurple} />
+   
+              <Tooltip content={<CustomTooltip />} />
+              <ReferenceLine y={0} stroke="#000" />
+              {portoflioNameList.map((item, i) => {
+                return <Bar dataKey={item} fill={COLORS[i]} />;
+              })}
+            </BarChart>
+          </ResponsiveContainer>
         </Grid>
     
       </Grid>

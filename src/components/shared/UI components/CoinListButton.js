@@ -50,19 +50,19 @@ export const CoinListButton = ({ onChange, selected, width, height }) => {
   const BootstrapInput = withStyles((theme) => ({
     input: {
       borderRadius: 20,
-      position: 'relative',
+      position: "relative",
       backgroundColor: theme.palette.common.textPurple,
-      color:theme.palette.common.white,
-      border: '1px solid',
+      color: theme.palette.common.white,
+      border: "1px solid",
       borderColor: theme.palette.common.textPurple,
       fontSize: 16,
       height: height || "1.5em",
-      padding: '0.7em',
-      transition: theme.transitions.create(['border-color', 'box-shadow']),
-      '&:focus': {
+      padding: "0.7em",
+      transition: theme.transitions.create(["border-color", "box-shadow"]),
+      "&:focus": {
         borderRadius: 20,
         borderColor: theme.palette.secondary.main,
-        boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+        boxShadow: "0 0 0 0.2rem rgba(0,123,255,.25)",
       },
     },
   }))(InputBase);
@@ -73,7 +73,7 @@ export const CoinListButton = ({ onChange, selected, width, height }) => {
       style={{ width: width || "100%" }} // Customizable width
     >
       <Select
-        value={selected?.name || ""}
+        value={selected}
         onChange={onChange}
         input={<BootstrapInput className={classes.selectInput} />}
       >
@@ -85,7 +85,7 @@ export const CoinListButton = ({ onChange, selected, width, height }) => {
         {coinListResponse.map((coin) => {
           return (
             <MenuItem
-              value={coin.name}
+              value={coin}
               classes={{ gutters: classes.menuItemGuttersRoot }}
               key={coin.id}
             >

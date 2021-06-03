@@ -1,13 +1,13 @@
-import React, {useState, useContext, useEffect} from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
-import { PieChart, Pie, Cell } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { Typography } from "@material-ui/core";
 import { Tabs } from "@material-ui/core";
 import { Tab } from "@material-ui/core";
-import {motion} from "framer-motion"
-import {PortfolioContext} from "../shared/contexts/PortfolioContext"
-import {useFormatter} from "../shared/utils/formatterHook"
+import { motion } from "framer-motion";
+import { PortfolioContext } from "../shared/contexts/PortfolioContext";
+import { useFormatter } from "../shared/utils/formatterHook";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -35,10 +35,17 @@ const useStyles = makeStyles((theme) => ({
   miniTextName: {
     fontSize: "0.75em",
     lineHeight: "12px",
+    [theme.breakpoints.up("xl")]: {
+      fontSize: "0.9em",
+      lineHeight: "18px",
+    },
   },
   miniTextPercentage: {
     fontSize: "0.6em",
     lineHeight: "12px",
+    [theme.breakpoints.up("xl")]: {
+      fontSize: "0.8em",
+    },
   },
   iconContainers: {
     display: "flex",
@@ -47,13 +54,16 @@ const useStyles = makeStyles((theme) => ({
   graphLabel: {
     position: "absolute",
     backgroundColor: "transparent",
-    width: 180,
-    height: 180,
+    width: 250,
+    height: 250,
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     color: "white",
+    [theme.breakpoints.up("xl")]: {
+      fontSize: "1.2em",
+    },
   },
   labelPercentage: {
     fontSize: "1.2em",
@@ -63,92 +73,93 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.common.textPurple,
   },
   controlBar: {
-    paddingLeft:"1em",
-    paddingRight:"1em",
+    paddingLeft: "1em",
+    paddingRight: "1em",
     backgroundColor: theme.palette.common.blue2,
     borderTopLeftRadius: "0.6em",
     borderTopRightRadius: "0.6em",
-    maxHeight:"2.5em",
-    marginBottom:"1em"
+    minHeight: "2.5em",
+    maxHeight: "3.8em",
+    marginBottom: "1em",
+    [theme.breakpoints.up("xl")]: {
+      fontSize: "1.2em",
+    },
   },
-  headline:{
-    fontSize:"0.80em",
-    color: theme.palette.common.white
+  headline: {
+    fontSize: "0.80em",
+    color: theme.palette.common.white,
   },
-  chartContainers:{
-    marginBottom:"1em"
+  chartContainers: {
+    marginBottom: "1em",
   },
   tabRoot: {
     minWidth: "10px",
-    textTransform:"none",
-    minHeight:"0",
+    textTransform: "none",
+    minHeight: "0",
     padding: "0",
-    paddingLeft:"0.5em",
-    paddingRight:"0.5em",
-    marginLeft:"0.4em"
+    paddingLeft: "0.5em",
+    paddingRight: "0.5em",
+    marginLeft: "0.4em",
   },
-  tabsRoot:{
-    minHeight:"0",
+  tabsRoot: {
+    minHeight: "0",
   },
-  tabs:{
+  tabs: {
     color: theme.palette.common.white,
   },
-  tab:{
-    fontSize:"0.7em",
+  tab: {
+    fontSize: "0.7em",
     color: theme.palette.common.white,
   },
-  customIndicator:{
-    position:"absolute",
+  customIndicator: {
+    position: "absolute",
     backgroundColor: theme.palette.secondary.main,
-    height:"1.2em",
-    borderRadius:"3px",
-    width:"3.3em",
+    height: "1.2em",
+    borderRadius: "3px",
+    width: "3.3em",
   },
 }));
 
 export const AssetGraph = () => {
-  const {currencyFormatter} = useFormatter()
-  const {totalSpentByCoin,totalProfit, totalSpent, portfolioList, coinListResponse} = useContext(PortfolioContext)
+  const { currencyFormatter } = useFormatter();
+  const {
+    totalSpentByCoin,
+    totalProfit,
+    totalSpent,
+    portfolioList,
+    coinListResponse,
+  } = useContext(PortfolioContext);
   const classes = useStyles();
   const [tabValue, setTabValue] = useState(1);
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
 
   const tabHandler = (_, newValue) => {
-    setTabValue(newValue)
-  } 
+    setTabValue(newValue);
+  };
 
-  // Render Logic 
-  useEffect(()=> {
-    
+  // Render Logic
+  useEffect(() => {
+    const item = portfolioList;
 
-    const item = portfolioList
-    
     const renderFunc = (unit) => {
-      if(item.length > 4 ) {
-        const sortedTopThree = item.sort((a,b)=> b.unit - a.unit).slice(0,3)
-        const rest = item.sort((a,b)=> b.unit - a.unit).slice(3)
-        const restValue = rest.reduce((sum, cur) => sum + cur.unit, 0)
-        const renderData = [...sortedTopThree, {name : "Rest", unit: restValue }]
-        setData(renderData)
-        } else {
-          setData(item)
-        }
+      if (item.length > 4) {
+        const sortedTopThree = item.sort((a, b) => b.unit - a.unit).slice(0, 3);
+        const rest = item.sort((a, b) => b.unit - a.unit).slice(3);
+        const restValue = rest.reduce((sum, cur) => sum + cur.unit, 0);
+        const renderData = [
+          ...sortedTopThree,
+          { name: "Rest", unit: restValue },
+        ];
+        setData(renderData);
+      } else {
+        setData(item);
       }
-      
-      tabValue === 1 ? renderFunc(["value"]) : renderFunc(["profit"])
+    };
 
-      
-  }, [tabValue, totalSpentByCoin, portfolioList, coinListResponse])
-  
+    tabValue === 1 ? renderFunc(["value"]) : renderFunc(["profit"]);
+  }, [tabValue, totalSpentByCoin, portfolioList, coinListResponse]);
 
-
-  const COLORS = [
-    "#FF78CB",
-    "#B4BDFF",
-    "#9758A6",
-    "#634893"
-    ];
-
+  const COLORS = ["#FF78CB", "#B4BDFF", "#9758A6", "#634893"];
 
   return (
     <>
@@ -160,58 +171,86 @@ export const AssetGraph = () => {
         alignItems="center"
         direction="column"
       >
-
-
         {/* Control Bar */}
-        <Grid item md container alignItems="center" justify="flex-end" className={classes.controlBar}>
+        <Grid
+          item
+          md
+          container
+          alignItems="center"
+          justify="flex-end"
+          className={classes.controlBar}
+        >
           <Grid item md>
             <Typography className={classes.headline}>
               Asset Structure
             </Typography>
           </Grid>
-          <Grid item container justify="flex-end" md className={classes.iconGridContainer} >
-            <Tabs 
+          <Grid
+            item
+            container
+            justify="flex-end"
+            md
+            className={classes.iconGridContainer}
+          >
+            <Tabs
               value={tabValue}
               onChange={tabHandler}
-              className={classes.tabs} 
-              classes={{root: classes.tabsRoot}}
-              TabIndicatorProps={{style: {display: "none"}}}>
-              <motion.div 
-              className={classes.customIndicator} 
-              animate={{marginLeft: tabValue === 1 ? "0.45em" : "4.2em"}} 
-              transition={{duration: 0.6}} 
-              initial={false} />
-              <Tab label="By Value" className={classes.tab} classes={{root: classes.tabRoot}}/>
-              <Tab label="By Profit" className={classes.tab} classes={{root: classes.tabRoot}}/>
+              className={classes.tabs}
+              classes={{ root: classes.tabsRoot }}
+              TabIndicatorProps={{ style: { display: "none" } }}
+            >
+              <motion.div
+                className={classes.customIndicator}
+                animate={{ marginLeft: tabValue === 1 ? "0.45em" : "4.2em" }}
+                transition={{ duration: 0.6 }}
+                initial={false}
+              />
+              <Tab
+                label="By Value"
+                className={classes.tab}
+                classes={{ root: classes.tabRoot }}
+              />
+              <Tab
+                label="By Profit"
+                className={classes.tab}
+                classes={{ root: classes.tabRoot }}
+              />
             </Tabs>
           </Grid>
         </Grid>
 
-
         {/* Chart */}
-        <Grid item   className={classes.chartContainers}>
+        <Grid item className={classes.chartContainers}>
           <div className={classes.graphLabel}>
-            <Typography className={classes.labelPercentage}>{portfolioList.length === 0 ? "": "100%"}</Typography>
+            <Typography className={classes.labelPercentage}>
+              {portfolioList.length === 0 ? "" : "100%"}
+            </Typography>
             <Typography className={classes.labelValue}>
-              {portfolioList.length === 0 ? "" : `${currencyFormatter(tabValue === 1 ?  totalSpent : totalProfit)} USD`} 
+              {portfolioList.length === 0
+                ? ""
+                : `${currencyFormatter(
+                    tabValue === 1 ? totalSpent : totalProfit
+                  )} USD`}
             </Typography>
           </div>
-          <PieChart width={180} height={180}>
-            <Pie
-              data={data}
-              innerRadius={60}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey= {tabValue === 1 ? "value" : "profit"}
-            >
-              {data.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-          </PieChart>
+          <ResponsiveContainer height={220} width={220}>
+            <PieChart>
+              <Pie
+                data={data}
+                innerRadius={80}
+                outerRadius={100}
+                fill="#8884d8"
+                dataKey={tabValue === 1 ? "value" : "profit"}
+              >
+                {data.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
         </Grid>
 
         {/* Asset Icons */}
@@ -244,7 +283,10 @@ export const AssetGraph = () => {
                     align="center"
                     className={classes.miniTextPercentage}
                   >
-                    {tabValue === 1 ? (coin.value/totalSpent*100).toFixed(2) : (coin.profit/totalProfit*100).toFixed(2)}%
+                    {tabValue === 1
+                      ? ((coin.value / totalSpent) * 100).toFixed(2)
+                      : ((coin.profit / totalProfit) * 100).toFixed(2)}
+                    %
                   </Typography>
                 </Grid>
               </Grid>
