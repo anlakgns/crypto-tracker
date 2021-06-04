@@ -73,7 +73,7 @@ export const CoinListButton = ({ onChange, selected, width, height }) => {
       style={{ width: width || "100%" }} // Customizable width
     >
       <Select
-        value={selected}
+        value={selected.name || ""}
         onChange={onChange}
         input={<BootstrapInput className={classes.selectInput} />}
       >
@@ -85,7 +85,7 @@ export const CoinListButton = ({ onChange, selected, width, height }) => {
         {coinListResponse.map((coin) => {
           return (
             <MenuItem
-              value={coin}
+              value={coin.name}
               classes={{ gutters: classes.menuItemGuttersRoot }}
               key={coin.id}
             >

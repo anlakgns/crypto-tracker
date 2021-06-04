@@ -146,8 +146,11 @@ export const PortfolioModalSecond = (props) => {
   const handleTabChange = (e, newValue) => {
     setTransactionType(newValue);
   };
-  const handleChangeCrypto = (event) => {
-    setSelectedCoin(event.target.value);
+  const handleChangeCrypto = (event) => { 
+    const selectedFind = coinListResponse.find(
+      (c) => c.name === event.target.value
+    );
+    setSelectedCoin(selectedFind);
   };
   const coinQuantityHandler = (event) => {
     setCoinQuantity(event.target.value);

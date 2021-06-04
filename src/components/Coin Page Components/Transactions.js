@@ -60,6 +60,14 @@ export const Transactions = ({ coinSingleResponse })=> {
     setTickerList(tickers)
   },[coinSingleResponse, tickerListNumber])
 
+  const closeAllHandler = () => {
+    setTickerListNumber(6)
+    window.scroll({
+      top: 1200,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
  
   return (
     <>
@@ -109,7 +117,7 @@ export const Transactions = ({ coinSingleResponse })=> {
           { tickerListNumber === 6 ? 
           <ButtonSecondary  contentText="See All Markets" width="20em" onClick={()=> setTickerListNumber(100)} />
           :
-           <ButtonSecondary  contentText="Close All" width="20em" onClick={()=> setTickerListNumber(6)} />
+           <ButtonSecondary  contentText="Close All" width="20em" onClick={closeAllHandler} />
 
           }
           

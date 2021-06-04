@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const LandingPage = ({logStatus})=> {
+const Auth = ({logStatus})=> {
   const classes = useStyles()
   return (
     <>
@@ -42,4 +42,4 @@ const LandingPage = ({logStatus})=> {
   )
 }
 
-export default LandingPage
+export default Auth

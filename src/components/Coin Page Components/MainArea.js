@@ -68,7 +68,8 @@ const useStyles = makeStyles(theme => ({
   },
   infoDescription:{
     fontSize:"0.9em",
-    opacity:0.8
+    opacity:0.8,
+    overflowY:"auto"
   },
   tooltipContainer: {
     background:

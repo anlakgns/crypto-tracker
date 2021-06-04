@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.main,
     border: "0.4em solid ",
     borderRadius: "1em",
+    cursor: "pointer",
     borderColor: theme.palette.primary.light,
     [theme.breakpoints.down("md")]: {
       minHeight: "7em",
@@ -21,21 +22,20 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       border: "0 ",
       borderRadius: "0em",
-    }
-    
+    },
   },
   gridContainer: {
     padding: "1em",
     [theme.breakpoints.down("md")]: {
       padding: "0.5em",
-    }
+    },
   },
   cardLogo: {
     maxHeight: 25,
     borderRadius: "50%",
     [theme.breakpoints.up("lg")]: {
       maxHeight: 35,
-    }
+    },
   },
   cardGraph: {
     width: "80%",
@@ -49,15 +49,15 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "1.6em",
     [theme.breakpoints.up("md")]: {
       minHeight: "1.3em",
-    }
+    },
   },
   PricePercentageGrid: {
     minHeight: "2.2em",
-  }
+  },
 }));
 
 export const CoinCard = (props) => {
-  const theme = useTheme()
+  const theme = useTheme();
   const classes = useStyles();
   const isMdDown = useMediaQuery(theme.breakpoints.down("md"));
   const history = useHistory();
@@ -73,21 +73,32 @@ export const CoinCard = (props) => {
   } = props;
 
   const cardHandler = (coinName) => {
-    console.log(coinName)
+    console.log(coinName);
     history.push(`/currencies/${coinName.toLowerCase()}`);
-  } 
+    window.scroll({
+      top: 100,
+      left: 100,
+      behavior: 'smooth'
+    });
+  };
 
   const fontSizePrice = (coinName) => {
-    if(isMdDown) {
-      return coinName.length > 9 ? "1.3em" : "1.4em"
+    if (isMdDown) {
+      return coinName.length > 9 ? "1.3em" : "1.4em";
     } else {
-      return coinName.length > 9 ? "1.5em" : "1.7em"
+      return coinName.length > 9 ? "1.5em" : "1.7em";
     }
-  }
+  };
 
   return (
     <Card className={classes.cardContainer}>
-      <Grid container direction="column" className={classes.gridContainer}>
+      <Grid 
+        container 
+        direction="column" 
+        className={classes.gridContainer}
+        onClick={() => cardHandler(coinName)}
+        >
+        
         {/* Coin Logo & Coin Graph */}
         <Grid
           item
@@ -97,7 +108,6 @@ export const CoinCard = (props) => {
           alignItems="center"
           justify="space-between"
           className={classes.logoGraphContainer}
-          onClick={() => cardHandler(coinName)}
         >
           {/* Logo */}
           <Grid item xs>
@@ -129,13 +139,16 @@ export const CoinCard = (props) => {
         </Grid>
 
         {/* Coin Price & Percentage  */}
-        <Grid item container direction="row" xs={12} className={classes.PricePercentageGrid}>
+        <Grid
+          item
+          container
+          direction="row"
+          xs={12}
+          className={classes.PricePercentageGrid}
+        >
           {/* Price */}
           <Grid item xs>
-            <Typography
-              align="left"
-              style={{ fontSize: fontSizePrice(price)}}
-            >
+            <Typography align="left" style={{ fontSize: fontSizePrice(price) }}>
               {price}
             </Typography>
           </Grid>

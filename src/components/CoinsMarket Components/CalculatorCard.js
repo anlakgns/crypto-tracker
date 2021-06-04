@@ -202,7 +202,7 @@ export const CalculatorCard = ({ coinListResponse }) => {
   const tabHandleChange = (event, newValue) => {
     setTabValue(newValue);
   };
-  const handleChangeCrypto = (event) => {
+  const handleChangeCrypto = (event) => { 
     const selectedFind = coinListResponse.find(
       (c) => c.name === event.target.value
     );

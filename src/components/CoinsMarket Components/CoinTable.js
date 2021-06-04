@@ -318,6 +318,11 @@ const CoinTable = () => {
     const coinName =
       cell.firstChild.firstChild.lastChild.firstChild.innerHTML.toLowerCase();
     history.push(`/currencies/${coinName}`);
+    window.scroll({
+      top: 100,
+      left: 100,
+      behavior: 'smooth'
+    });
   };
 
   // Responsive Style
