@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   footerContainer: {
-    backgroundColor: theme.palette.common.blue2,
+    backgroundColor: theme.palette.common.blue1,
     fontFamily: "roboto",
   },
   linkContainer: {
@@ -84,6 +84,7 @@ const Footer = () => {
           xs={12}
           className={classes.mainItem}
         >
+
           <Grid container direction="column" className={classes.linkContainer}>
             <Grid
               item
@@ -139,7 +140,9 @@ const Footer = () => {
               </Grid>
             </Grid>
           </Grid>
+        
         </Grid>
+        
         <Grid item lg={3} md={4} sm={6} xs={12} className={classes.mainItem}>
           <Grid container direction="column" className={classes.linkContainer}>
             <Grid item className={classes.contactUs}>

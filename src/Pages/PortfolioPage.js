@@ -8,7 +8,7 @@ import { ValueGraph } from "../components/Portfolio Components/ValueGraph";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
-    backgroundColor: theme.palette.common.blue4,
+    backgroundColor: theme.palette.common.blue1,
     height: "100vh",
     padding: "1em",
   },

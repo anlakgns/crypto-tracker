@@ -8,7 +8,10 @@ const Waves = () => {
 
   return (
     <Grid item>
-      <img src={waves} style={{ width:"100%", height:"100%",}} alt="background pattern" />
+      <img src={waves} style={{ 
+        width:"100%", 
+        height:"100%",
+        }} alt="background pattern" />
     </Grid>
   )
 } 

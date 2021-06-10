@@ -1,7 +1,8 @@
 import React from 'react'
 import {BrowserRouter, Route, Switch} from "react-router-dom"
-import { ThemeProvider } from '@material-ui/core/styles';
-import theme from './Theme'
+import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import theme from './theme'
 import Footer from "./Pages/Footer"
 import LandingPage from "./Pages/LandingPage"
 import AuthPage from "./Pages/AuthPage"
@@ -11,25 +12,40 @@ import {AuthProvider} from "./components/shared/contexts/AuthContext"
 import CoinMarketPage from "./Pages/CoinsMarketPage"
 import CoinPage from "./Pages/CoinPage"
 
+const useStyles = makeStyles({
+  main: {
+    backgroundColor: "#2E3880"
+  },
+  containerDiv:{
+    maxWidth:"1500px",
+    margin:"auto"
+  }
+})
+
 const App = ()=> {
+  const classes = useStyles()
 
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Switch>
-        <PortfolioProvider>
-          <AuthProvider>
-            <Route exact path="/" component={LandingPage} />
-            <Route exact path="/coinmarkets" component={CoinMarketPage} />
-            <Route exact path="/portfolio" component={PortfolioPage} />
-            <Route exact path="/contact" component={()=> <div>Contact</div>} />
-            <Route exact path="/auth" component={AuthPage} />
-            <Route exact path="/currencies/:id" component={CoinPage} />
-          </AuthProvider>
-        </PortfolioProvider>
-        </Switch>
-        <Footer />
-      </BrowserRouter>
+      <div className={classes.main}>
+        <BrowserRouter>
+          <div className={classes.containerDiv}>
+            <Switch>
+            <PortfolioProvider>
+              <AuthProvider>
+                    <Route exact path="/" component={LandingPage} />
+                    <Route exact path="/coinmarkets" component={CoinMarketPage} />
+                      <Route exact path="/portfolio" component={PortfolioPage} />
+                      <Route exact path="/currencies/:id" component={CoinPage} />
+                    <Route exact path="/contact" component={()=> <div>Contact</div>} />
+                    <Route exact path="/auth" component={AuthPage} />
+              </AuthProvider>
+            </PortfolioProvider>
+            </Switch>
+            <Footer />
+          </div>
+        </BrowserRouter>
+      </div>
     </ThemeProvider>
   )
 }

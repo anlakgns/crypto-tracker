@@ -31,6 +31,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "2em",
     marginBottom: "1em",
   },
+  tabRoot: {
+    [theme.breakpoints.down('xs')]: {
+      width:"100px"
+    }
+  },
   indicator: {
     height: "90%",
     borderRadius: "2em",
@@ -42,13 +47,10 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     marginBottom: "1em",
   },
-  inputLabel: {
-    color: "white",
-    marginTop: "0.3em",
-  },
-  labelRoot: {
-    color: "white",
-    opacity: "0.8",
+  labels: {
+    color: theme.palette.common.white,
+    fontSize: "0.8em",
+    marginLeft: "1em",
   },
   select: {
     minHeight: "4em",
@@ -88,7 +90,9 @@ const useStyles = makeStyles((theme) => ({
     width: "80%",
     margin: "auto",
     color: theme.palette.common.white,
+    fontSize: "0.9em",
   },
+  calcPriceInfoContainer: {},
 }));
 
 export const CalculatorCard = ({ coinListResponse }) => {
@@ -102,8 +106,7 @@ export const CalculatorCard = ({ coinListResponse }) => {
   const [coinQuantity, setCoinQuantity] = useState("");
   const [isValid, setIsValid] = useState(false);
 
-
-  const matches550Down = useMediaQuery('(max-width:550px)');
+  const matches600Down = useMediaQuery("(max-width:600px)");
 
   // Validation for numbers
   useEffect(() => {
@@ -202,7 +205,7 @@ export const CalculatorCard = ({ coinListResponse }) => {
   const tabHandleChange = (event, newValue) => {
     setTabValue(newValue);
   };
-  const handleChangeCrypto = (event) => { 
+  const handleChangeCrypto = (event) => {
     const selectedFind = coinListResponse.find(
       (c) => c.name === event.target.value
     );
@@ -243,14 +246,14 @@ export const CalculatorCard = ({ coinListResponse }) => {
 
   return (
     <>
-      <Grid 
-        container 
+      <Grid
+        container
         className={classes.calcContainer}
         style={{
-          height: matches550Down ? "30em" : "20em",
-          width:  matches550Down ? "20em" : "30em",
-        }}>
-        
+          height: matches600Down ? "32em" : "21em",
+          width: matches600Down ? "18em" : "30em",
+        }}
+      >
         {/* Calculator Switch Fiat & Crypto */}
         <Grid item container justify="center">
           <Tabs
@@ -258,33 +261,43 @@ export const CalculatorCard = ({ coinListResponse }) => {
             value={tabValue}
             onChange={tabHandleChange}
             className={classes.tabContainer}
-            classes={{ 
-              indicator: classes.indicator }}
+            classes={{
+              indicator: classes.indicator,
+            }}
             style={{
-              width: matches550Down ? "15.3em" : "20.3em",
+              width: matches600Down ? "210px" : "20.3em",
             }}
             TabIndicatorProps={{
               style: {
-                width: matches550Down ? "145px" : "160px",
+                width: matches600Down ? "100px" : "160px",
               },
             }}
           >
-            <Tab value={0} label="Crypto to Fiat" />
-            <Tab value={1}  label="Crypto to Crypto" />
+            <Tab 
+              classes={{root:classes.tabRoot}} 
+              value={0} 
+              label={matches600Down ? "Fiat" : "Crypto to Fiat"} />
+            
+            <Tab 
+              classes={{root:classes.tabRoot}} 
+              value={1} 
+              label={matches600Down ? "Crypto" : "Crypto to Crypto"} />
           </Tabs>
         </Grid>
 
         {/* Mini Form for Converting */}
-        <Grid 
-          item container 
-          justify="space-evenly" 
-          direction={matches550Down ? "column" : "row"}
-          spacing={matches550Down ? 2 : 0}>
-          
+        <Grid
+          item
+          container
+          justify="space-evenly"
+          direction={matches600Down ? "column" : "row"}
+          spacing={matches600Down ? 2 : 0}
+        >
           {/** Left **/}
           <Grid item container direction="column" alignItems="center" xs>
             {/***  Left Coin List ***/}
             <Grid item>
+              <Typography className={classes.labels}>Choose a coin</Typography>
               <CoinListButton
                 coinListResponse={coinListResponse}
                 onChange={handleChangeCrypto}
@@ -295,6 +308,9 @@ export const CalculatorCard = ({ coinListResponse }) => {
 
             {/*** Quantity Coin Input ***/}
             <Grid item>
+              <Typography className={classes.labels}>
+                Enter a quantity
+              </Typography>
               <QuantityInput
                 onChange={coinQuantityHandler}
                 value={coinQuantity}
@@ -305,14 +321,20 @@ export const CalculatorCard = ({ coinListResponse }) => {
           {/** Right **/}
           <Grid item container alignItems="center" direction="column" xs>
             {/*** Fiat&Crypto List ***/}
-            <Grid item>{fiatCryptoSwitch}</Grid>
+
+            <Grid item>
+              <Typography className={classes.labels}>
+                Choose a {tabValue ? "currency" : "coin"}
+              </Typography>
+              {fiatCryptoSwitch}
+            </Grid>
 
             {/*** Result Input ***/}
             <Grid item>
+              <Typography className={classes.labels}>Total amount </Typography>
               <ResultBox value={calcResult} />
             </Grid>
           </Grid>
-        
         </Grid>
 
         {/* Coin Info Text */}
@@ -324,7 +346,6 @@ export const CalculatorCard = ({ coinListResponse }) => {
             </Typography>
           ) : null}
         </Grid>
-      
       </Grid>
     </>
   );

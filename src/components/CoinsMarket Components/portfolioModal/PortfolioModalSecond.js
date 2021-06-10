@@ -255,13 +255,13 @@ export const PortfolioModalSecond = (props) => {
             className={classes.tab}
             classes={{ root: classes.tabRoot }}
           />
-          <Tab
+          {/* <Tab
             disableRipple
             value={2}
             label="Transfer"
             className={classes.tab}
             classes={{ root: classes.tabRoot }}
-          />
+          /> */}
         </Tabs>
       </Grid>
 

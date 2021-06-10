@@ -13,7 +13,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
-    backgroundColor: theme.palette.common.blue2,
+    backgroundColor: theme.palette.common.blue1,
     padding: "1em"
   },
   spinnerGrid: {

@@ -29,7 +29,10 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: "0px",
   },
   menuItemGridContainer: {
-    width: "17em",
+    width: "15em",
+    [theme.breakpoints.down("xs")]: {
+      width: "15em",
+    },
   },
   menuItemLogo: {
     width: "1em",
@@ -73,7 +76,7 @@ export const CoinListButton = ({ onChange, selected, width, height }) => {
       style={{ width: width || "100%" }} // Customizable width
     >
       <Select
-        value={selected.name || ""}
+        value={selected.name || ""}
         onChange={onChange}
         input={<BootstrapInput className={classes.selectInput} />}
       >
@@ -97,9 +100,9 @@ export const CoinListButton = ({ onChange, selected, width, height }) => {
                 className={classes.menuItemGridContainer}
               >
                 {/* Coin Name + Logo */}
-                <Grid item container alignItems="center" md={9}>
+                <Grid item container alignItems="center" xs={7} sm={9}>
                   {/* Logo */}
-                  <Grid item md={2}>
+                  <Grid item sm={2} xs={2}>
                     <img
                       className={classes.menuItemLogo}
                       src={coin.logo}
@@ -108,13 +111,13 @@ export const CoinListButton = ({ onChange, selected, width, height }) => {
                   </Grid>
 
                   {/* Coin Name */}
-                  <Grid item md={10}>
+                  <Grid item sm={10} xs={5}>
                     <Typography align="left">{coin.name}</Typography>
                   </Grid>
                 </Grid>
 
                 {/* Coin ID */}
-                <Grid item md={3}>
+                <Grid item sm={3} xs={5}>
                   <Typography
                     align="right"
                     className={classes.coinCodeMenuItem}
