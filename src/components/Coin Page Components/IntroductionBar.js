@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Typography, IconButton } from "@material-ui/core";
 import StarBorderRoundedIcon from "@material-ui/icons/StarBorderRounded";
 import LinkRoundedIcon from "@material-ui/icons/LinkRounded";
@@ -12,6 +13,8 @@ import CodeRoundedIcon from "@material-ui/icons/CodeRounded";
 import { useFormatter } from "../shared/utils/formatterHook";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Link from "@material-ui/core/Link";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
@@ -51,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 120,
     padding: "0.2em 0.3em",
     marginTop: "0.3em",
+    cursor: "pointer",
   },
   rightCode: {
     color: theme.palette.common.white,
@@ -89,11 +93,26 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.common.textPurple,
     fontSize: "0.9em",
   },
+  menuPaperRoot: {
+    marginTop: "3em",
+    backgroundColor: theme.palette.secondary.main,
+    borderRadius: "1em",
+  },
+  menuExplorerItem: {},
+
+  explorerLinkRoot: {
+    textDecoration: "none",
+    color: theme.palette.common.white,
+  },
 }));
 
 export const IntroductionBar = ({ coinSingleResponse }) => {
   const { currencyFormatter } = useFormatter();
   const classes = useStyles();
+  const [anchorElExplorer, setAnchorElExplorer] = useState(null);
+  const [anchorElCommunity, setAnchorElCommunity] = useState(null);
+  const [anchorElSource, setAnchorElSource] = useState(null);
+  const matches750 = useMediaQuery("(max-width:750px)");
 
   const priceCurrent = currencyFormatter(
     coinSingleResponse?.data.market_data.current_price.usd
@@ -112,11 +131,53 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
     100;
   const homepage = coinSingleResponse?.data.links.homepage[0];
 
+  const explorerLinks = coinSingleResponse?.data.links.blockchain_site;
+  const officialForumUrl = coinSingleResponse?.data.links.official_forum_url;
+  const redditForumUrl =
+    coinSingleResponse?.data.links.subreddit_url.toString();
+  const repos = coinSingleResponse?.data.links.repos_url.github[0];
+  console.log(coinSingleResponse?.data);
+
+  // Dom Handlers
+  const handleExplorerClick = (event) => {
+    setAnchorElExplorer(event.currentTarget);
+  };
+
+  const handleExplorerClose = () => {
+    setAnchorElExplorer(null);
+  };
+
+  const handleCommunityClick = (event) => {
+    setAnchorElCommunity(event.currentTarget);
+  };
+
+  const handleCommunityClose = () => {
+    setAnchorElCommunity(null);
+  };
+
+  const handleSourceClick = (event) => {
+    setAnchorElSource(event.currentTarget);
+  };
+
+  const handleSourceClose = () => {
+    setAnchorElSource(null);
+  };
+
   return (
     <>
-      <Grid container className={classes.mainContainer} justify="center">
+      <Grid
+        container
+        className={classes.mainContainer}
+        justify="center"
+        direction={matches750 ? "column" : "row"}
+      >
         {/* Left */}
-        <Grid item xs container>
+        <Grid
+          item
+          xs
+          container
+          style={{ display: matches750 ? "none" : "flex" }}
+        >
           {/* First Line */}
           <Grid item container justify="flex-start" alignItems="center">
             <Grid item>
@@ -143,8 +204,8 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
             </Grid>
           </Grid>
           {/* Second Line */}
-          <Grid item container>
-            {/* Link 1 */}
+          <Grid item container justify={matches750 ? "space-evenly" : null}>
+            {/* Homepage 1 */}
             <Grid
               item
               container
@@ -158,7 +219,7 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
               <Grid item xs={6}>
                 <Link href={homepage} target="_blank" rel="noopener">
                   <Typography className={classes.linkText} align="center">
-                    Link
+                    Homepage
                   </Typography>
                 </Link>
               </Grid>
@@ -167,13 +228,14 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
               </Grid>
             </Grid>
 
-            {/* Link 2 */}
+            {/* Explorer 2 */}
             <Grid
               item
               container
               justify="center"
               alignItems="center"
               className={classes.linkGrid}
+              onClick={handleExplorerClick}
             >
               <Grid item container xs={3} justify="center" alignItems="center">
                 <SearchRoundedIcon className={classes.icons} />
@@ -187,14 +249,42 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
                 <ExpandMoreRoundedIcon className={classes.icons} />
               </Grid>
             </Grid>
+            <Menu
+              anchorEl={anchorElExplorer}
+              open={Boolean(anchorElExplorer)}
+              onClose={handleExplorerClose}
+              classes={{ paper: classes.menuPaperRoot }}
+              className={classes.menuExplorer}
+            >
+              {explorerLinks?.map((link) => {
+                return link === "" ? null : (
+                  <MenuItem
+                    onClick={handleExplorerClose}
+                    key={link}
+                    className={classes.menuExplorerItem}
+                  >
+                    <Link
+                      target="_blank"
+                      rel="noopener"
+                      href={link}
+                      underline="none"
+                      classes={{ root: classes.explorerLinkRoot }}
+                    >
+                      {link.replace("https://", "").split("/")[0]}
+                    </Link>
+                  </MenuItem>
+                );
+              })}
+            </Menu>
 
-            {/* Link 3 */}
+            {/* Community 3 */}
             <Grid
               item
               container
               justify="center"
               alignItems="center"
               className={classes.linkGrid}
+              onClick={handleCommunityClick}
             >
               <Grid item container xs={3} justify="center" alignItems="center">
                 <PersonRoundedIcon className={classes.icons} />
@@ -208,14 +298,57 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
                 <ExpandMoreRoundedIcon className={classes.icons} />
               </Grid>
             </Grid>
+            <Menu
+              anchorEl={anchorElCommunity}
+              open={Boolean(anchorElCommunity)}
+              onClose={handleCommunityClose}
+              classes={{ paper: classes.menuPaperRoot }}
+              className={classes.menuExplorer}
+            >
+              {officialForumUrl?.map((link) => {
+                return link === "" ? null : (
+                  <MenuItem
+                    onClick={handleCommunityClose}
+                    key={link}
+                    className={classes.menuExplorerItem}
+                  >
+                    <Link
+                      target="_blank"
+                      rel="noopener"
+                      href={link}
+                      underline="none"
+                      classes={{ root: classes.explorerLinkRoot }}
+                    >
+                      {link.replace("https://", "").split("/")[0]}
+                    </Link>
+                  </MenuItem>
+                );
+              })}
+              <MenuItem
+                onClick={handleCommunityClose}
+                className={classes.menuExplorerItem}
+              >
+                <Link
+                  target="_blank"
+                  rel="noopener"
+                  href={redditForumUrl}
+                  underline="none"
+                  classes={{ root: classes.explorerLinkRoot }}
+                >
+                  {redditForumUrl &&
+                    redditForumUrl.replace("https://www.", "").split("/")[0]}
+                </Link>
+              </MenuItem>
+            </Menu>
 
-            {/* Link 4 */}
+            {/* Source Code 4 */}
             <Grid
               item
               container
               justify="center"
               alignItems="center"
               className={classes.linkGrid}
+              onClick={handleSourceClick}
             >
               <Grid item container xs={2} justify="center" alignItems="center">
                 <CodeRoundedIcon className={classes.icons} />
@@ -229,48 +362,112 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
                 <ExpandMoreRoundedIcon className={classes.icons} />
               </Grid>
             </Grid>
+            <Menu
+              anchorEl={anchorElSource}
+              open={Boolean(anchorElSource)}
+              onClose={handleSourceClose}
+              classes={{ paper: classes.menuPaperRoot }}
+              className={classes.menuExplorer}
+            >
+              <MenuItem
+                onClick={handleSourceClose}
+                className={classes.menuExplorerItem}
+              >
+                <Link
+                  target="_blank"
+                  rel="noopener"
+                  href={repos}
+                  underline="none"
+                  classes={{ root: classes.explorerLinkRoot }}
+                >
+                  {repos ? repos.replace("https://", "").split("/")[0] : null}
+                </Link>
+              </MenuItem>
+            </Menu>
           </Grid>
         </Grid>
 
         {/* Right */}
         <Grid item xs container direction="column">
           {/* Coin Code */}
-          <Grid item container directiton="column" justify="flex-end">
+          <Grid
+            item
+            container
+            directiton="column"
+            justify="flex-end"
+            style={{ display: matches750 ? "none" : "flex" }}
+          >
             <Grid item>
               <Typography align="right" className={classes.rightCode}>
                 {coinName} ({coinCode})
               </Typography>
             </Grid>
           </Grid>
+
           {/* Price & Change Info */}
           <Grid
             item
             container
-            directiton="column"
-            justify="flex-end"
+            direction="row"
+            justify={matches750 ? "space-between" : "flex-end"}
             alignItems="center"
+            style={{ marginTop: matches750 ? "1em" : "0" }}
           >
-            <Grid item>
-              <Typography align="right" className={classes.rightPrice}>
-                {priceCurrent}
-              </Typography>
+            {/** Responsive Logo  **/}
+            <Grid
+              item
+              container
+              style={{ display: matches750 ? "flex" : "none" }}
+              xs={4}
+            >
+              <Grid item>
+                <img
+                  src={coinSingleResponse?.data.image.small}
+                  alt="coin logo"
+                  className={classes.logo}
+                />
+              </Grid>
+              <Grid item>
+                <Typography className={classes.coinName}>
+                  {coinSingleResponse?.data.name}
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Typography align="right" className={classes.rightChange}>
-                {priceChange}
-              </Typography>
+
+            {/** Big Price & Change  **/}
+            <Grid
+              item
+              container
+              xs={matches750 ? "8" : "12"}
+              alignItems="center"
+              justify="flex-end"
+            >
+              {/**  Big Price **/}
+              <Grid item>
+                <Typography align="right" className={classes.rightPrice}>
+                  {priceCurrent}
+                </Typography>
+              </Grid>
+
+              {/** Price Change  **/}
+              <Grid item>
+                <Typography align="right" className={classes.rightChange}>
+                  {priceChange}
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
+
           {/* Low & High Info */}
           <Grid
             item
             container
-            justify="flex-end"
+            justify={matches750 ? "space-between" : "flex-end"}
             alignItems="center"
             spacing={2}
             className={classes.progressContainer}
           >
-            <Grid item container justify="center" xs={2}>
+            <Grid item justify="center">
               <span className={classes.low}>
                 Low:&nbsp;
                 <span
@@ -280,7 +477,12 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
                 </span>
               </span>
             </Grid>
-            <Grid item xs={4} className={classes.progressGrid}>
+            <Grid
+              item
+              md={5}
+              sm={matches750 ? 7 : 4}
+              className={classes.progressGrid}
+            >
               <LinearProgress
                 color="secondary"
                 className={classes.progress}
@@ -288,7 +490,7 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
                 value={progresValue}
               />
             </Grid>
-            <Grid item xs={2} container justify="center">
+            <Grid item justify="center">
               <span className={classes.high}>
                 High:&nbsp;
                 <span
