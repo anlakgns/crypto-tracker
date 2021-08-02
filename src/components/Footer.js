@@ -93,11 +93,11 @@ const Footer = () => {
               style={{ cursor: "pointer" }}
             >
               <span>Coin</span>
-              <span className={classes.one}>ONE</span>
+              <span className={classes.one}>Tracker</span>
             </Grid>
             <Grid item className={classes.coinOneText}>
-              Coinone is the fastest and most scalable digital asset, enabling
-              real-time global payments anywhere in the world.
+            CoinTracker offers user friendly charts with real-time prices.
+            You can easily manage your portfolio and watchlist.
             </Grid>
             <Grid item className={classes.coinOneIcons}>
               <Grid container>
@@ -152,7 +152,7 @@ const Footer = () => {
             <Grid item>Suite 135A, Brentwood,</Grid>
             <Grid item>TN 37027-5237</Grid>
             <Grid item>Phone: 615.555.5555</Grid>
-            <Grid item>Email: yourfriends@coindash.com</Grid>
+            <Grid item>Email: info@cointracker.com</Grid>
           </Grid>
         </Grid>
         <Grid item sm={6} lg={2} md={3} xs={12} className={classes.mainItem}>

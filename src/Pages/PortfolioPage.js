@@ -1,23 +1,29 @@
 import React from "react";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles, useTheme } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
-import { AssetGraph } from "../components/Portfolio Components/AssetGraph";
+import { AssetStructure } from "../components/Portfolio Components/AssetStructure";
 import { AssetListContainer } from "../components/Portfolio Components/AssetList/AssetListContainer";
-import { PerformanceGraph } from "../components/Portfolio Components/PerformanceGraph";
-import { ValueGraph } from "../components/Portfolio Components/ValueGraph";
+import { PerformanceChart } from "../components/Portfolio Components/PerformanceChart";
+import { HistoricChart } from "../components/Portfolio Components/HistoricChart";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
     backgroundColor: theme.palette.common.blue1,
     height: "100vh",
+    "@media (max-width:1024px)": {
+      height: "160vh",
+    },
     padding: "1em",
   },
 }));
 
 const PortfolioPage = () => {
   const classes = useStyles();
-  
-  
+  const theme = useTheme();
+  const matches1024 = useMediaQuery("(max-width:1024px");
+  console.log(theme.breakpoints.down("sm"));
+
   return (
     <>
       <Grid
@@ -26,34 +32,35 @@ const PortfolioPage = () => {
         justify="center"
         className={classes.mainGrid}
       >
-
         {/* Left */}
-        <Grid item container xs={9}>
-          
+        <Grid item container xs={matches1024 ? 12 : 9}>
           {/*  Value Graph */}
           <Grid item container>
-            <ValueGraph />
+            <HistoricChart />
           </Grid>
 
           {/*  Performance Graph */}
           <Grid item container>
-            <PerformanceGraph />
+            <PerformanceChart />
           </Grid>
         </Grid>
 
         {/* Right */}
-        <Grid item container xs={3} direction="column">
-          
+        <Grid
+          item
+          container
+          xs={matches1024 ? 12 : 3}
+          direction={matches1024 ? "row" : "column"}
+        >
           {/*  Asset List */}
-          <Grid item container xs className={classes.assetListContainer}>
-            <AssetListContainer  />
+          <Grid item container xs>
+            <AssetListContainer />
           </Grid>
 
           {/*  Asset Circle Graph */}
           <Grid item container xs>
-            <AssetGraph />
+            <AssetStructure />
           </Grid>
-        
         </Grid>
       </Grid>
     </>

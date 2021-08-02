@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.blue3,
     marginBottom: "1em",
     marginRight: "1em",
+    "@media (max-width:1024px)" : {
+      marginRight: "0em",
+    },
     borderRadius: "0.6em",
   },
   controlBar: {
@@ -122,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const ValueGraph = () => {
+export const HistoricChart = () => {
   const theme = useTheme();
   const classes = useStyles();
 
@@ -516,7 +519,7 @@ export const ValueGraph = () => {
           item container xs 
           justify="center" 
           alignItems="center" >
-          <ResponsiveContainer height={315} width="90%">
+          <ResponsiveContainer height={(window.innerHeight - 100)/3} width="90%">
             <LineChart
               data={chartData}
             >

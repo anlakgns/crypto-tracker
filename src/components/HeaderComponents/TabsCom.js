@@ -74,7 +74,6 @@ const TabsCom = () => {
         indicatorColor="primary">
         <Tab className={classes.tab} value={1} component={Link} to="/coinmarkets" label="Coin Market"/>
         <Tab className={classes.tab} value={2} component={Link} to="/portfolio" label="Portfolio"/>
-        <Tab className={classes.tab} value={3} component={Link} to="/contract" label="Contact"/>
         
       </Tabs>
       </Grid>

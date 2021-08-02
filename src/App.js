@@ -1,9 +1,8 @@
 import React from 'react'
 import {BrowserRouter, Route, Switch} from "react-router-dom"
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 import theme from './theme'
-import Footer from "./Pages/Footer"
+import Footer from "./components/Footer"
 import LandingPage from "./Pages/LandingPage"
 import AuthPage from "./Pages/AuthPage"
 import PortfolioPage from "./Pages/PortfolioPage"

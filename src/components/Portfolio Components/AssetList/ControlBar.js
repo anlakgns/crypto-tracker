@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
     textTransform:"none",
     minHeight:"0",
     [theme.breakpoints.up("xl")]: {
-      minWidth: "150px",
+      minWidth: "120px",
     }
   },
   tabsRoot:{

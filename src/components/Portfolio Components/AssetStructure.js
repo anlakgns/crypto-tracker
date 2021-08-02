@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.blue3,
     marginTop: "1em",
     borderRadius: "0.6em",
+    "@media (max-width:1024px)" : {
+      marginLeft:"0.5em"
+    },
   },
   assetIcon: {
     backgroundColor: theme.palette.common.blue2,
@@ -28,13 +31,34 @@ const useStyles = makeStyles((theme) => ({
     width: "20px",
     height: "20px",
     borderRadius: "50%",
+
+  },
+  pieContainer: {
+    position:"relative",
+  },
+  graphLabel: {
+    position: "absolute",
+    backgroundColor: "transparent",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "white",
+    [theme.breakpoints.up("xl")]: {
+      fontSize: "1em",
+    },
   },
   miniText: {
     color: theme.palette.common.white,
+    marginBottom:"12px",
+    
   },
   miniTextName: {
     fontSize: "0.75em",
-    lineHeight: "12px",
+    lineHeight: "px",
     [theme.breakpoints.up("xl")]: {
       fontSize: "0.9em",
       lineHeight: "18px",
@@ -45,24 +69,6 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: "12px",
     [theme.breakpoints.up("xl")]: {
       fontSize: "0.8em",
-    },
-  },
-  iconContainers: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  graphLabel: {
-    position: "absolute",
-    backgroundColor: "transparent",
-    width: 250,
-    height: 250,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    color: "white",
-    [theme.breakpoints.up("xl")]: {
-      fontSize: "1.2em",
     },
   },
   labelPercentage: {
@@ -120,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const AssetGraph = () => {
+export const AssetStructure = () => {
   const { currencyFormatter } = useFormatter();
   const {
     totalSpentByCoin,
@@ -174,7 +180,7 @@ export const AssetGraph = () => {
         {/* Control Bar */}
         <Grid
           item
-          md
+          xs
           container
           alignItems="center"
           justify="flex-end"
@@ -218,49 +224,53 @@ export const AssetGraph = () => {
             </Tabs>
           </Grid>
         </Grid>
+        
+        {/* Chart & Icons Container */}
+        <Grid item container md direction="column" alignItems="center" justify="center">
+          
+          {/* Chart */}
+          <Grid item container justify="center" alignItems="center"  className={classes.chartContainers}>
+            <div className={classes.pieContainer}>
+              <div className={classes.graphLabel}>
+                <Typography className={classes.labelPercentage}>
+                  {portfolioList.length === 0 ? "" : "100%"}
+                </Typography>
+                <Typography className={classes.labelValue}>
+                  {portfolioList.length === 0
+                    ? ""
+                    : `${currencyFormatter(
+                        tabValue === 1 ? totalSpent : totalProfit
+                      )} USD`}
+                </Typography>
+              </div>
+              <ResponsiveContainer height={200} width={200} >
+                <PieChart>
+                  <Pie
+                    data={data}
+                    innerRadius={65}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey={tabValue === 1 ? "value" : "profit"}
+                  >
+                    {data.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </Grid>
 
-        {/* Chart */}
-        <Grid item className={classes.chartContainers}>
-          <div className={classes.graphLabel}>
-            <Typography className={classes.labelPercentage}>
-              {portfolioList.length === 0 ? "" : "100%"}
-            </Typography>
-            <Typography className={classes.labelValue}>
-              {portfolioList.length === 0
-                ? ""
-                : `${currencyFormatter(
-                    tabValue === 1 ? totalSpent : totalProfit
-                  )} USD`}
-            </Typography>
-          </div>
-          <ResponsiveContainer height={220} width={220}>
-            <PieChart>
-              <Pie
-                data={data}
-                innerRadius={80}
-                outerRadius={100}
-                fill="#8884d8"
-                dataKey={tabValue === 1 ? "value" : "profit"}
-              >
-                {data.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-        </Grid>
-
-        {/* Asset Icons */}
-        <Grid item md container className={classes.iconContainers}>
+          {/* Asset Icons */}
+          <Grid item container className={classes.iconContainers}>
           {data.map((coin, i) => {
             return (
               <Grid
-                item
+                item container
                 xs
-                container
                 alignItems="center"
                 spacing={1}
                 key={coin.name}
@@ -293,6 +303,8 @@ export const AssetGraph = () => {
             );
           })}
         </Grid>
+        </Grid>
+      
       </Grid>
     </>
   );

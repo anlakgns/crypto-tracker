@@ -92,10 +92,10 @@ const CoinTable = () => {
   const { percentageFormatter, numberFormatter, currencyFormatter } =
   useFormatter();
   const { fetchCoinList, sourceAPI } = useFetchData();
-  const isSmDown = useMediaQuery(theme.breakpoints.down("sm"))
-  const isMdDown = useMediaQuery(theme.breakpoints.down("md"));
   
   // Responsive Varibles
+  const isSmDown = useMediaQuery(theme.breakpoints.down("sm"))
+  const isMdDown = useMediaQuery(theme.breakpoints.down("md"));
   const matches680Down = useMediaQuery('(max-width:680px)');
   const matches530Down = useMediaQuery('(max-width:530px)');
   const matches780Down = useMediaQuery('(max-width:780px)');

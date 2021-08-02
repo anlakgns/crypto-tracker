@@ -1,4 +1,5 @@
 import React from "react"
+import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid"
 import Typography from '@material-ui/core/Typography'
 import {makeStyles} from '@material-ui/styles'
@@ -33,21 +34,24 @@ const useStyles = makeStyles(theme => ({
  }))
 
 const Headline = () => {
+  const history = useHistory()
   const classes = useStyles()
 
   return (
     <Grid item className={classes.headAll} style={{textAlign:"center"}} >
       <Typography variant="h3" className={classes.headline}> 
-        The <span className={classes.digitalAssets}>Digital Assets</span> for Payments
+        The <span className={classes.digitalAssets}>Cryptocurrency Tracker</span> for Your Coins
       </Typography>
       <Typography variant="subtitle1" className={classes.subtitle}> 
-        It’s the fastest and most scalable digital asset, enabling <br />real-time global payments anywhere in the world.
+        Coin tracker offers user friendly charts with real-time prices. <br />
+        You can easily manage your portfolio and watchlist.
       </Typography>
       <Button
             variant="contained"
             className={classes.exploreButton}
+            onClick={()=> history.push("/coinmarkets")}
           >
-            <span style={{ marginRight: 5, color:"white" }}>Explore Coin</span>
+            <span style={{ marginRight: 5, color:"white" }}>Explore Coins</span>
             <ButtonArrow
               width={20}
               height={20}

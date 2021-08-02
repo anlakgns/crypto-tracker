@@ -15,16 +15,18 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  Legend,
   ReferenceLine,
   ResponsiveContainer
 } from "recharts";
 
 const useStyles = makeStyles((theme) => ({
-  mainGrid: {
+  main: {
     backgroundColor: theme.palette.common.blue3,
     marginRight: "1em",
     borderRadius: "0.6em",
+    "@media (max-width:1024px)" : {
+      marginRight: "0em",
+    },
   },
   controlBar: {
     paddingLeft: "1em",
@@ -80,8 +82,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const PerformanceGraph = () => {
-  // console.log("PerformanceGraph rendered.")
+export const PerformanceChart = () => {
   const theme = useTheme();
   const classes = useStyles();
   
@@ -104,7 +105,6 @@ export const PerformanceGraph = () => {
     }
     fetch()
   }, [fetchPerformanceData, portfolioList]);
-
 
   // Data Format
   useEffect(() => {
@@ -190,6 +190,9 @@ export const PerformanceGraph = () => {
     setRenderData(renderAll);
   }, [editedData, portoflioNameList]);
 
+  // 
+  console.log(window.innerHeight)
+
   // Colors for Bars
   const COLORS = ["#FF78CB", "#B4BDFF", "#9758A6", "#634893"];
 
@@ -206,7 +209,7 @@ export const PerformanceGraph = () => {
           <ul>
             {payload.map(c => {
               return (
-                <li>{c.name}: {c.value.toFixed(2)}%</li>
+                <li key={c.name}>{c.name}: {c.value.toFixed(2)}%</li>
               )
             })}
           </ul>
@@ -219,13 +222,18 @@ export const PerformanceGraph = () => {
 
   return (
     <>
-      <Grid container className={classes.mainGrid} direction="column">
+      <Grid 
+        container 
+        className={classes.main} 
+        direction="column"
+        justify="center"
+        alignItems="center"
+        >
           
         {/* Control Bar */}
         <Grid
-          item
+          item container
           md
-          container
           alignItems="center"
           justify="flex-end"
           className={classes.controlBar}
@@ -265,16 +273,10 @@ export const PerformanceGraph = () => {
         </Grid>
  
         {/* Chart */}
-        <Grid item container justify="center" alignItems="center">
-          <ResponsiveContainer height={300} width="90%">
+        <Grid item container justify="center" alignItems="center" xs>
+          <ResponsiveContainer height={(window.innerHeight - 100)/3} width="90%">
             <BarChart
               data={renderData}
-              margin={{
-                top: 40,
-                right: 0,
-                left: 0,
-                bottom: 0,
-              }}
             >
               <XAxis
                 hide

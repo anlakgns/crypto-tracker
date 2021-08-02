@@ -9,6 +9,10 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.common.blue3,
     borderRadius:"0.6em",
     color: theme.palette.common.white,
+    "@media (max-width:1024px)" : {
+      marginTop: "1em",
+      marginRight:"0.5em"
+    },
   },
   controlBar:{
     borderTopRightRadius:"0.6em",
