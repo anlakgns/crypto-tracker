@@ -27,70 +27,96 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const TabsCom = () => {
-
+  const classes = useStyles();   
   const {handleLogout, state} = useContext(AuthContext)
+  const [tabValue, setTabValue] = useState(1) 
 
-  const [tabValue, setTabValue] = useState(1) // tabs state
-
-  const classes = useStyles();   // Local CSS
 
   // Tab handler
-  const handleTabChange = (event, newValue)=> {
+  const handleTabChange = (_, newValue)=> {
     setTabValue(newValue)
   }
 
+  // Bug fix : always synchronizationed tabs.
   useEffect(()=>{
     switch(window.location.pathname) {
-      case "/features" :
+      case "/" :
         setTabValue(1)
         break;
-      case "/tokensale" :
-        setTabValue(3)
+      case "/coinmarkets" :
+        setTabValue(2)
           break;
-      case "/blog" :
-      setTabValue(4)
-        break;
-      case "/contract" :
-        setTabValue(5)
-        break;
-      case "/auth" :
-        setTabValue(6)
+      case "/portfolio" :
+      setTabValue(3)
         break;
       default: 
         setTabValue(1)
         break;
     }
-
   }, [tabValue])
 
   return (
     <>
-    <Grid container alignItems="center" >
-      <Grid item >
-      <Tabs 
-        onChange={handleTabChange} 
-        value={tabValue}
-        className={classes.tabContainer}
-        indicatorColor="primary">
-        <Tab className={classes.tab} value={1} component={Link} to="/coinmarkets" label="Coin Market"/>
-        <Tab className={classes.tab} value={2} component={Link} to="/portfolio" label="Portfolio"/>
+      <Grid container alignItems="center" >
         
-      </Tabs>
+        {/* Tabs */}
+        <Grid item >
+          <Tabs 
+            onChange={handleTabChange} 
+            value={tabValue}
+            className={classes.tabContainer}
+            indicatorColor="primary"
+          >
+            <Tab 
+              className={classes.tab} 
+              value={1} 
+              component={Link} 
+              to="/" 
+              label="Home"
+            />
+            <Tab 
+              className={classes.tab} 
+              value={2} 
+              component={Link} 
+              to="/coinmarket" 
+              label="Coin Market"
+            />
+            <Tab 
+              className={classes.tab} 
+              value={3} 
+              component={Link} 
+              to="/portfolio" 
+              label="Portfolio"
+            />
+            
+          </Tabs>
+        </Grid>
+
+        {/* Login & Logout */}
+        <Grid item >
+          {state.isLoggedIn 
+              ?  <Button 
+                    variant="outlined" 
+                    className={classes.tabButton} 
+                    color="secondary" 
+                    onClick={handleLogout}
+                  >
+                    Log Out
+                 </Button> 
+              : 
+                 <Button 
+                    variant="outlined" 
+                    className={classes.tabButton} 
+                    color="secondary" 
+                    component={Link} 
+                    to="/auth"
+                 >
+                    Log In
+                </Button>
+          } 
+        </Grid>
       </Grid>
-      <Grid item >
-      {state.isLoggedIn 
-          ?  <Button variant="outlined" className={classes.tabButton} color="secondary" onClick={handleLogout}>
-            Log Out
-            </Button> 
-          : <Button variant="outlined" className={classes.tabButton} color="secondary" component={Link} to="/auth">
-            Log In
-            </Button>
-      } 
-      </Grid>
-    </Grid>
-      
-      
-  </>
+    </>
   )
 }
 

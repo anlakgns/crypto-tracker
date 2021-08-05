@@ -313,16 +313,11 @@ const CoinTable = () => {
       });
     }
   };
-  const tableClickHandler = (event) => {
-    const cell = event.target.closest("tr");
-    const coinName =
-      cell.firstChild.firstChild.lastChild.firstChild.innerHTML.toLowerCase();
-    history.push(`/currencies/${coinName}`);
-    window.scroll({
-      top: 100,
-      left: 100,
-      behavior: 'smooth'
-    });
+  const tableClickHandler = (id) => {
+    // const cell = event.target.closest("tr");
+    // const coinName =
+      // cell.firstChild.firstChild.lastChild.firstChild.innerHTML.toLowerCase();
+    history.push(`/currencies/${id}`);
   };
 
   // Responsive Style
@@ -507,10 +502,10 @@ const CoinTable = () => {
           </TableHead>
 
           {/* Table Body */}
-          <TableBody onClick={tableClickHandler}>
+          <TableBody >
             {finalRenderList.length > 0 ? (
               finalRenderList.map((coin) => (
-                <TableRow key={coin.id} style={{ cursor: "pointer" }}>
+                <TableRow onClick={() => {tableClickHandler(coin.id)}} key={coin.id} style={{ cursor: "pointer" }}>
                   
                   {/* Bookmark & Logo Cell */}
                   <TableCell>

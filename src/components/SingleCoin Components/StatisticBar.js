@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
 import { Typography, Tooltip } from "@material-ui/core";
@@ -45,38 +45,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const StatisticBar = ({ coinSingleResponse }) => {
-  const { currencyFormatter, numberFormatter } = useFormatter();
-
+export const StatisticBar = ({ singleCoinResponse }) => {
   const classes = useStyles();
-  const marketCap = currencyFormatter(
-    coinSingleResponse?.data.market_data.market_cap.usd
-  );
-  const marketCapChange =
-    coinSingleResponse?.data.market_data.market_cap_change_percentage_24h.toFixed(
-      2
-    ) + "%";
-  console.log(coinSingleResponse);
+  const { currencyFormatter, numberFormatter } = useFormatter();
+  const [formattedData, setFormattedData] = useState({});
 
-  const coinCode = coinSingleResponse?.data.symbol.toUpperCase();
-  const dilutedMarketCap = currencyFormatter(
-    coinSingleResponse?.data.market_data.fully_diluted_valuation.usd
-  );
-  const allTimeHighPrice = currencyFormatter(
-    coinSingleResponse?.data.market_data.ath.usd
-  );
-  const allTimeHighDate = coinSingleResponse?.data.market_data.ath_date.usd;
-  const circulatingSupply = numberFormatter(
-    coinSingleResponse?.data.market_data.circulating_supply
-  );
-  const totalSupply = numberFormatter(
-    coinSingleResponse?.data.market_data.total_supply
-  );
-  const progressValue =
-    (coinSingleResponse?.data.market_data.circulating_supply /
-      coinSingleResponse?.data.market_data.total_supply) *
-    100;
-  console.log(progressValue);
+  // Data Formatted & Editted
+  useEffect(() => {
+    setFormattedData({
+      marketCap: currencyFormatter(
+        singleCoinResponse?.data.market_data.market_cap.usd
+      ),
+      marketCapChange:
+        singleCoinResponse?.data.market_data.market_cap_change_percentage_24h.toFixed(
+          2
+        ) + "%",
+      coinCode: singleCoinResponse?.data.symbol.toUpperCase(),
+      dilutedMarketCap: currencyFormatter(
+        singleCoinResponse?.data.market_data.fully_diluted_valuation.usd
+      ),
+      allTimeHighPrice: currencyFormatter(
+        singleCoinResponse?.data.market_data.ath.usd
+      ),
+      allTimeHighDate: singleCoinResponse?.data.market_data.ath_date.usd,
+      circulatingSupply: numberFormatter(
+        singleCoinResponse?.data.market_data.circulating_supply
+      ),
+      totalSupply: numberFormatter(
+        singleCoinResponse?.data.market_data.total_supply
+      ),
+      progressValue:
+        (singleCoinResponse?.data.market_data.circulating_supply /
+          singleCoinResponse?.data.market_data.total_supply) *
+        100,
+    });
+  }, [singleCoinResponse, currencyFormatter, numberFormatter]);
 
   return (
     <>
@@ -115,7 +118,7 @@ export const StatisticBar = ({ coinSingleResponse }) => {
             <Grid item container className={classes.SecondaLineMC}>
               <Grid item>
                 <Typography className={classes.marketCapNumber}>
-                  {marketCap}
+                  {formattedData.marketCap}
                 </Typography>
               </Grid>
             </Grid>
@@ -123,7 +126,7 @@ export const StatisticBar = ({ coinSingleResponse }) => {
             <Grid item container className={classes.SecondaLineMC}>
               <Grid item>
                 <Typography className={classes.marketCapNumberChange}>
-                  {marketCapChange}
+                  {formattedData.marketCapChange}
                 </Typography>
               </Grid>
             </Grid>
@@ -164,7 +167,7 @@ export const StatisticBar = ({ coinSingleResponse }) => {
             <Grid item container className={classes.SecondaLineMC}>
               <Grid item>
                 <Typography className={classes.marketCapNumber}>
-                  {dilutedMarketCap}
+                  {formattedData.dilutedMarketCap}
                 </Typography>
               </Grid>
             </Grid>
@@ -198,7 +201,7 @@ export const StatisticBar = ({ coinSingleResponse }) => {
             >
               <Grid item>
                 <Typography className={classes.marketCapNumber}>
-                  {allTimeHighPrice}
+                  {formattedData.allTimeHighPrice}
                 </Typography>
               </Grid>
             </Grid>
@@ -215,7 +218,7 @@ export const StatisticBar = ({ coinSingleResponse }) => {
             <Grid item container className={classes.SecondaLineMC}>
               <Grid item>
                 <Typography className={classes.marketCapNumber}>
-                  {allTimeHighDate}
+                  {formattedData.allTimeHighDate}
                 </Typography>
               </Grid>
             </Grid>
@@ -260,12 +263,14 @@ export const StatisticBar = ({ coinSingleResponse }) => {
             >
               <Grid item>
                 <Typography className={classes.marketCapNumber}>
-                  {circulatingSupply +" "+ coinCode}
+                  {formattedData.circulatingSupply +
+                    " " +
+                    formattedData.coinCode}
                 </Typography>
               </Grid>
               <Grid item>
                 <Typography className={classes.marketCapNumber}>
-                  {progressValue.toFixed(0) + "%"}
+                  {formattedData.progressValue?.toFixed(0) + "%"}
                 </Typography>
               </Grid>
             </Grid>
@@ -279,7 +284,7 @@ export const StatisticBar = ({ coinSingleResponse }) => {
                 color="secondary"
                 className={classes.progress}
                 variant="determinate"
-                value={progressValue}
+                value={formattedData.progressValue}
               />
             </Grid>
 
@@ -316,7 +321,7 @@ export const StatisticBar = ({ coinSingleResponse }) => {
                   className={classes.marketCapNumber}
                   style={{ fontSize: "0.7em" }}
                 >
-                  {totalSupply}
+                  {formattedData.totalSupply}
                 </Typography>
               </Grid>
             </Grid>
@@ -349,7 +354,7 @@ export const StatisticBar = ({ coinSingleResponse }) => {
                   className={classes.marketCapNumber}
                   style={{ fontSize: "0.7em" }}
                 >
-                  {circulatingSupply}
+                  {formattedData.circulatingSupply}
                 </Typography>
               </Grid>
             </Grid>

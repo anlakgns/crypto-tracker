@@ -43,10 +43,12 @@ export const TopMoverCards = () => {
 
   return (
     <>
-      {/* Cards */}
+      {/* Headline */}
       <Grid item container>
         <Typography className={classes.headline}>Top Movers </Typography>
       </Grid>
+      
+      {/* Cards */}
       <Grid
         item
         container

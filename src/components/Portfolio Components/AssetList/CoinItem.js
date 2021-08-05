@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize:"1em",
     [theme.breakpoints.up("xl")]: {
       fontSize:"1.2em"
-    }
+    },
   },
   underline: {
     borderBottom: "2px solid",
@@ -151,7 +151,7 @@ export const CoinItem = (props) => {
         alignItems="center"
       >
         {/* Logo & Coin Name */}
-        <Grid item container md={6} alignItems="center">
+        <Grid item container xs={6} alignItems="center">
           {/* Logo */}
           <Grid item container justify="center" xs={4}>
             <img src={logo} alt="coin logo" className={classes.logo} />
@@ -173,7 +173,7 @@ export const CoinItem = (props) => {
         </Grid>
 
         {/* Price & Icon */}
-        <Grid item container md={5} justify="center" alignItems="center">
+        <Grid item container xs={5} justify="center" alignItems="center">
           <Grid item container direction="column" xs={8}>
             <Grid item>
               <Typography className={classes.price} align="right">
@@ -201,7 +201,7 @@ export const CoinItem = (props) => {
         </Grid>
 
         {/* 3 Dot */}
-        <Grid item container md={1} justify="center" alignItems="center">
+        <Grid item container xs={1} justify="center" alignItems="center">
           <IconButton
             aria-label="more"
             aria-controls="long-menu"

@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "0.9em",
       lineHeight: "18px",
     },
+
   },
   miniTextPercentage: {
     fontSize: "0.6em",
@@ -286,7 +287,7 @@ export const AssetStructure = () => {
                 </Grid>
 
                 <Grid item className={classes.miniText}>
-                  <Typography className={classes.miniTextName}>
+                  <Typography align="center" className={classes.miniTextName}>
                     {coin.name}
                   </Typography>
                   <Typography

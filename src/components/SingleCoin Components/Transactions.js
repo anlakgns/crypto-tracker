@@ -21,9 +21,6 @@ const useStyles = makeStyles(theme => ({
     border: "0.4em solid ",
     borderColor: theme.palette.primary.light,
   },
-  tableGrid:{
-    
-  },
   row:{
     "&:hover": {
       backgroundColor: theme.palette.secondary.light,
@@ -47,19 +44,22 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export const Transactions = ({ coinSingleResponse })=> {
+export const Transactions = ({ singleCoinResponse })=> {
   const classes = useStyles()
   const [tickerListNumber, setTickerListNumber] = useState(6)
   const [tickerList, setTickerList] = useState([])
   const { currencyFormatter } = useFormatter();
 
-  const coinName = coinSingleResponse?.data.name
+  const coinName = singleCoinResponse?.data.name
 
+  // Setting up ticker list.
   useEffect(()=> {
-    const tickers = coinSingleResponse?.data.tickers.slice(0,tickerListNumber)
+    const tickers = singleCoinResponse?.data.tickers.slice(0,tickerListNumber)
     setTickerList(tickers)
-  },[coinSingleResponse, tickerListNumber])
+  },[singleCoinResponse, tickerListNumber])
 
+  
+  // Dom Handlers
   const closeAllHandler = () => {
     setTickerListNumber(6)
     window.scroll({
@@ -72,12 +72,20 @@ export const Transactions = ({ coinSingleResponse })=> {
   return (
     <>
       <Grid item container justify="center" className={classes.mainContainer}>
+        
+        {/* Headline */}
         <Grid item container>
           <Typography className={classes.headline}>{coinName} Markets</Typography>
         </Grid>
+
+        {/* Table & Button */}
         <Grid item container justify="center" className={classes.tableGrid}>
+          
+          {/** Table **/}
           <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">
+              
+              {/*** Table Healdines ***/}
               <TableHead>
                 <TableRow>
                   <TableCell>Source </TableCell>
@@ -89,6 +97,8 @@ export const Transactions = ({ coinSingleResponse })=> {
                   <TableCell align="right">Updated</TableCell>
                 </TableRow>
               </TableHead>
+
+              {/*** Table Body ***/}
               <TableBody>
                 {tickerList?.map((transaction,i) => (
                   <TableRow key={i} className={classes.row}>
@@ -112,13 +122,15 @@ export const Transactions = ({ coinSingleResponse })=> {
                   </TableRow>
                 ))}
               </TableBody>
+            
             </Table>
           </TableContainer>
+          
+          {/** Button **/}
           { tickerListNumber === 6 ? 
           <ButtonSecondary  contentText="See All Markets" width="20em" onClick={()=> setTickerListNumber(100)} />
           :
-           <ButtonSecondary  contentText="Close All" width="20em" onClick={closeAllHandler} />
-
+          <ButtonSecondary  contentText="Close All" width="20em" onClick={closeAllHandler} />
           }
           
         </Grid>

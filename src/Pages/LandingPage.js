@@ -1,7 +1,7 @@
 import React, {useContext} from "react"
 import {makeStyles} from '@material-ui/styles'
 import Grid from "@material-ui/core/Grid"
-import HeaderM from "../components/Landing Components/Introduction Section/HeaderM"
+import Header from "../components/HeaderComponents/Header"
 import Headline from "../components/Landing Components/Introduction Section/Headline"
 import Waves from "../components/Landing Components/Introduction Section/Waves"
 import HeadImage from "../components/Landing Components/WhyUs Section/HeadImage"
@@ -35,7 +35,7 @@ const LandingPage = ()=> {
         {/* Introduction Page */}
         <Grid item >
           <Grid container direction="column" className={classes.headpage}>
-            <HeaderM />
+            <Header />
             <Headline />
             <Waves />
           </Grid>

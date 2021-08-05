@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     display: "block",
     overflow: "hidden",
     marginBottom: "15em",
+    
     width: "100%",
     [theme.breakpoints.down("md")]: {
       width: "90%",
@@ -68,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: "none",
     fontSize: "0.9em",
     marginTop: "3em",
-    marginBottom: "20em",
+    marginBottom: "10em",
     [theme.breakpoints.down("sm")]: {
       display: "block",
       margin: "auto",
@@ -76,6 +77,11 @@ const useStyles = makeStyles((theme) => ({
       marginTop: "3em",
     },
   },
+  imageContainer:{
+    marginRight:"2em",
+    marginTop: "6em",
+    display: "flex",
+  }
 }));
 
 const HeadImage = () => {
@@ -86,13 +92,17 @@ const HeadImage = () => {
     <>
       <Grid item className={classes.headAll}>
         <Grid container direction="row" justify="center" alignItems="center">
-          <Grid item md={6} lg={5} xl={4}>
+          
+          {/* Image  */}
+          <Grid item md={6} lg={5} xl={4} className={classes.imageContainer}>
             <img
               src={featurePic}
               className={classes.image}
               alt="background pattern"
             />
           </Grid>
+
+          {/* Text */}
           <Grid item md={5} lg={4} xl={4}>
             <Typography className={classes.whycoin}>WHY COINTRACKER</Typography>
             <Typography className={classes.headline}>
@@ -120,7 +130,7 @@ const HeadImage = () => {
         </Grid>
       </Grid>
 
-      <Grid item className={classes.trusters}></Grid>
+  
     </>
   );
 };

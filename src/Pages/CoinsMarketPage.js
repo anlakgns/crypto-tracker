@@ -1,17 +1,16 @@
-import React from "react"
+import React, {useEffect} from "react"
 import {makeStyles} from '@material-ui/styles'
 import Grid from "@material-ui/core/Grid"
-import HeaderM from "../components/Landing Components/Introduction Section/HeaderM"
-import waves from "../assets/graph-dark.svg"
+import HeaderM from "../components/HeaderComponents/Header"
+import wavePattern from "../assets/graph-dark.svg"
 import CoinTable from "../components/CoinsMarket Components/CoinTable"
 
 
 const useStyles = makeStyles(theme => ({ 
   mainContainer: {
     backgroundColor: theme.palette.common.blue1,
-
   },
-  waves: { 
+  wavePattern: { 
     width:"100%", 
     position:"relative", 
     marginBottom:"-9em",
@@ -29,6 +28,15 @@ const useStyles = makeStyles(theme => ({
 
 const CoinMarketPage = ()=> {
   const classes = useStyles()
+  
+  // Scroll Down to Table
+  useEffect(()=> {
+    window.scroll({
+      top: 100,
+      behavior: 'smooth'
+    });
+  }, [])
+
   return (
     <>
       <Grid 
@@ -42,11 +50,15 @@ const CoinMarketPage = ()=> {
         <Grid item container >
               <HeaderM />
         </Grid>
+
+        {/* Table */}
         <Grid item container  md={11} direction="column"  >
               <CoinTable />
         </Grid>
+
+        {/* Wave Pattern */}
         <Grid item container xs={12} >
-          <img src={waves} className={classes.waves} alt="background pattern" />
+          <img src={wavePattern} className={classes.wavePattern} alt="background pattern" />
         </Grid>
   
       </Grid>

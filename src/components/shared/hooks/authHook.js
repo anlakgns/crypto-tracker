@@ -15,7 +15,6 @@ const ACTIONS = {
   SETERRORMESSAGE: "setErrorMessage"
 }
 
-
 const reducerFn = (state, action) => {
   switch(action.type) {
     case ACTIONS.LOGIN : {
@@ -212,6 +211,7 @@ export const useAuth = () => {
       ;
     });
   };
+  
   useEffect(() => {
     authListener();
   }, []);

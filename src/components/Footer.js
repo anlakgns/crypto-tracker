@@ -10,8 +10,8 @@ import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   footerContainer: {
-    backgroundColor: theme.palette.common.blue1,
     fontFamily: "roboto",
+    backgroundColor: theme.palette.common.blue1,
   },
   linkContainer: {
     padding: "3em",
@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     zIndex: "100",
   },
-
   coinOneIcon: {
     width: "2rem",
     height: "2rem",
@@ -63,6 +62,7 @@ const Footer = () => {
   const classes = useStyles();
   const history = useHistory();
 
+
   const logoHandler = () => {
     history.push("/");
     window.scroll({
@@ -73,7 +73,9 @@ const Footer = () => {
   };
 
   return (
-    <footer className={classes.footerContainer}>
+    <footer
+      className={classes.footerContainer}
+    >
       <Grid container direciton="row" justify="center">
         <Grid
           item
@@ -84,7 +86,6 @@ const Footer = () => {
           xs={12}
           className={classes.mainItem}
         >
-
           <Grid container direction="column" className={classes.linkContainer}>
             <Grid
               item
@@ -96,8 +97,8 @@ const Footer = () => {
               <span className={classes.one}>Tracker</span>
             </Grid>
             <Grid item className={classes.coinOneText}>
-            CoinTracker offers user friendly charts with real-time prices.
-            You can easily manage your portfolio and watchlist.
+              CoinTracker offers user friendly charts with real-time prices. You
+              can easily manage your portfolio and watchlist.
             </Grid>
             <Grid item className={classes.coinOneIcons}>
               <Grid container>
@@ -140,9 +141,8 @@ const Footer = () => {
               </Grid>
             </Grid>
           </Grid>
-        
         </Grid>
-        
+
         <Grid item lg={3} md={4} sm={6} xs={12} className={classes.mainItem}>
           <Grid container direction="column" className={classes.linkContainer}>
             <Grid item className={classes.contactUs}>

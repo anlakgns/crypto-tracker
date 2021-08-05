@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LogIn = ({ logStatus }) => {
+const LoginForm = ({ logStatus }) => {
   const { handleLogin, handleSignUp, state, dispatch, ACTIONS } =
     useContext(AuthContext);
   const { spinner, errorMessage, newUser, isLoggedIn, snackOpen } = state;
@@ -232,4 +232,4 @@ const LogIn = ({ logStatus }) => {
   );
 };
 
-export default LogIn;
+export default LoginForm;

@@ -1,18 +1,19 @@
-import React from "react";
-import { makeStyles, useTheme } from "@material-ui/styles";
+import React, {useEffect} from "react";
+import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
 import { AssetStructure } from "../components/Portfolio Components/AssetStructure";
 import { AssetListContainer } from "../components/Portfolio Components/AssetList/AssetListContainer";
 import { PerformanceChart } from "../components/Portfolio Components/PerformanceChart";
 import { HistoricChart } from "../components/Portfolio Components/HistoricChart";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import HeaderM from "../components/HeaderComponents/Header"
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
     backgroundColor: theme.palette.common.blue1,
     height: "100vh",
     "@media (max-width:1024px)": {
-      height: "160vh",
+      height: "140vh",
     },
     padding: "1em",
   },
@@ -20,12 +21,22 @@ const useStyles = makeStyles((theme) => ({
 
 const PortfolioPage = () => {
   const classes = useStyles();
-  const theme = useTheme();
   const matches1024 = useMediaQuery("(max-width:1024px");
-  console.log(theme.breakpoints.down("sm"));
+
+  // Scroll Down to Charts
+  useEffect(()=> {
+    window.scroll({
+      top: 120,
+      behavior: 'smooth'
+    });
+  }, [])
 
   return (
     <>
+      {/* Header Section */}
+        <Grid item container >
+              <HeaderM />
+        </Grid>
       <Grid
         container
         direction="row"
@@ -53,15 +64,16 @@ const PortfolioPage = () => {
           direction={matches1024 ? "row" : "column"}
         >
           {/*  Asset List */}
-          <Grid item container xs>
+          <Grid item container  style={{ flexBasis: matches1024 ?  "70%" : "auto", flexGrow: 1}}>
             <AssetListContainer />
           </Grid>
 
           {/*  Asset Circle Graph */}
-          <Grid item container xs>
+          <Grid item container style={{flexBasis: matches1024 ? "30%" : "auto", flexGrow: 1}}>
             <AssetStructure />
           </Grid>
         </Grid>
+      
       </Grid>
     </>
   );

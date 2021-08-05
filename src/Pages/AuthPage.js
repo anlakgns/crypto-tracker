@@ -1,18 +1,18 @@
 import React from "react"
 import {makeStyles} from '@material-ui/styles'
 import Grid from "@material-ui/core/Grid"
-import LogIn from "../components/Auth Components/LogIn"
+import LoginForm from "../components/Auth Components/LoginForm"
 import waves from "../assets/graph-dark.svg"
+import Header from "../components/HeaderComponents/Header"
 
 
 const useStyles = makeStyles(theme => ({
-  allPage: {
-   backgroundColor: theme.palette.common.blue2
+ main: {
+   backgroundColor: theme.palette.common.blue1
  },
- LoginContainer:{
+ loginContainer:{
    height: "90vh",
-   marginTop:"6em",
-
+   marginTop:"3em",
  },
  waves: { 
     width:"100%", 
@@ -22,22 +22,44 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Auth = ({logStatus})=> {
+
   const classes = useStyles()
   return (
     <>
-    <Grid container direction="column" className={classes.allPage} >
-      
+      <Grid 
+        container 
+        direction="column" 
+        className={classes.main} 
+      >
+        
+        {/* Header Section */}
+        <Grid item container >
+          <Header />
+        </Grid>
 
-      {/* Auth Section */}    
-      <Grid item container direction="row" className={classes.LoginContainer} justify="center" alignItems="center" >
-        <Grid item  md={3}  >
-          <LogIn logStatus={logStatus} />
+        {/* Auth Section */}    
+        <Grid item container 
+          direction="row" 
+          className={classes.loginContainer} 
+          justify="center" 
+          alignItems="center" 
+        >
+          {/** Login Form **/}
+          <Grid item  md={3}  >
+            <LoginForm logStatus={logStatus} />
+          </Grid>
+
+          {/** Pattern **/}
+          <Grid item md={12} >
+            <img 
+              src={waves} 
+              className={classes.waves} 
+              alt="background pattern" />
+          </Grid>
+
         </Grid>
-        <Grid item md={12} >
-          <img src={waves} className={classes.waves} alt="background pattern" />
-        </Grid>
+      
       </Grid>
-    </Grid>
     </>
   )
 }

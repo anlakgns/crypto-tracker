@@ -1,14 +1,16 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
-import LogoButton from "../../shared/UI components/LogoButton";
-import TabsCom from "../../HeaderComponents/TabsCom";
-import DrawerCom from "../../HeaderComponents/DrawerCom";
+
 import { useTheme } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-const HeaderM = () => {
+import LogoButton from "../shared/UI components/LogoButton";
+import TabsCom from "./TabsCom";
+import DrawerCom from "./DrawerCom";
+
+const Header = () => {
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("md")); // Responsive Listener
+  const matchesMDup = useMediaQuery(theme.breakpoints.up("md"))
 
   return (
     <Grid
@@ -19,14 +21,20 @@ const HeaderM = () => {
       style={{ padding: "2em 0em" }}
     >
       <Grid item container xs={11} justify="space-between">
+        
+        {/* Left: Logo */}
         <Grid item>
           <LogoButton />
         </Grid>
 
-        <Grid item>{matches ? <TabsCom /> : <DrawerCom />}</Grid>
+        {/* Right: Tabs or Drawer */}
+        <Grid item>
+          {matchesMDup ? <TabsCom /> : <DrawerCom />}
+        </Grid>
+      
       </Grid>
     </Grid>
   );
 };
 
-export default HeaderM;
+export default Header;

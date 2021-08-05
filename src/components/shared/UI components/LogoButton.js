@@ -1,8 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   logo: {
@@ -11,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: "none",
     textDecoration: "none",
   },
-  logo2: {
+  innerLogo: {
     color: "white",
     fontWeight: "400",
   },
@@ -28,7 +29,7 @@ const LogoButton = () => {
         component={Link}
         to="/"
       >
-        <span className={classes.logo2}>Coin</span>Tracker
+        <span className={classes.innerLogo}>Coin</span>Tracker
       </Typography>
     </Button>
   );

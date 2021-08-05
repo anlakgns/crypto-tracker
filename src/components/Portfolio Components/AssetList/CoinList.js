@@ -11,9 +11,12 @@ const useStyles = makeStyles(theme => ({
   },
   list: {
     overflow: 'auto',
-    maxHeight:"38vh"
-
+    maxHeight:"38vh",
+    margin: "auto"
   },
+  listRoot: {
+    width:"100%"
+  }
   
 }))
 

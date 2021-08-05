@@ -375,14 +375,14 @@ export const HistoricChart = () => {
           justify="flex-end"
           className={classes.controlBar}
         >
-          <Grid item md>
+          <Grid item xs>
             <Typography className={classes.headline}>
               {selectedCoinForGraph?.name || "Portfolio"} Historic Chart
             </Typography>
           </Grid>
 
           {/* Chart Type Select */}
-          <Grid item md>
+          <Grid item xs>
             <form>
               <select
                 name="cars"
@@ -403,7 +403,7 @@ export const HistoricChart = () => {
           </Grid>
 
           {/* Switcher -  Among Transaction Types */}
-          <Grid item md container justify="center">
+          <Grid item xs container justify="center">
             {selectedCoinForGraph !== "All Assets" ? (
               <Tabs
                 value={chartDataType}
@@ -464,7 +464,7 @@ export const HistoricChart = () => {
             item
             container
             justify="flex-end"
-            md
+            xs
             className={classes.iconGridContainer}
           >
             <Tabs
@@ -512,6 +512,7 @@ export const HistoricChart = () => {
               />
             </Tabs>
           </Grid>
+        
         </Grid>
 
         {/* Line Chart */}

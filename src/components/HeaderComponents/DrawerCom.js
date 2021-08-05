@@ -7,9 +7,60 @@ import MenuIcon from '@material-ui/icons/Menu'
 import {makeStyles} from '@material-ui/styles'
 import {Link} from "react-router-dom"
 import ListItemText from "@material-ui/core/ListItemText"
+import Typography from "@material-ui/core/Typography";
+import waves from "../../assets/graph-dark.svg"
 
-// Local CSS
 const useStyles = makeStyles(theme => ({
+  
+  // Drawer Menu 
+  drawer: {
+    backgroundColor: theme.palette.primary.main,
+    width: "15em",
+    height:"40em",
+    borderBottomRightRadius:"2em"
+  },
+  logo: {
+    fontSize: "1.8rem",
+    fontFamily: "roboto",
+    textTransform: "none",
+    textDecoration: "none",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: "2em",
+    [theme.breakpoints.down("md")]: {
+      marginBottom:"2.5em"
+    },
+    [theme.breakpoints.down("xs")]: {
+      marginBottom:"2.5em"
+    },
+  },
+  innerLogo: {
+    color: "white",
+    fontWeight: "400",
+  },
+  drawerItemSelected: {
+    "& .MuiListItemText-root": {
+      opacity : 1
+    },
+  },
+  drawerItemText: {
+    ...theme.typography.tab,
+    color:"white",
+    opacity: 0.7,
+  },
+  wavePattern: {
+    width: "100%",
+    height:"100%"
+  },
+  descriptionText: {
+    lineHeight: "1.4rem",
+    marginBottom: "1.2rem",
+    fontWeight: 400,
+    color: theme.palette.common.textPurple,
+    padding: "1em"
+  },
+
+  // Hamburger Menu Icon
   drawerIconContainer: {
     marginLeft: "auto"
   },
@@ -17,51 +68,23 @@ const useStyles = makeStyles(theme => ({
     height: "50px",
     width: "30px",
     color:"white"
-  },
-  drawer: {
-    backgroundColor: theme.palette.primary.main
-  },
-  drawerItemText: {
-    ...theme.typography.tab,
-    color:"white",
-    opacity: 0.7,
-  },
-  drawerItemSelected: {
-      "& .MuiListItemText-root": {
-        opacity : 1
-      },
-  },
-  tollbarMargin: {
-    marginBottom: "5.5em",
-    [theme.breakpoints.down("md")]: {
-      marginBottom:"4.9em"
-    },
-    [theme.breakpoints.down("xs")]: {
-      marginBottom:"4.4em"
-    },
-  }
-
-  
+  },  
 }))
-
 
 const DrawerCom = ()=> {
   const classes = useStyles();   // Local CSS
-
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent); // optimal usability for IOS
-
-  const [openDrawer, setOpenDrawer] = useState(false) // Drawer Open/Close State
+  const [openDrawer, setOpenDrawer] = useState(false) 
 
   const routes = [
-    {name: "Features" , link: "/features", activeIndex: "0"},
-    {name: "Use Cases" , link: "/usecases", activeIndex: "1"},
-    {name: "Token Sale" , link: "/tokensale", activeIndex: "2"},
-    {name: "Blog" , link: "/blog", activeIndex: "3"},
-    {name: "Contact", link: "/contact", activeIndex: "4"},
+    {name: "Home" , link: "/", activeIndex: "0"},
+    {name: "Coin Market" , link: "/coinmarket", activeIndex: "1"},
+    {name: "Portfolio" , link: "/portfolio", activeIndex: "2"},
   ]
 
   return (
     <>
+      {/* Drawer */}
       <SwipeableDrawer 
         disableBackdropTransition={!iOS} 
         disableDiscovery={iOS}
@@ -69,7 +92,16 @@ const DrawerCom = ()=> {
         onClose={()=> setOpenDrawer(false)} 
         onOpen={()=> setOpenDrawer(true)}
         classes={{paper: classes.drawer}}>
-          <div className={classes.tollbarMargin} />
+
+          {/** Logo  **/}
+          <Typography
+            color="secondary"
+            className={classes.logo}
+          >
+            <span className={classes.innerLogo}>Coin</span>Tracker
+          </Typography>
+
+          {/** Nav List **/}
           <List disablePadding>
             {routes.map((route)=> (
               <ListItem 
@@ -89,9 +121,24 @@ const DrawerCom = ()=> {
                 </ListItemText>
               </ListItem>
             ))}
-           
           </List>
+
+          {/** Wave Pattern **/}
+          <img 
+            src={waves} 
+            className={classes.wavePattern} 
+            alt="background pattern" 
+          />
+
+          {/** Website Description Text **/}
+          <Typography className={classes.descriptionText}>
+            CoinTracker offers user friendly charts with real-time prices. You
+            can easily manage your portfolio and watchlist.
+          </Typography>
+
       </SwipeableDrawer >
+      
+      {/* Hamburger Menu Icon */}
       <IconButton className={classes.drawerIconContainer} onClick={()=> setOpenDrawer(!openDrawer)}>
         <MenuIcon className={classes.drawerIcon}/>
       </IconButton>

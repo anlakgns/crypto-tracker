@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -10,11 +11,12 @@ import SearchRoundedIcon from "@material-ui/icons/SearchRounded";
 import ExpandMoreRoundedIcon from "@material-ui/icons/ExpandMoreRounded";
 import PersonRoundedIcon from "@material-ui/icons/PersonRounded";
 import CodeRoundedIcon from "@material-ui/icons/CodeRounded";
-import { useFormatter } from "../shared/utils/formatterHook";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Link from "@material-ui/core/Link";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+
+import { useFormatter } from "../shared/utils/formatterHook";
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
@@ -99,66 +101,67 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "1em",
   },
   menuExplorerItem: {},
-
   explorerLinkRoot: {
     textDecoration: "none",
     color: theme.palette.common.white,
   },
+  selectedMenuItem: {
+
+  }
 }));
 
-export const IntroductionBar = ({ coinSingleResponse }) => {
-  const { currencyFormatter } = useFormatter();
+export const IntroductionBar = ({ singleCoinResponse }) => {
   const classes = useStyles();
+  const { currencyFormatter } = useFormatter();
   const [anchorElExplorer, setAnchorElExplorer] = useState(null);
   const [anchorElCommunity, setAnchorElCommunity] = useState(null);
   const [anchorElSource, setAnchorElSource] = useState(null);
   const matches750 = useMediaQuery("(max-width:750px)");
+  const [formattedData, setFormattedData] = useState({})
 
-  const priceCurrent = currencyFormatter(
-    coinSingleResponse?.data.market_data.current_price.usd
-  );
-  const priceChange =
-    coinSingleResponse?.data.market_data.price_change_percentage_24h.toFixed(
-      2
-    ) + "%";
-  const coinCode = coinSingleResponse?.data.symbol.toUpperCase();
-  const coinName = coinSingleResponse?.data.name;
-  const high24 = coinSingleResponse?.data.market_data.high_24h.usd;
-  const low24 = coinSingleResponse?.data.market_data.low_24h.usd;
-  const progresValue =
-    ((coinSingleResponse?.data.market_data.current_price.usd - low24) /
-      (high24 - low24)) *
-    100;
-  const homepage = coinSingleResponse?.data.links.homepage[0];
-
-  const explorerLinks = coinSingleResponse?.data.links.blockchain_site;
-  const officialForumUrl = coinSingleResponse?.data.links.official_forum_url;
-  const redditForumUrl =
-    coinSingleResponse?.data.links.subreddit_url.toString();
-  const repos = coinSingleResponse?.data.links.repos_url.github[0];
-  console.log(coinSingleResponse?.data);
+  // Data Formatted & Editted
+  useEffect(()=> {
+    setFormattedData({
+      priceCurrent : currencyFormatter(
+        singleCoinResponse?.data.market_data.current_price.usd
+      ),
+      priceChange: singleCoinResponse?.data.market_data.price_change_percentage_24h.toFixed(
+        2
+      ) + "%",
+      coinCode: singleCoinResponse?.data.symbol.toUpperCase(),
+      coinName: singleCoinResponse?.data.name,
+      high24: singleCoinResponse?.data.market_data.high_24h.usd,
+      low24: singleCoinResponse?.data.market_data.low_24h.usd,
+      progresValue: 
+        ((singleCoinResponse?.data.market_data.current_price.usd - singleCoinResponse?.data.market_data.low_24h.usd) /
+          (singleCoinResponse?.data.market_data.high_24h.usd - singleCoinResponse?.data.market_data.low_24h.usd)) *
+        100,
+      homepage:  singleCoinResponse?.data.links.homepage[0],
+    
+      explorerLinks: singleCoinResponse?.data.links.blockchain_site,
+      officialForumUrl: singleCoinResponse?.data.links.official_forum_url,
+      redditForumUrl: 
+      singleCoinResponse?.data?.links?.subreddit_url?.toString(),
+      repos: singleCoinResponse?.data.links.repos_url.github[0],
+    })
+  }, [singleCoinResponse, currencyFormatter])
 
   // Dom Handlers
   const handleExplorerClick = (event) => {
     setAnchorElExplorer(event.currentTarget);
   };
-
   const handleExplorerClose = () => {
     setAnchorElExplorer(null);
   };
-
   const handleCommunityClick = (event) => {
     setAnchorElCommunity(event.currentTarget);
   };
-
   const handleCommunityClose = () => {
     setAnchorElCommunity(null);
   };
-
   const handleSourceClick = (event) => {
     setAnchorElSource(event.currentTarget);
   };
-
   const handleSourceClose = () => {
     setAnchorElSource(null);
   };
@@ -173,28 +176,27 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
       >
         {/* Left */}
         <Grid
-          item
+          item container
           xs
-          container
           style={{ display: matches750 ? "none" : "flex" }}
         >
-          {/* First Line */}
+          {/**  First Line **/}
           <Grid item container justify="flex-start" alignItems="center">
             <Grid item>
               <img
-                src={coinSingleResponse?.data.image.small}
+                src={singleCoinResponse?.data.image.small}
                 alt="coin logo"
                 className={classes.logo}
               />
             </Grid>
             <Grid item>
               <Typography className={classes.coinName}>
-                {coinSingleResponse?.data.name}
+                {singleCoinResponse?.data.name}
               </Typography>
             </Grid>
             <Grid item className={classes.coinCode}>
               <Typography>
-                {coinSingleResponse?.data.symbol.toUpperCase()}
+                {singleCoinResponse?.data.symbol.toUpperCase()}
               </Typography>
             </Grid>
             <Grid item>
@@ -203,12 +205,13 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
               </IconButton>
             </Grid>
           </Grid>
-          {/* Second Line */}
+          
+          {/**  Second Line **/}
           <Grid item container justify={matches750 ? "space-evenly" : null}>
-            {/* Homepage 1 */}
+            
+            {/***  Homepage 1 ***/}
             <Grid
-              item
-              container
+              item container
               justify="center"
               alignItems="center"
               className={classes.linkGrid}
@@ -217,7 +220,7 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
                 <LinkRoundedIcon className={classes.icons} />
               </Grid>
               <Grid item xs={6}>
-                <Link href={homepage} target="_blank" rel="noopener">
+                <Link href={formattedData.homepage} target="_blank" rel="noopener">
                   <Typography className={classes.linkText} align="center">
                     Homepage
                   </Typography>
@@ -228,7 +231,7 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
               </Grid>
             </Grid>
 
-            {/* Explorer 2 */}
+            {/***  Explorer 2 ***/}
             <Grid
               item
               container
@@ -256,12 +259,13 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
               classes={{ paper: classes.menuPaperRoot }}
               className={classes.menuExplorer}
             >
-              {explorerLinks?.map((link) => {
+              {formattedData.explorerLinks?.map((link) => {
                 return link === "" ? null : (
                   <MenuItem
                     onClick={handleExplorerClose}
                     key={link}
                     className={classes.menuExplorerItem}
+                    selected={false}
                   >
                     <Link
                       target="_blank"
@@ -277,7 +281,7 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
               })}
             </Menu>
 
-            {/* Community 3 */}
+            {/*** Community 3 ***/}
             <Grid
               item
               container
@@ -305,7 +309,7 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
               classes={{ paper: classes.menuPaperRoot }}
               className={classes.menuExplorer}
             >
-              {officialForumUrl?.map((link) => {
+              {formattedData.officialForumUrl?.map((link) => {
                 return link === "" ? null : (
                   <MenuItem
                     onClick={handleCommunityClose}
@@ -327,21 +331,22 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
               <MenuItem
                 onClick={handleCommunityClose}
                 className={classes.menuExplorerItem}
+                classes={{selected: classes.selectedMenuItem}}
               >
                 <Link
                   target="_blank"
                   rel="noopener"
-                  href={redditForumUrl}
+                  href={formattedData.redditForumUrl}
                   underline="none"
                   classes={{ root: classes.explorerLinkRoot }}
                 >
-                  {redditForumUrl &&
-                    redditForumUrl.replace("https://www.", "").split("/")[0]}
+                  {formattedData.redditForumUrl &&
+                    formattedData.redditForumUrl.replace("https://www.", "").split("/")[0]}
                 </Link>
               </MenuItem>
             </Menu>
 
-            {/* Source Code 4 */}
+            {/***  Source Code 4 ***/}
             <Grid
               item
               container
@@ -376,20 +381,23 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
                 <Link
                   target="_blank"
                   rel="noopener"
-                  href={repos}
+                  href={formattedData.repos}
                   underline="none"
                   classes={{ root: classes.explorerLinkRoot }}
                 >
-                  {repos ? repos.replace("https://", "").split("/")[0] : null}
+                  {formattedData.repos ? formattedData.repos.replace("https://", "").split("/")[0] : null}
                 </Link>
               </MenuItem>
             </Menu>
+         
           </Grid>
+        
         </Grid>
 
         {/* Right */}
         <Grid item xs container direction="column">
-          {/* Coin Code */}
+          
+          {/** Coin Code **/}
           <Grid
             item
             container
@@ -399,12 +407,12 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
           >
             <Grid item>
               <Typography align="right" className={classes.rightCode}>
-                {coinName} ({coinCode})
+                {formattedData.coinName} ({formattedData.coinCode})
               </Typography>
             </Grid>
           </Grid>
 
-          {/* Price & Change Info */}
+          {/** Price & Change Info **/}
           <Grid
             item
             container
@@ -413,7 +421,7 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
             alignItems="center"
             style={{ marginTop: matches750 ? "1em" : "0" }}
           >
-            {/** Responsive Logo  **/}
+            {/*** Responsive Logo  ***/}
             <Grid
               item
               container
@@ -422,43 +430,44 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
             >
               <Grid item>
                 <img
-                  src={coinSingleResponse?.data.image.small}
+                  src={singleCoinResponse?.data.image.small}
                   alt="coin logo"
                   className={classes.logo}
                 />
               </Grid>
               <Grid item>
                 <Typography className={classes.coinName}>
-                  {coinSingleResponse?.data.name}
+                  {singleCoinResponse?.data.name}
                 </Typography>
               </Grid>
             </Grid>
 
-            {/** Big Price & Change  **/}
+            {/*** Big Price & Change  ***/}
             <Grid
               item
               container
-              xs={matches750 ? "8" : "12"}
+              xs={matches750 ? 8 : 12}
               alignItems="center"
               justify="flex-end"
             >
               {/**  Big Price **/}
               <Grid item>
                 <Typography align="right" className={classes.rightPrice}>
-                  {priceCurrent}
+                  {formattedData.priceCurrent}
                 </Typography>
               </Grid>
 
               {/** Price Change  **/}
               <Grid item>
                 <Typography align="right" className={classes.rightChange}>
-                  {priceChange}
+                  {formattedData.priceChange}
                 </Typography>
               </Grid>
             </Grid>
+          
           </Grid>
 
-          {/* Low & High Info */}
+          {/**  Low & High Info **/}
           <Grid
             item
             container
@@ -467,16 +476,17 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
             spacing={2}
             className={classes.progressContainer}
           >
-            <Grid item justify="center">
+            <Grid item>
               <span className={classes.low}>
                 Low:&nbsp;
                 <span
                   style={{ color: "white", fontWeight: "bold", opacity: 1 }}
                 >
-                  {currencyFormatter(low24)}
+                  {currencyFormatter(formattedData.low24)}
                 </span>
               </span>
             </Grid>
+            
             <Grid
               item
               md={5}
@@ -487,21 +497,25 @@ export const IntroductionBar = ({ coinSingleResponse }) => {
                 color="secondary"
                 className={classes.progress}
                 variant="determinate"
-                value={progresValue}
+                value={formattedData.progresValue || 0}
               />
             </Grid>
-            <Grid item justify="center">
+            
+            <Grid item>
               <span className={classes.high}>
                 High:&nbsp;
                 <span
                   style={{ color: "white", fontWeight: "bold", opacity: 1 }}
                 >
-                  {currencyFormatter(high24)}
+                  {currencyFormatter(formattedData.high24)}
                 </span>
               </span>
             </Grid>
+            
           </Grid>
+        
         </Grid>
+      
       </Grid>
     </>
   );

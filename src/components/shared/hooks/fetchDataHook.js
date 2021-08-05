@@ -12,12 +12,14 @@ export const useFetchData = () => {
     return formatted;
   }, [responseFormatter]);
 
-  const fetchHistoricOneData = useCallback(async (coinName, currency, days) => {
+  const fetchHistoricSingleData = useCallback(async (coinName, currency, days, source) => {
+
     const response = await coinGeckoAPI.get(`/${coinName}/market_chart`, {
       params: {
         vs_currency: currency,
         days: days,
       },
+      cancelToken: source.token
     });
     return response;
   }, []);
@@ -91,29 +93,34 @@ export const useFetchData = () => {
     []
   );
 
-  const fetchCoinSingle = useCallback(async (coinName) => {
-    const response = await coinGeckoAPI.get(
-      `https://api.coingecko.com/api/v3/coins/${coinName}?
-        `,
-      {
-        params: {
-          localization: false,
-          tickers: true,
-          market_data: true,
-          community_data: true,
-          developer_data: true,
-          sparkline: true,
-        },
-      }
-    );
-    return response;
+  const fetchSingleCoin = useCallback(async (coinName) => {
+    try {
+      const response = await coinGeckoAPI.get(
+        `https://api.coingecko.com/api/v3/coins/${coinName}?
+          `,
+        {
+          params: {
+            localization: false,
+            tickers: true,
+            market_data: true,
+            community_data: true,
+            developer_data: true,
+            sparkline: true,
+          },
+        }
+      );
+      return response;
+    } catch(err) {
+      console.log(err)
+    }
+    
   }, []);
 
   return {
     fetchCoinList,
-    fetchHistoricOneData,
+    fetchHistoricSingleData,
     fetchHistoricBundleData,
     fetchPerformanceData,
-    fetchCoinSingle,
+    fetchSingleCoin,
   };
 };
