@@ -85,6 +85,7 @@ const LoginForm = ({ logStatus }) => {
   const [hasAccount, setHasAccount] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
+
   const modalHandleClose = () => {
     setModalOpen(false);
     dispatch({ type: ACTIONS.SETERRORMESSAGE, payload: false });

@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import { Typography } from "@material-ui/core";
+import useMediaQuery from "@material-ui/core/useMediaQuery"
+import { Tabs } from "@material-ui/core";
+import { Tab } from "@material-ui/core";
+
 import { useFormatter } from "../shared/utils/formatterHook";
-import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useTheme } from "@material-ui/core/styles";
 import { useFetchData } from "../shared/hooks/fetchDataHook";
 
@@ -82,6 +87,89 @@ const useStyles = makeStyles((theme) => ({
     padding: "0.5em",
     color: theme.palette.common.white,
   },
+
+  // Chart Css
+  controlBar: {
+    paddingLeft: "1em",
+    paddingRight: "1em",
+    backgroundColor: theme.palette.common.blue3,
+    borderTopLeftRadius: "0.6em",
+    borderTopRightRadius: "0.6em",
+    maxHeight: "2.5em",
+    minHeight: "3.8em",
+    [theme.breakpoints.up("xl")]: {
+      fontSize:"1.2em"
+    },
+    width:"95%",
+    marginLeft:"1em",
+    marginTop:"2em"
+  },
+  lineChart: {
+    backgroundColor: theme.palette.common.blue2,
+    width:"95%",
+    marginLeft:"1em",
+    borderBottomLeftRadius: "0.6em",
+    borderBottomRightRadius: "0.6em",
+    paddingTop: "1em",
+    paddingBottom: "1em",
+    marginBottom:"1em"
+
+  },
+  headlineChart: {
+    fontSize: "0.80em",
+    color: theme.palette.common.white,
+  },
+  tabsData: {
+    color: theme.palette.primary.main,
+    backgroundColor: "white",
+    borderRadius: "1.5em",
+    minHeight: "0",
+    height: "1.5em",
+  },
+  customDataIndicator: {
+    position: "absolute",
+    backgroundColor: theme.palette.secondary.light,
+    height: "1em",
+    borderRadius: "30px",
+    width: "4.6em",
+    margin: "0.25em",
+  },
+  tabData: {
+    width: "7em",
+    fontSize: "0.7em",
+    textTransform: "none",
+  },
+  tabDataRoot: {
+    minWidth: 0,
+    minHeight: "0",
+    padding: "0.2em",
+  },
+  tabTimeRoot: {
+    minWidth: "10px",
+    textTransform: "none",
+    minHeight: "0",
+    padding: "0",
+    paddingLeft: "0.5em",
+    paddingRight: "0.5em",
+    marginLeft: "0.4em",
+  },
+  tabsTimeRoot: {
+    minHeight: "0",
+  },
+  tabsTime: {
+    color: theme.palette.common.white,
+  },
+  tabTime: {
+    fontSize: "0.7em",
+    color: theme.palette.common.white,
+  },
+  customTimeIndicator: {
+    position: "absolute",
+    backgroundColor: theme.palette.secondary.main,
+    height: "1.2em",
+    borderRadius: "3px",
+    width: "1.5em",
+  },
 }));
 
 export const MainArea = ({ singleCoinResponse }) => {
@@ -94,10 +182,9 @@ export const MainArea = ({ singleCoinResponse }) => {
   const [chartDataType, setChartDataType] = useState(0);
   const [chartTimeType, setChartTimeType] = useState(1);
   const [coinHistoricResponse, setCoinHistoricResponse] = useState([]);
-  const [formattedData, setFormattedData] = useState({})
-  
-  console.log("main area rendered.")
-
+  const [formattedData, setFormattedData] = useState({});
+  const matchesMDdown = useMediaQuery(theme.breakpoints.down("sm"))
+  console.log(chartTimeType)
   // Data Fetching
   useEffect(() => {
     const CancelToken = axios.CancelToken;
@@ -148,7 +235,6 @@ export const MainArea = ({ singleCoinResponse }) => {
       default:
         days = 1;
     }
-    setChartTimeType(days)
     setDaysToFetch(days);
   }, [chartTimeType]);
 
@@ -190,39 +276,6 @@ export const MainArea = ({ singleCoinResponse }) => {
 
     setChartData(data);
   }, [chartDataType, coinHistoricResponse, dateFormatter]);
-
-  // Tooltip
-  const CustomTooltip = ({ active, payload }) => {
-    let name;
-    switch (chartDataType) {
-      case 0:
-        name = "Price";
-        break;
-      case 1:
-        name = "Market Cap";
-        break;
-      case 2:
-        name = "Volume";
-        break;
-      default:
-        name = "Price";
-    }
-
-    if (active && payload && payload.length) {
-      return (
-        <div className={classes.tooltipContainer}>
-          <p className="label">{`${payload[0].payload.date}`}</p>
-          <ul>
-            <li className="price">{` ${name} : ${currencyFormatter(
-              payload[0].value
-            )}`}</li>
-          </ul>
-        </div>
-      );
-    }
-
-    return null;
-  };
 
   // Data Formatted & Editted
   useEffect(()=> {
@@ -275,46 +328,249 @@ export const MainArea = ({ singleCoinResponse }) => {
     })
   }, [currencyFormatter, singleCoinResponse])
 
+
+  // Tooltip
+  const CustomTooltip = ({ active, payload }) => {
+    let name;
+    switch (chartDataType) {
+      case 0:
+        name = "Price";
+        break;
+      case 1:
+        name = "Market Cap";
+        break;
+      case 2:
+        name = "Volume";
+        break;
+      default:
+        name = "Price";
+    }
+
+    if (active && payload && payload.length) {
+      return (
+        <div className={classes.tooltipContainer}>
+          <p className="label">{`${payload[0].payload.date}`}</p>
+          <ul>
+            <li className="price">{` ${name} : ${currencyFormatter(
+              payload[0].value
+            )}`}</li>
+          </ul>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  // Switcher Animation for Framer Motion
+  const indicatorDataStyle = () => {
+    let marginLeft;
+    switch (chartDataType) {
+      case 0:
+        marginLeft = "0.25em";
+        break;
+      case 1:
+        marginLeft = "5em";
+        break;
+      case 2:
+        marginLeft = "9.8em";
+        break;
+      default:
+        marginLeft = "0.25em";
+    }
+    return marginLeft;
+  };
+  const indicatorTimeStyle = () => {
+    let marginLeft;
+    switch (chartTimeType) {
+      case 1:
+        marginLeft = "0.35em";
+        break;
+      case 2:
+        marginLeft = "2.2em";
+        break;
+      case 3:
+        marginLeft = "4.2em";
+        break;
+      case 4:
+        marginLeft = "6.2em";
+        break;
+      case 5:
+        marginLeft = "8.15em";
+        break;
+      case 6:
+        marginLeft = "10em";
+        break;
+      default:
+        marginLeft = "";
+    }
+    return marginLeft;
+  };
+
+  // Switch Handlers
+  const chartDataSwitcher = (e, newValue) => {
+    setChartDataType(newValue);
+  };
+  const timeSwitcher = (_, newValue) => {
+    setChartTimeType(newValue);
+  };
+
   return (
     <>
-      <Grid container>
+      <Grid container direction={matchesMDdown ? "column" : "row"}>
         
         {/* Chart & Bitcoin Info */}
-        <Grid item container direction="column" xs={8}>
+        <Grid item container direction="column" xs={matchesMDdown ? 12 : 8}>
           
           {/** Chart **/}
-          <Grid item xs container>
-            <LineChart
-              width={((window.innerWidth - 100) / 3) * 2}
-              height={400}
-              data={chartData}
-              margin={{ top: 30, right: 30, left: 0, bottom: 0 }}
-            >
-              <XAxis
-                hide={chartData?.length === 0 ? true : false}
-                dataKey="xData"
-                type="category"
-                tickCount="4"
-                interval={40}
-                stroke={theme.palette.common.textPurple}
-              />
-              <YAxis
-                hide={chartData?.length === 0 ? true : false}
-                dataKey="yData"
-                type="number"
-                tickCount="3"
-                domain={["auto", "auto"]}
-                stroke={theme.palette.common.textPurple}
-              />
-              <Tooltip content={<CustomTooltip />} />
-              <Line
-                type="monotone"
-                dataKey="yData"
-                stroke={theme.palette.secondary.main}
-                dot={false}
-                name="yData"
-              />
-            </LineChart>
+          <Grid item xs container direction="column">
+            
+            {/*** Control Bar ***/}
+            <Grid
+              item
+              container
+              md
+              alignItems="center"
+              justify="flex-end"
+              className={classes.controlBar}
+              >
+              {/**** Headline *****/}
+              <Grid item xs>
+                <Typography className={classes.headlineChart}>
+                  {formattedData?.coinName} Historic Chart
+                </Typography>
+              </Grid>
+              
+              {/***** Switcher -  Among Transaction Types ****/}
+              <Grid item xs container justify="center">
+                  <Tabs
+                    value={chartDataType}
+                    onChange={chartDataSwitcher}
+                    className={classes.tabsData}
+                    component={motion.div}
+                    TabIndicatorProps={{ style: { display: "none" } }}
+                  >
+                    <motion.div
+                      className={classes.customDataIndicator}
+                      animate={{ marginLeft: indicatorDataStyle() }}
+                      transition={{ duration: 0.6 }}
+                      initial={false}
+                    />
+                    <Tab
+                      disableRipple
+                      value={0}
+                      label="Price"
+                      className={classes.tabData}
+                      classes={{ root: classes.tabDataRoot }}
+                    />
+                    <Tab
+                      disableRipple
+                      value={1}
+                      label="Market Cap"
+                      className={classes.tabData}
+                      classes={{ root: classes.tabDataRoot }}
+                    />
+                    <Tab
+                      disableRipple
+                      value={2}
+                      label="Volume"
+                      className={classes.tabData}
+                      classes={{ root: classes.tabDataRoot }}
+                    />
+                  </Tabs>
+              </Grid>
+              
+              {/**** Time Tabs ****/}
+              <Grid
+              item
+              container
+              justify="flex-end"
+              xs
+              >
+                <Tabs
+                  value={chartTimeType}
+                  onChange={timeSwitcher}
+                  className={classes.tabsTime}
+                  classes={{ root: classes.tabsTimeRoot }}
+                  TabIndicatorProps={{ style: { display: "none" } }}
+                >
+                  <motion.div
+                    className={classes.customTimeIndicator}
+                    animate={{ marginLeft: indicatorTimeStyle() }}
+                    transition={{ duration: 0.6 }}
+                    initial={false}
+                  />
+                  <Tab
+                    label="1D"
+                    className={classes.tabTime}
+                    classes={{ root: classes.tabTimeRoot }}
+                  />
+                  <Tab
+                    label="7D"
+                    className={classes.tabTime}
+                    classes={{ root: classes.tabTimeRoot }}
+                  />
+                  <Tab
+                    label="1M"
+                    className={classes.tabTime}
+                    classes={{ root: classes.tabTimeRoot }}
+                  />
+                  <Tab
+                    label="6M"
+                    className={classes.tabTime}
+                    classes={{ root: classes.tabTimeRoot }}
+                  />
+                  <Tab
+                    label="1Y"
+                    className={classes.tabTime}
+                    classes={{ root: classes.tabTimeRoot }}
+                  />
+                  <Tab
+                    label="All"
+                    className={classes.tabTime}
+                    classes={{ root: classes.tabTimeRoot }}
+                  />
+                </Tabs>
+              </Grid>
+   
+            </Grid>
+            
+            {/*** Line Chart ***/}
+            <Grid 
+              item container xs 
+              justify="center" 
+              alignItems="center"
+              className={classes.lineChart} >
+              <ResponsiveContainer height={400} width={"90%"} >
+                <LineChart
+                  data={chartData}
+                >
+                  <XAxis
+                    dataKey="xData"
+                    type="category"
+                    tickCount="4"
+                    interval={40}
+                    stroke={theme.palette.common.textPurple}
+                  />
+                  <YAxis
+                    dataKey="yData"
+                    type="number"
+                    tickCount="3"
+                    domain={["auto", "auto"]}
+                    stroke={theme.palette.common.textPurple}
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Line
+                    type="monotone"
+                    dataKey="yData"
+                    stroke={theme.palette.secondary.main}
+                    dot={false}
+                    name="yData"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </Grid>
+          
           </Grid>
 
           {/** Info **/}
@@ -336,7 +592,7 @@ export const MainArea = ({ singleCoinResponse }) => {
         </Grid>
 
         {/* Statistic Table */}
-        <Grid item container xs={4}>
+        <Grid item container xs={matchesMDdown ? 12 : 4}>
           <Grid
             item
             container
@@ -550,3 +806,9 @@ export const MainArea = ({ singleCoinResponse }) => {
     </>
   );
 }
+
+
+
+
+   
+   

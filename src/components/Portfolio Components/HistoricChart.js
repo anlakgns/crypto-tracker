@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
@@ -131,7 +132,7 @@ export const HistoricChart = () => {
 
   const { dateFormatter, currencyFormatter } = useFormatter();
   const {
-    fetchHistoricOneData,
+    fetchHistoricSingleData,
     fetchHistoricBundleData,
   } = useFetchData();
   const [chartDataType, setChartDataType] = useState(0);
@@ -149,14 +150,19 @@ export const HistoricChart = () => {
   
   // Dynamic One Coin Data Fetching
   useEffect(() => {
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
     if (selectedCoinForGraph !== "All Assets") {
+      
       const fetch = async () => {
-        const response = await fetchHistoricOneData(selectedCoinForGraph, "usd", daysToFetch);
+        const response = await fetchHistoricSingleData(selectedCoinForGraph, "usd", daysToFetch, source);
         setCoinHistoricResponse(response)
       }
       fetch()
     }
-  }, [daysToFetch, fetchHistoricOneData, selectedCoinForGraph]);
+
+    return () => { source.cancel()}
+  }, [daysToFetch, fetchHistoricSingleData, selectedCoinForGraph]);
 
   // Dynamic Portfolio Fetching
   useEffect(() => {
@@ -381,11 +387,10 @@ export const HistoricChart = () => {
             </Typography>
           </Grid>
 
-          {/* Chart Type Select */}
+          {/* Coin Type Select */}
           <Grid item xs>
             <form>
               <select
-                name="cars"
                 value={selectedCoinForGraph}
                 className={classes.chartTypeSelect}
                 onChange={chartSelectHandler}
@@ -465,7 +470,6 @@ export const HistoricChart = () => {
             container
             justify="flex-end"
             xs
-            className={classes.iconGridContainer}
           >
             <Tabs
               value={chartTimeType}

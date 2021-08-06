@@ -5,6 +5,7 @@ import { Typography, Tooltip } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
 import { useFormatter } from "../shared/utils/formatterHook";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import useMediaQuery from "@material-ui/core/useMediaQuery"
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
@@ -14,6 +15,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.blue3,
     padding: "1em",
     borderRadius: "1em",
+    marginBottom:"1em",
+    "@media (max-width:500px)": {
+      marginBottom: "1em",
+    },
   },
   marketCapText: {
     fontSize: "0.8em",
@@ -49,6 +54,7 @@ export const StatisticBar = ({ singleCoinResponse }) => {
   const classes = useStyles();
   const { currencyFormatter, numberFormatter } = useFormatter();
   const [formattedData, setFormattedData] = useState({});
+  const matchesIphoneX = useMediaQuery('(max-width:500px)');
 
   // Data Formatted & Editted
   useEffect(() => {
@@ -84,57 +90,61 @@ export const StatisticBar = ({ singleCoinResponse }) => {
   return (
     <>
       <Grid container direction="row" className={classes.mainContainer}>
-        {/* Market Cap */}
-        <Grid item container xs justify="center">
-          <Grid
-            item
-            container
-            xs={11}
-            direction="column"
-            justify="center"
-            alignItems="center"
-            className={classes.cardContainer}
-          >
-            <Grid item container className={classes.FirstLineMC}>
-              <Grid item>
-                <Typography className={classes.marketCapText}>
-                  Market Cap
-                </Typography>
+        
+        {/* Group 1 for reponsiveness */}
+        <Grid item container md >
+          
+          {/** Market Cap **/}
+          <Grid item container xs={matchesIphoneX ? 12 :6 } justify="center">
+            <Grid
+              item
+              container
+              xs={11}
+              direction="column"
+              justify="center"
+              alignItems="center"
+              className={classes.cardContainer}
+            >
+              <Grid item container className={classes.FirstLineMC}>
+                <Grid item>
+                  <Typography className={classes.marketCapText}>
+                    Market Cap
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Tooltip
+                    title="The total market value of a cryptocurrency's circulating supply. It is analogous to the free-float capitalization in the stock market.
+                  Market Cap = Current Price x Circulating Supply."
+                    interactive
+                    classes={{ tooltip: classes.tooltip }}
+                  >
+                    <InfoIcon
+                      style={{ fontSize: "0.9em", marginLeft: "0.2em" }}
+                    />
+                  </Tooltip>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Tooltip
-                  title="The total market value of a cryptocurrency's circulating supply. It is analogous to the free-float capitalization in the stock market.
-                Market Cap = Current Price x Circulating Supply."
-                  interactive
-                  classes={{ tooltip: classes.tooltip }}
-                >
-                  <InfoIcon
-                    style={{ fontSize: "0.9em", marginLeft: "0.2em" }}
-                  />
-                </Tooltip>
-              </Grid>
-            </Grid>
 
-            <Grid item container className={classes.SecondaLineMC}>
-              <Grid item>
-                <Typography className={classes.marketCapNumber}>
-                  {formattedData.marketCap}
-                </Typography>
+              <Grid item container className={classes.SecondaLineMC}>
+                <Grid item>
+                  <Typography className={classes.marketCapNumber}>
+                    {formattedData.marketCap}
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
 
-            <Grid item container className={classes.SecondaLineMC}>
-              <Grid item>
-                <Typography className={classes.marketCapNumberChange}>
-                  {formattedData.marketCapChange}
-                </Typography>
+              <Grid item container className={classes.SecondaLineMC}>
+                <Grid item>
+                  <Typography className={classes.marketCapNumberChange}>
+                    {formattedData.marketCapChange}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
 
-        {/* Fully Diluted Market Cap */}
-        <Grid item container xs justify="center">
+          {/** Fully Diluted Market Cap **/}
+          <Grid item container xs={matchesIphoneX ? 12 :6 } justify="center">
           <Grid
             item
             container
@@ -173,60 +183,64 @@ export const StatisticBar = ({ singleCoinResponse }) => {
             </Grid>
           </Grid>
         </Grid>
+        
+        </Grid>
 
-        {/* All Time High  */}
-        <Grid item container xs justify="center">
-          <Grid
-            item
-            container
-            xs={11}
-            direction="column"
-            justify="center"
-            alignItems="center"
-            className={classes.cardContainer}
-          >
-            <Grid item container className={classes.FirstLineMC}>
-              <Grid item>
-                <Typography className={classes.marketCapText}>
-                  All Time High Price
-                </Typography>
-              </Grid>
-            </Grid>
-
+        {/* Group 2 for responsiveness */}
+        <Grid item container md>
+          {/** All Time High  **/}
+          <Grid item container xs={matchesIphoneX ? 12 : 6 } justify="center">
             <Grid
               item
               container
-              className={classes.SecondaLineMC}
-              style={{ marginBottom: "1em" }}
+              xs={11}
+              direction="column"
+              justify="center"
+              alignItems="center"
+              className={classes.cardContainer}
             >
-              <Grid item>
-                <Typography className={classes.marketCapNumber}>
-                  {formattedData.allTimeHighPrice}
-                </Typography>
+              <Grid item container className={classes.FirstLineMC}>
+                <Grid item>
+                  <Typography className={classes.marketCapText}>
+                    All Time High Price
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
 
-            <Grid item container className={classes.FirstLineMC}>
-              <Grid item>
-                <Typography className={classes.marketCapText}>
-                  All Time High Date
-                </Typography>
+              <Grid
+                item
+                container
+                className={classes.SecondaLineMC}
+                style={{ marginBottom: "1em" }}
+              >
+                <Grid item>
+                  <Typography className={classes.marketCapNumber}>
+                    {formattedData.allTimeHighPrice}
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item></Grid>
-            </Grid>
 
-            <Grid item container className={classes.SecondaLineMC}>
-              <Grid item>
-                <Typography className={classes.marketCapNumber}>
-                  {formattedData.allTimeHighDate}
-                </Typography>
+              <Grid item container className={classes.FirstLineMC}>
+                <Grid item>
+                  <Typography className={classes.marketCapText}>
+                    All Time High Date
+                  </Typography>
+                </Grid>
+                <Grid item></Grid>
+              </Grid>
+
+              <Grid item container className={classes.SecondaLineMC}>
+                <Grid item>
+                  <Typography className={classes.marketCapNumber}>
+                    {formattedData.allTimeHighDate}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
 
-        {/* Circulating Supply */}
-        <Grid item container xs justify="center">
+          {/** Circulating Supply **/}
+          <Grid item container xs={matchesIphoneX ? 12 : 6 } justify="center">
           <Grid
             item
             container
@@ -360,6 +374,8 @@ export const StatisticBar = ({ singleCoinResponse }) => {
             </Grid>
           </Grid>
         </Grid>
+        </Grid>
+      
       </Grid>
     </>
   );
