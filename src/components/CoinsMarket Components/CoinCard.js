@@ -19,10 +19,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("md")]: {
       minHeight: "7em",
     },
-    [theme.breakpoints.down("sm")]: {
-      border: "0 ",
-      borderRadius: "0em",
-    },
+    
   },
   gridContainer: {
     padding: "1em",
@@ -70,10 +67,10 @@ export const CoinCard = (props) => {
     percentageChangeByDay,
     price,
     chartData,
+    location
   } = props;
 
-  const cardHandler = (coinName) => {
-    console.log(coinName);
+  const cardRouter = (coinName) => {
     history.push(`/currencies/${coinName.toLowerCase()}`);
     window.scroll({
       top: 100,
@@ -90,13 +87,15 @@ export const CoinCard = (props) => {
     }
   };
 
+  
+
   return (
     <Card className={classes.cardContainer}>
       <Grid 
         container 
         direction="column" 
         className={classes.gridContainer}
-        onClick={() => cardHandler(coinName)}
+        onClick={() => cardRouter(coinName)}
         >
         
         {/* Coin Logo & Coin Graph */}
@@ -116,7 +115,7 @@ export const CoinCard = (props) => {
 
           {/* Sparkline */}
           <Grid item xs container justify="flex-end">
-            <Sparkline chartData={chartData} />
+            <Sparkline chartData={chartData} location={location} />
           </Grid>
         </Grid>
 
@@ -134,7 +133,7 @@ export const CoinCard = (props) => {
             style={{ fontSize: coinName.length > 20 ? "0.9em" : "1em" }}
           >
             {coinName} &nbsp;
-            <span style={{ opacity: 0.7 }}>{coinCode}</span>
+            <span style={{ opacity: 0.7 }}>{coinCode.length > 10 ? " " : coinCode  }</span>
           </Typography>
         </Grid>
 
@@ -165,6 +164,7 @@ export const CoinCard = (props) => {
             </Typography>
           </Grid>
         </Grid>
+      
       </Grid>
     </Card>
   );

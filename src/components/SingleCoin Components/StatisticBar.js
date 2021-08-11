@@ -52,10 +52,11 @@ const useStyles = makeStyles((theme) => ({
 
 export const StatisticBar = ({ singleCoinResponse }) => {
   const classes = useStyles();
-  const { currencyFormatter, numberFormatter } = useFormatter();
+  const { currencyFormatter, numberFormatter, dateFormatter } = useFormatter();
   const [formattedData, setFormattedData] = useState({});
   const matchesIphoneX = useMediaQuery('(max-width:500px)');
-
+  console.log(new Date(formattedData.allTimeHighDate))
+  
   // Data Formatted & Editted
   useEffect(() => {
     setFormattedData({
@@ -73,7 +74,7 @@ export const StatisticBar = ({ singleCoinResponse }) => {
       allTimeHighPrice: currencyFormatter(
         singleCoinResponse?.data.market_data.ath.usd
       ),
-      allTimeHighDate: singleCoinResponse?.data.market_data.ath_date.usd,
+      allTimeHighDate: `${new Date(singleCoinResponse?.data.market_data.ath_date.usd)}`.split(" ").splice(0,6).join(" "),
       circulatingSupply: numberFormatter(
         singleCoinResponse?.data.market_data.circulating_supply
       ),
@@ -177,7 +178,7 @@ export const StatisticBar = ({ singleCoinResponse }) => {
             <Grid item container className={classes.SecondaLineMC}>
               <Grid item>
                 <Typography className={classes.marketCapNumber}>
-                  {formattedData.dilutedMarketCap}
+                  {formattedData.dilutedMarketCap === "$NaN" ? "Not Available" : formattedData.dilutedMarketCap  }
                 </Typography>
               </Grid>
             </Grid>
@@ -188,6 +189,7 @@ export const StatisticBar = ({ singleCoinResponse }) => {
 
         {/* Group 2 for responsiveness */}
         <Grid item container md>
+          
           {/** All Time High  **/}
           <Grid item container xs={matchesIphoneX ? 12 : 6 } justify="center">
             <Grid
@@ -298,7 +300,7 @@ export const StatisticBar = ({ singleCoinResponse }) => {
                 color="secondary"
                 className={classes.progress}
                 variant="determinate"
-                value={formattedData.progressValue}
+                value={formattedData.progressValue || 0}
               />
             </Grid>
 

@@ -384,6 +384,7 @@ const CoinTable = () => {
                   percentageChangeByDay={coin.priceChangeDayPerc}
                   price={currencyFormatter(coin.price)}
                   chartData={coin.sparkline}
+                  location="table"
                 />
               </Grid>
             );

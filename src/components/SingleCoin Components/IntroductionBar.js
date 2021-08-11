@@ -105,9 +105,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: theme.palette.common.white,
   },
-  selectedMenuItem: {
-
-  }
+  selectedMenuItem: {},
 }));
 
 export const IntroductionBar = ({ singleCoinResponse }) => {
@@ -116,35 +114,42 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
   const [anchorElExplorer, setAnchorElExplorer] = useState(null);
   const [anchorElCommunity, setAnchorElCommunity] = useState(null);
   const [anchorElSource, setAnchorElSource] = useState(null);
+  const [formattedData, setFormattedData] = useState({});
+
   const matches750 = useMediaQuery("(max-width:750px)");
-  const [formattedData, setFormattedData] = useState({})
+  const matches520 = useMediaQuery("(max-width:520px)");
+  const matches375 = useMediaQuery("(max-width:375px)");
+  const matches450 = useMediaQuery("(max-width:450px)");
 
   // Data Formatted & Editted
-  useEffect(()=> {
+  useEffect(() => {
     setFormattedData({
-      priceCurrent : currencyFormatter(
+      priceCurrent: currencyFormatter(
         singleCoinResponse?.data.market_data.current_price.usd
       ),
-      priceChange: singleCoinResponse?.data.market_data.price_change_percentage_24h.toFixed(
-        2
-      ) + "%",
+      priceChange:
+        singleCoinResponse?.data.market_data.price_change_percentage_24h.toFixed(
+          2
+        ) + "%",
       coinCode: singleCoinResponse?.data.symbol.toUpperCase(),
       coinName: singleCoinResponse?.data.name,
       high24: singleCoinResponse?.data.market_data.high_24h.usd,
       low24: singleCoinResponse?.data.market_data.low_24h.usd,
-      progresValue: 
-        ((singleCoinResponse?.data.market_data.current_price.usd - singleCoinResponse?.data.market_data.low_24h.usd) /
-          (singleCoinResponse?.data.market_data.high_24h.usd - singleCoinResponse?.data.market_data.low_24h.usd)) *
+      progresValue:
+        ((singleCoinResponse?.data.market_data.current_price.usd -
+          singleCoinResponse?.data.market_data.low_24h.usd) /
+          (singleCoinResponse?.data.market_data.high_24h.usd -
+            singleCoinResponse?.data.market_data.low_24h.usd)) *
         100,
-      homepage:  singleCoinResponse?.data.links.homepage[0],
-    
+      homepage: singleCoinResponse?.data.links.homepage[0],
+
       explorerLinks: singleCoinResponse?.data.links.blockchain_site,
       officialForumUrl: singleCoinResponse?.data.links.official_forum_url,
-      redditForumUrl: 
-      singleCoinResponse?.data?.links?.subreddit_url?.toString(),
+      redditForumUrl:
+        singleCoinResponse?.data?.links?.subreddit_url?.toString(),
       repos: singleCoinResponse?.data.links.repos_url.github[0],
-    })
-  }, [singleCoinResponse, currencyFormatter])
+    });
+  }, [singleCoinResponse, currencyFormatter]);
 
   // Dom Handlers
   const handleExplorerClick = (event) => {
@@ -166,6 +171,21 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
     setAnchorElSource(null);
   };
 
+  // Responsiveness
+  const linearProgressResponsive = () => {
+    if (matches450) {
+      return 3;
+    }
+    if (matches520) {
+      return 5;
+    }
+    if (matches750) {
+      return 6;
+    }
+
+    return 4;
+  };
+
   return (
     <>
       <Grid
@@ -176,7 +196,8 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
       >
         {/* Left */}
         <Grid
-          item container
+          item
+          container
           xs
           style={{ display: matches750 ? "none" : "flex" }}
         >
@@ -205,13 +226,13 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
               </IconButton>
             </Grid>
           </Grid>
-          
+
           {/**  Second Line **/}
           <Grid item container justify={matches750 ? "space-evenly" : null}>
-            
             {/***  Homepage 1 ***/}
             <Grid
-              item container
+              item
+              container
               justify="center"
               alignItems="center"
               className={classes.linkGrid}
@@ -220,7 +241,11 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
                 <LinkRoundedIcon className={classes.icons} />
               </Grid>
               <Grid item xs={6}>
-                <Link href={formattedData.homepage} target="_blank" rel="noopener">
+                <Link
+                  href={formattedData.homepage}
+                  target="_blank"
+                  rel="noopener"
+                >
                   <Typography className={classes.linkText} align="center">
                     Homepage
                   </Typography>
@@ -331,7 +356,7 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
               <MenuItem
                 onClick={handleCommunityClose}
                 className={classes.menuExplorerItem}
-                classes={{selected: classes.selectedMenuItem}}
+                classes={{ selected: classes.selectedMenuItem }}
               >
                 <Link
                   target="_blank"
@@ -341,7 +366,9 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
                   classes={{ root: classes.explorerLinkRoot }}
                 >
                   {formattedData.redditForumUrl &&
-                    formattedData.redditForumUrl.replace("https://www.", "").split("/")[0]}
+                    formattedData.redditForumUrl
+                      .replace("https://www.", "")
+                      .split("/")[0]}
                 </Link>
               </MenuItem>
             </Menu>
@@ -385,18 +412,17 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
                   underline="none"
                   classes={{ root: classes.explorerLinkRoot }}
                 >
-                  {formattedData.repos ? formattedData.repos.replace("https://", "").split("/")[0] : null}
+                  {formattedData.repos
+                    ? formattedData.repos.replace("https://", "").split("/")[0]
+                    : null}
                 </Link>
               </MenuItem>
             </Menu>
-         
           </Grid>
-        
         </Grid>
 
         {/* Right */}
         <Grid item xs container direction="column">
-          
           {/** Coin Code **/}
           <Grid
             item
@@ -464,7 +490,6 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
                 </Typography>
               </Grid>
             </Grid>
-          
           </Grid>
 
           {/**  Low & High Info **/}
@@ -486,21 +511,23 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
                 </span>
               </span>
             </Grid>
-            
+
             <Grid
               item
-              md={5}
-              sm={matches750 ? 7 : 4}
+              // md={5}
+              // sm={matches750 ? 7 : 4}
+              // xs={matches500 ? 5 : 7}
+              xs={linearProgressResponsive()}
               className={classes.progressGrid}
             >
               <LinearProgress
                 color="secondary"
                 className={classes.progress}
                 variant="determinate"
-                value={formattedData.progresValue || 0}
+                value={formattedData.progresValue || 0}
               />
             </Grid>
-            
+
             <Grid item>
               <span className={classes.high}>
                 High:&nbsp;
@@ -511,11 +538,8 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
                 </span>
               </span>
             </Grid>
-            
           </Grid>
-        
         </Grid>
-      
       </Grid>
     </>
   );

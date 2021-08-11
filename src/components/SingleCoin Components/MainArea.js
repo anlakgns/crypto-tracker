@@ -7,12 +7,19 @@ import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import { Typography } from "@material-ui/core";
-import useMediaQuery from "@material-ui/core/useMediaQuery"
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Tabs } from "@material-ui/core";
 import { Tab } from "@material-ui/core";
 
 import { useFormatter } from "../shared/utils/formatterHook";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import { useTheme } from "@material-ui/core/styles";
 import { useFetchData } from "../shared/hooks/fetchDataHook";
 
@@ -23,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "1em",
     marginTop: "2em",
     marginRight: "1em",
+    "@media (max-width:960px)": {
+      marginLeft: "1em",
+    },
   },
   list: {
     width: "100%",
@@ -67,6 +77,7 @@ const useStyles = makeStyles((theme) => ({
   descriptionGrid: {
     color: "white",
     padding: "1em",
+    position: "relative",
   },
   infoHeadline: {
     fontSize: "1.5em",
@@ -77,6 +88,15 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "0.9em",
     opacity: 0.8,
     overflowY: "auto",
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      height: "100px",
+      width: "100%",
+      background: "linear-gradient(transparent, #2E3880)",
+    },
   },
   tooltipContainer: {
     background:
@@ -93,31 +113,39 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "1em",
     paddingRight: "1em",
     backgroundColor: theme.palette.common.blue3,
-    borderTopLeftRadius: "0.6em",
-    borderTopRightRadius: "0.6em",
-    maxHeight: "2.5em",
+    borderTopLeftRadius: "1em",
+    borderTopRightRadius: "1em",
     minHeight: "3.8em",
     [theme.breakpoints.up("xl")]: {
-      fontSize:"1.2em"
+      fontSize: "1.2em",
     },
-    width:"95%",
-    marginLeft:"1em",
-    marginTop:"2em"
+    "@media (max-width:653px)": {
+      minHeight: "4.8em",
+    },
+    width: "95%",
+    marginLeft: "1em",
+    marginTop: "2em",
+    "@media (max-width:960px)": {
+      margin: "auto",
+    },
   },
   lineChart: {
     backgroundColor: theme.palette.common.blue2,
-    width:"95%",
-    marginLeft:"1em",
-    borderBottomLeftRadius: "0.6em",
-    borderBottomRightRadius: "0.6em",
+    width: "95%",
+    marginLeft: "1em",
+    borderBottomLeftRadius: "1em",
+    borderBottomRightRadius: "1em",
     paddingTop: "1em",
     paddingBottom: "1em",
-    marginBottom:"1em"
-
+    marginBottom: "1em",
+    "@media (max-width:960px)": {
+      margin: "auto",
+    },
   },
   headlineChart: {
     fontSize: "0.80em",
     color: theme.palette.common.white,
+    marginRight: "0.5em",
   },
   tabsData: {
     color: theme.palette.primary.main,
@@ -125,6 +153,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "1.5em",
     minHeight: "0",
     height: "1.5em",
+    "@media (max-width:653px)": {
+      marginBottom: "0.6em",
+    },
   },
   customDataIndicator: {
     position: "absolute",
@@ -183,8 +214,9 @@ export const MainArea = ({ singleCoinResponse }) => {
   const [chartTimeType, setChartTimeType] = useState(1);
   const [coinHistoricResponse, setCoinHistoricResponse] = useState([]);
   const [formattedData, setFormattedData] = useState({});
-  const matchesMDdown = useMediaQuery(theme.breakpoints.down("sm"))
-  console.log(chartTimeType)
+  const matchesMDdown = useMediaQuery(theme.breakpoints.down("sm"));
+  const matches653 = useMediaQuery("(max-width:653px)");
+
   // Data Fetching
   useEffect(() => {
     const CancelToken = axios.CancelToken;
@@ -193,21 +225,20 @@ export const MainArea = ({ singleCoinResponse }) => {
     const fetch = async () => {
       try {
         const response = await fetchHistoricSingleData(
-          singleCoinResponse?.data.id || "bitcoin",
+          singleCoinResponse?.data.id || "bitcoin",
           "usd",
           daysToFetch,
           source
         );
         setCoinHistoricResponse(response);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
-      
     };
-    fetch()
+    fetch();
     return () => {
-      source.cancel()
-    }
+      source.cancel();
+    };
   }, [singleCoinResponse, daysToFetch, fetchHistoricSingleData]);
 
   // Historical Coverage Logic
@@ -278,56 +309,60 @@ export const MainArea = ({ singleCoinResponse }) => {
   }, [chartDataType, coinHistoricResponse, dateFormatter]);
 
   // Data Formatted & Editted
-  useEffect(()=> {
+  useEffect(() => {
     setFormattedData({
       coinCode: singleCoinResponse?.data.symbol.toUpperCase(),
       coinName: singleCoinResponse?.data.name,
       marketRank: singleCoinResponse?.data.market_cap_rank,
       priceCurrent: currencyFormatter(
         singleCoinResponse?.data.market_data.current_price.usd
-        ),
+      ),
       high24: currencyFormatter(
         singleCoinResponse?.data.market_data.high_24h.usd
-        ),
+      ),
       low24: currencyFormatter(
         singleCoinResponse?.data.market_data.low_24h.usd
-        ),
+      ),
       marketCap: currencyFormatter(
         singleCoinResponse?.data.market_data.market_cap.usd
-        ),
+      ),
       marketCapChange:
         singleCoinResponse?.data.market_data.market_cap_change_percentage_24h.toFixed(
-        2
+          2
         ) + "%",
+      priceChangeAmount: currencyFormatter(
+        singleCoinResponse?.data.market_data.price_change_24h
+      ),
       priceChange1d:
         singleCoinResponse?.data.market_data.price_change_percentage_24h.toFixed(
-        2
+          2
         ) + "%",
       priceChange7d:
-        singleCoinResponse?.data.market_data.price_change_percentage_7d.toFixed(2) +
-        "%",
+        singleCoinResponse?.data.market_data.price_change_percentage_7d.toFixed(
+          2
+        ) + "%",
       priceChange14d:
         singleCoinResponse?.data.market_data.price_change_percentage_14d.toFixed(
-        2
+          2
         ) + "%",
       priceChange30d:
         singleCoinResponse?.data.market_data.price_change_percentage_30d.toFixed(
-        2
+          2
         ) + "%",
       priceChange60d:
         singleCoinResponse?.data.market_data.price_change_percentage_60d.toFixed(
-        2
+          2
         ) + "%",
       priceChange200d:
         singleCoinResponse?.data.market_data.price_change_percentage_200d.toFixed(
-        2
+          2
         ) + "%",
       coinInfo: singleCoinResponse?.data.description.en.replace(
         /<[^>]*>?/gm,
-        ""),
-    })
-  }, [currencyFormatter, singleCoinResponse])
-
+        ""
+      ),
+    });
+  }, [currencyFormatter, singleCoinResponse]);
 
   // Tooltip
   const CustomTooltip = ({ active, payload }) => {
@@ -418,13 +453,10 @@ export const MainArea = ({ singleCoinResponse }) => {
   return (
     <>
       <Grid container direction={matchesMDdown ? "column" : "row"}>
-        
         {/* Chart & Bitcoin Info */}
         <Grid item container direction="column" xs={matchesMDdown ? 12 : 8}>
-          
           {/** Chart **/}
           <Grid item xs container direction="column">
-            
             {/*** Control Bar ***/}
             <Grid
               item
@@ -433,16 +465,26 @@ export const MainArea = ({ singleCoinResponse }) => {
               alignItems="center"
               justify="flex-end"
               className={classes.controlBar}
-              >
-              {/**** Headline *****/}
-              <Grid item xs>
-                <Typography className={classes.headlineChart}>
-                  {formattedData?.coinName} Historic Chart
-                </Typography>
+            >
+              {/**** Group 1 for responsiveness ****/}
+              <Grid item container xs={3}>
+                {/**** Headline *****/}
+                <Grid item xs>
+                  <Typography className={classes.headlineChart}>
+                    {formattedData?.coinName} Historic Chart
+                  </Typography>
+                </Grid>
               </Grid>
-              
-              {/***** Switcher -  Among Transaction Types ****/}
-              <Grid item xs container justify="center">
+
+              {/**** Group 2 for responsiveness ****/}
+              <Grid item container xs={9}>
+                {/***** Switcher -  Among Transaction Types ****/}
+                <Grid
+                  item
+                  xs
+                  container
+                  justify={matches653 ? "flex-end" : "center"}
+                >
                   <Tabs
                     value={chartDataType}
                     onChange={chartDataSwitcher}
@@ -478,73 +520,69 @@ export const MainArea = ({ singleCoinResponse }) => {
                       classes={{ root: classes.tabDataRoot }}
                     />
                   </Tabs>
+                </Grid>
+
+                {/**** Time Tabs ****/}
+                <Grid item container justify={"flex-end"} xs>
+                  <Tabs
+                    value={chartTimeType}
+                    onChange={timeSwitcher}
+                    className={classes.tabsTime}
+                    classes={{ root: classes.tabsTimeRoot }}
+                    TabIndicatorProps={{ style: { display: "none" } }}
+                  >
+                    <motion.div
+                      className={classes.customTimeIndicator}
+                      animate={{ marginLeft: indicatorTimeStyle() }}
+                      transition={{ duration: 0.6 }}
+                      initial={false}
+                    />
+                    <Tab
+                      label="1D"
+                      className={classes.tabTime}
+                      classes={{ root: classes.tabTimeRoot }}
+                    />
+                    <Tab
+                      label="7D"
+                      className={classes.tabTime}
+                      classes={{ root: classes.tabTimeRoot }}
+                    />
+                    <Tab
+                      label="1M"
+                      className={classes.tabTime}
+                      classes={{ root: classes.tabTimeRoot }}
+                    />
+                    <Tab
+                      label="6M"
+                      className={classes.tabTime}
+                      classes={{ root: classes.tabTimeRoot }}
+                    />
+                    <Tab
+                      label="1Y"
+                      className={classes.tabTime}
+                      classes={{ root: classes.tabTimeRoot }}
+                    />
+                    <Tab
+                      label="All"
+                      className={classes.tabTime}
+                      classes={{ root: classes.tabTimeRoot }}
+                    />
+                  </Tabs>
+                </Grid>
               </Grid>
-              
-              {/**** Time Tabs ****/}
-              <Grid
+            </Grid>
+
+            {/*** Line Chart ***/}
+            <Grid
               item
               container
-              justify="flex-end"
               xs
-              >
-                <Tabs
-                  value={chartTimeType}
-                  onChange={timeSwitcher}
-                  className={classes.tabsTime}
-                  classes={{ root: classes.tabsTimeRoot }}
-                  TabIndicatorProps={{ style: { display: "none" } }}
-                >
-                  <motion.div
-                    className={classes.customTimeIndicator}
-                    animate={{ marginLeft: indicatorTimeStyle() }}
-                    transition={{ duration: 0.6 }}
-                    initial={false}
-                  />
-                  <Tab
-                    label="1D"
-                    className={classes.tabTime}
-                    classes={{ root: classes.tabTimeRoot }}
-                  />
-                  <Tab
-                    label="7D"
-                    className={classes.tabTime}
-                    classes={{ root: classes.tabTimeRoot }}
-                  />
-                  <Tab
-                    label="1M"
-                    className={classes.tabTime}
-                    classes={{ root: classes.tabTimeRoot }}
-                  />
-                  <Tab
-                    label="6M"
-                    className={classes.tabTime}
-                    classes={{ root: classes.tabTimeRoot }}
-                  />
-                  <Tab
-                    label="1Y"
-                    className={classes.tabTime}
-                    classes={{ root: classes.tabTimeRoot }}
-                  />
-                  <Tab
-                    label="All"
-                    className={classes.tabTime}
-                    classes={{ root: classes.tabTimeRoot }}
-                  />
-                </Tabs>
-              </Grid>
-   
-            </Grid>
-            
-            {/*** Line Chart ***/}
-            <Grid 
-              item container xs 
-              justify="center" 
+              justify="center"
               alignItems="center"
-              className={classes.lineChart} >
-              <ResponsiveContainer height={400} width={"90%"} >
-                <LineChart
-                  data={chartData}
-                >
+              className={classes.lineChart}
+            >
+              <ResponsiveContainer height={400} width={"90%"}>
+                <LineChart data={chartData}>
                   <XAxis
                     dataKey="xData"
                     type="category"
@@ -570,7 +608,6 @@ export const MainArea = ({ singleCoinResponse }) => {
                 </LineChart>
               </ResponsiveContainer>
             </Grid>
-          
           </Grid>
 
           {/** Info **/}
@@ -588,7 +625,6 @@ export const MainArea = ({ singleCoinResponse }) => {
               {formattedData.coinInfo}
             </Typography>
           </Grid>
-        
         </Grid>
 
         {/* Statistic Table */}
@@ -617,7 +653,7 @@ export const MainArea = ({ singleCoinResponse }) => {
               <ListItem className={classes.priceItem}>
                 <Grid item container justify="space-between">
                   <Grid item>{formattedData.coinName} Price</Grid>
-                  <Grid item>{formattedData.lengthpriceCurrent}</Grid>
+                  <Grid item>{formattedData.priceCurrent}</Grid>
                 </Grid>
               </ListItem>
 
@@ -627,7 +663,7 @@ export const MainArea = ({ singleCoinResponse }) => {
                   <Grid item>
                     Price Change <span className={classes.dayTag}>24h</span>
                   </Grid>
-                  <Grid item>{formattedData.priceCurrent}</Grid>
+                  <Grid item>{formattedData.priceChangeAmount}</Grid>
                 </Grid>
               </ListItem>
 
@@ -801,14 +837,7 @@ export const MainArea = ({ singleCoinResponse }) => {
             </List>
           </Grid>
         </Grid>
-      
       </Grid>
     </>
   );
-}
-
-
-
-
-   
-   
+};

@@ -5,6 +5,7 @@ import { Typography } from "@material-ui/core";
 import { PortfolioContext } from "../shared/contexts/PortfolioContext";
 import { CoinCard } from "../CoinsMarket Components/CoinCard";
 import { useFormatter } from "../shared/utils/formatterHook";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const useStyles = makeStyles((theme) => ({
   cardsGrid: {
@@ -22,6 +23,8 @@ export const TopMoverCards = () => {
   const { coinListResponse } = useContext(PortfolioContext);
   const [cardCoinsInfo, setCardCoinsInfo] = useState([]);
   const { currencyFormatter } = useFormatter();
+  const matches600 = useMediaQuery("(max-width: 600px)");
+  const matches950 = useMediaQuery("(max-width: 950px)");
 
   // Coin Cards Logic
   useEffect(() => {
@@ -41,6 +44,20 @@ export const TopMoverCards = () => {
     setCardCoinsInfo(coinsForCards);
   }, [coinListResponse]);
 
+
+  // responsiveness
+  const coinCardSpaceShare = () => {
+    if(matches600) {
+      return 12
+    } 
+    if(matches950) {
+      return 6
+    } 
+    
+    return 3
+  }
+
+
   return (
     <>
       {/* Headline */}
@@ -59,7 +76,7 @@ export const TopMoverCards = () => {
       >
         {cardCoinsInfo?.map((coin) => {
           return (
-            <Grid item md key={coin.id}>
+            <Grid item xs={coinCardSpaceShare()} key={coin.id}>
               <CoinCard
                 imgSource={coin.logo}
                 alt={coin.id}
@@ -67,6 +84,8 @@ export const TopMoverCards = () => {
                 coinCode={coin.id}
                 percentageChangeByDay={coin.priceChangeDayPerc}
                 price={currencyFormatter(coin.price)}
+                chartData={coin.sparkline}
+                location="cards"
               />
             </Grid>
           );
