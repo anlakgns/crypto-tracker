@@ -526,9 +526,9 @@ const CoinTable = () => {
                           {bookmarks.find(
                             (bookmark) => coin.id === bookmark.id
                           ) === undefined ? (
-                            <BookmarkBorderIcon />
+                            <BookmarkBorderIcon style={{color: theme.palette.secondary.main}} />
                           ) : (
-                            <BookmarkIcon />
+                            <BookmarkIcon style={{color: theme.palette.secondary.main}} />
                           )}
                         </Button>
                       </Grid>
