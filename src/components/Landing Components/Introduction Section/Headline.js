@@ -51,7 +51,7 @@ const Headline = () => {
       <Button
         variant="contained"
         className={classes.exploreButton}
-        onClick={() => history.push("/coinmarkets")}
+        onClick={() => history.push("/coinmarket")}
       >
         <span style={{ marginRight: 5, color: "white" }}>Explore Coins</span>
         <ButtonArrow width={20} height={20} fill={"white"} />
