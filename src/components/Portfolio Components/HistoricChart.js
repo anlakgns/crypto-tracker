@@ -35,15 +35,14 @@ const useStyles = makeStyles((theme) => ({
     '@media (min-width:960px)': {
       minHeight: '15em',
     },
-    position:"relative"
+    position: 'relative',
   },
   chartGrid: {
-    marginTop:"5rem",
-    padding:"1rem 0rem",
+    marginTop: '5rem',
+    padding: '1rem 0rem',
     '@media (min-width:960px)': {
-      marginTop:"4rem",
-      padding:"0rem 0rem",
-
+      marginTop: '4rem',
+      padding: '0rem 0rem',
     },
   },
   controlBar: {
@@ -56,8 +55,8 @@ const useStyles = makeStyles((theme) => ({
     '@media (min-width:600px)': {
       height: '3.5em',
     },
-    position:"absolute",
-    top:0,
+    position: 'absolute',
+    top: 0,
 
     [theme.breakpoints.up('xl')]: {
       fontSize: '1.2em',
@@ -542,7 +541,13 @@ export const HistoricChart = () => {
         </Grid>
 
         {/* Line Chart */}
-        <Grid item container justify="center" alignItems="center" className={classes.chartGrid}>
+        <Grid
+          item
+          container
+          justify="center"
+          alignItems="center"
+          className={classes.chartGrid}
+        >
           <ResponsiveContainer
             height={(window.innerHeight - 100) / 3}
             width="90%"
