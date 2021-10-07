@@ -1,108 +1,111 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from 'react';
 
-import { makeStyles } from "@material-ui/styles";
-import Grid from "@material-ui/core/Grid";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { Typography, IconButton } from "@material-ui/core";
-import StarBorderRoundedIcon from "@material-ui/icons/StarBorderRounded";
-import LinkRoundedIcon from "@material-ui/icons/LinkRounded";
-import LaunchRoundedIcon from "@material-ui/icons/LaunchRounded";
-import SearchRoundedIcon from "@material-ui/icons/SearchRounded";
-import ExpandMoreRoundedIcon from "@material-ui/icons/ExpandMoreRounded";
-import PersonRoundedIcon from "@material-ui/icons/PersonRounded";
-import CodeRoundedIcon from "@material-ui/icons/CodeRounded";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import Link from "@material-ui/core/Link";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
+import { makeStyles } from '@material-ui/styles';
+import Grid from '@material-ui/core/Grid';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Typography, IconButton } from '@material-ui/core';
+import StarBorderRoundedIcon from '@material-ui/icons/StarBorderRounded';
+import StarRoundedIcon from '@material-ui/icons/StarRounded';
+import LinkRoundedIcon from '@material-ui/icons/LinkRounded';
+import LaunchRoundedIcon from '@material-ui/icons/LaunchRounded';
+import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
+import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded';
+import PersonRoundedIcon from '@material-ui/icons/PersonRounded';
+import CodeRoundedIcon from '@material-ui/icons/CodeRounded';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Link from '@material-ui/core/Link';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { usePortfolio } from '../shared/hooks/portfolioHook';
+import { PortfolioContext } from "../shared/contexts/PortfolioContext";
 
-import { useFormatter } from "../shared/utils/formatterHook";
+import { useFormatter } from '../shared/utils/formatterHook';
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
-    padding: "0 1em",
+    padding: '0 1em',
   },
   logo: {
-    width: "90%",
+    width: '90%',
   },
   coinName: {
     color: theme.palette.common.white,
-    fontSize: "2em",
-    marginLeft: "0.2em",
+    fontSize: "clamp(1.5em, 5vw, 2em)",
+    marginLeft: '0.2em',
   },
   coinCode: {
     color: theme.palette.secondary.main,
     backgroundColor: theme.palette.common.blue4,
-    padding: "0.1em 0.3em",
-    borderRadius: "0.3em",
-    marginLeft: "0.5em",
+    padding: '0.1em 0.3em',
+    borderRadius: '0.3em',
+    marginLeft: '0.5em',
   },
   favorite: {
     color: theme.palette.common.white,
   },
   icons: {
     color: theme.palette.common.white,
-    fontSize: "1em",
-    verticalAlign: "center",
+    fontSize: '1em',
+    verticalAlign: 'center',
   },
   linkText: {
     color: theme.palette.common.white,
-    fontSize: "0.7em",
+    fontSize: '0.7em',
   },
   linkGrid: {
     backgroundColor: theme.palette.common.blue4,
-    borderRadius: "0.5em",
-    marginLeft: "0.5em",
+    borderRadius: '0.5em',
+    marginLeft: '0.5em',
     maxWidth: 120,
-    padding: "0.2em 0.3em",
-    marginTop: "0.3em",
-    cursor: "pointer",
+    padding: '0.2em 0.3em',
+    marginTop: '0.3em',
+    cursor: 'pointer',
   },
   rightCode: {
     color: theme.palette.common.white,
     opacity: 0.8,
-    fontSize: "0.8em",
-    display: "inline-block",
-    marginLeft: "1em",
+    fontSize: '0.8em',
+    display: 'inline-block',
+    marginLeft: '1em',
   },
   rightChange: {
-    display: "inline-block",
+    display: 'inline-block',
     color: theme.palette.common.white,
-    marginLeft: "1em",
-    backgroundColor: "green",
-    borderRadius: "0.5em",
-    padding: "0.2em 0.6em",
+    marginLeft: '1em',
+    backgroundColor: 'green',
+    borderRadius: '0.5em',
+    padding: '0.2em 0.6em',
   },
   rightPrice: {
-    display: "inline-block",
+    display: 'inline-block',
     color: theme.palette.common.white,
-    fontSize: "2.5em",
-    lineHeight: "1em",
+    fontSize: "clamp(2em, 5vw, 2.5em)",
+    lineHeight: '1em',
   },
   progressContainer: {
-    marginTop: "0.2em",
+    marginTop: '0.2em',
   },
   progress: {
-    height: "0.8em",
-    borderRadius: "1em",
+    height: '0.8em',
+    borderRadius: '1em',
     color: theme.palette.secondary.main,
   },
   high: {
     color: theme.palette.common.textPurple,
-    fontSize: "0.9em",
+    fontSize: '0.9em',
   },
   low: {
     color: theme.palette.common.textPurple,
-    fontSize: "0.9em",
+    fontSize: '0.9em',
   },
   menuPaperRoot: {
-    marginTop: "3em",
+    marginTop: '3em',
     backgroundColor: theme.palette.secondary.main,
-    borderRadius: "1em",
+    borderRadius: '1em',
   },
   menuExplorerItem: {},
   explorerLinkRoot: {
-    textDecoration: "none",
+    textDecoration: 'none',
     color: theme.palette.common.white,
   },
   selectedMenuItem: {},
@@ -115,11 +118,12 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
   const [anchorElCommunity, setAnchorElCommunity] = useState(null);
   const [anchorElSource, setAnchorElSource] = useState(null);
   const [formattedData, setFormattedData] = useState({});
-
-  const matches750 = useMediaQuery("(max-width:750px)");
-  const matches520 = useMediaQuery("(max-width:520px)");
-  const matches375 = useMediaQuery("(max-width:375px)");
-  const matches450 = useMediaQuery("(max-width:450px)");
+  const { bookmarkHandler, bookmarks } = useContext(PortfolioContext);
+  
+  const matches750 = useMediaQuery('(max-width:750px)');
+  const matches520 = useMediaQuery('(max-width:520px)');
+  const matches375 = useMediaQuery('(max-width:375px)');
+  const matches450 = useMediaQuery('(max-width:450px)');
 
   // Data Formatted & Editted
   useEffect(() => {
@@ -130,7 +134,7 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
       priceChange:
         singleCoinResponse?.data.market_data.price_change_percentage_24h.toFixed(
           2
-        ) + "%",
+        ) + '%',
       coinCode: singleCoinResponse?.data.symbol.toUpperCase(),
       coinName: singleCoinResponse?.data.name,
       high24: singleCoinResponse?.data.market_data.high_24h.usd,
@@ -150,6 +154,7 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
       repos: singleCoinResponse?.data.links.repos_url.github[0],
     });
   }, [singleCoinResponse, currencyFormatter]);
+  console.log(bookmarks);
 
   // Dom Handlers
   const handleExplorerClick = (event) => {
@@ -170,6 +175,7 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
   const handleSourceClose = () => {
     setAnchorElSource(null);
   };
+  
 
   // Responsiveness
   const linearProgressResponsive = () => {
@@ -192,14 +198,14 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
         container
         className={classes.mainContainer}
         justify="center"
-        direction={matches750 ? "column" : "row"}
+        direction={matches750 ? 'column' : 'row'}
       >
         {/* Left */}
         <Grid
           item
           container
           xs
-          style={{ display: matches750 ? "none" : "flex" }}
+          style={{ display: matches750 ? 'none' : 'flex' }}
         >
           {/**  First Line **/}
           <Grid item container justify="flex-start" alignItems="center">
@@ -221,14 +227,22 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
               </Typography>
             </Grid>
             <Grid item>
-              <IconButton>
-                <StarBorderRoundedIcon className={classes.favorite} />
+              <IconButton
+                onClick={() => bookmarkHandler(singleCoinResponse?.data)}
+              >
+                {bookmarks.some(
+                  (item) => item.id === singleCoinResponse?.data.id
+                ) ? (
+                  <StarRoundedIcon className={classes.favorite} />
+                ) : (
+                  <StarBorderRoundedIcon className={classes.favorite} />
+                )}
               </IconButton>
             </Grid>
           </Grid>
 
           {/**  Second Line **/}
-          <Grid item container justify={matches750 ? "space-evenly" : null}>
+          <Grid item container justify={matches750 ? 'space-evenly' : null}>
             {/***  Homepage 1 ***/}
             <Grid
               item
@@ -285,7 +299,7 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
               className={classes.menuExplorer}
             >
               {formattedData.explorerLinks?.map((link) => {
-                return link === "" ? null : (
+                return link === '' ? null : (
                   <MenuItem
                     onClick={handleExplorerClose}
                     key={link}
@@ -299,7 +313,7 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
                       underline="none"
                       classes={{ root: classes.explorerLinkRoot }}
                     >
-                      {link.replace("https://", "").split("/")[0]}
+                      {link.replace('https://', '').split('/')[0]}
                     </Link>
                   </MenuItem>
                 );
@@ -335,7 +349,7 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
               className={classes.menuExplorer}
             >
               {formattedData.officialForumUrl?.map((link) => {
-                return link === "" ? null : (
+                return link === '' ? null : (
                   <MenuItem
                     onClick={handleCommunityClose}
                     key={link}
@@ -348,7 +362,7 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
                       underline="none"
                       classes={{ root: classes.explorerLinkRoot }}
                     >
-                      {link.replace("https://", "").split("/")[0]}
+                      {link.replace('https://', '').split('/')[0]}
                     </Link>
                   </MenuItem>
                 );
@@ -367,8 +381,8 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
                 >
                   {formattedData.redditForumUrl &&
                     formattedData.redditForumUrl
-                      .replace("https://www.", "")
-                      .split("/")[0]}
+                      .replace('https://www.', '')
+                      .split('/')[0]}
                 </Link>
               </MenuItem>
             </Menu>
@@ -413,7 +427,7 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
                   classes={{ root: classes.explorerLinkRoot }}
                 >
                   {formattedData.repos
-                    ? formattedData.repos.replace("https://", "").split("/")[0]
+                    ? formattedData.repos.replace('https://', '').split('/')[0]
                     : null}
                 </Link>
               </MenuItem>
@@ -429,7 +443,7 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
             container
             directiton="column"
             justify="flex-end"
-            style={{ display: matches750 ? "none" : "flex" }}
+            style={{ display: matches750 ? 'none' : 'flex' }}
           >
             <Grid item>
               <Typography align="right" className={classes.rightCode}>
@@ -443,15 +457,15 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
             item
             container
             direction="row"
-            justify={matches750 ? "space-between" : "flex-end"}
+            justify={matches750 ? 'space-between' : 'flex-end'}
             alignItems="center"
-            style={{ marginTop: matches750 ? "1em" : "0" }}
+            style={{ marginTop: matches750 ? '1em' : '0' }}
           >
             {/*** Responsive Logo  ***/}
             <Grid
               item
               container
-              style={{ display: matches750 ? "flex" : "none" }}
+              style={{ display: matches750 ? 'flex' : 'none' }}
               xs={4}
             >
               <Grid item>
@@ -496,7 +510,7 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
           <Grid
             item
             container
-            justify={matches750 ? "space-between" : "flex-end"}
+            justify={matches750 ? 'space-between' : 'flex-end'}
             alignItems="center"
             spacing={2}
             className={classes.progressContainer}
@@ -505,7 +519,7 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
               <span className={classes.low}>
                 Low:&nbsp;
                 <span
-                  style={{ color: "white", fontWeight: "bold", opacity: 1 }}
+                  style={{ color: 'white', fontWeight: 'bold', opacity: 1 }}
                 >
                   {currencyFormatter(formattedData.low24)}
                 </span>
@@ -532,7 +546,7 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
               <span className={classes.high}>
                 High:&nbsp;
                 <span
-                  style={{ color: "white", fontWeight: "bold", opacity: 1 }}
+                  style={{ color: 'white', fontWeight: 'bold', opacity: 1 }}
                 >
                   {currencyFormatter(formattedData.high24)}
                 </span>

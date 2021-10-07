@@ -1,43 +1,57 @@
-import React, {useEffect} from "react";
-import { makeStyles } from "@material-ui/styles";
-import Grid from "@material-ui/core/Grid";
-import { AssetStructure } from "../components/Portfolio Components/AssetStructure";
-import { AssetListContainer } from "../components/Portfolio Components/AssetList/AssetListContainer";
-import { PerformanceChart } from "../components/Portfolio Components/PerformanceChart";
-import { HistoricChart } from "../components/Portfolio Components/HistoricChart";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import HeaderM from "../components/HeaderComponents/Header"
+import React, { useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
+import Grid from '@material-ui/core/Grid';
+import { AssetStructure } from '../components/Portfolio Components/AssetStructure';
+import { AssetListContainer } from '../components/Portfolio Components/AssetList/AssetListContainer';
+import { PerformanceChart } from '../components/Portfolio Components/PerformanceChart';
+import { HistoricChart } from '../components/Portfolio Components/HistoricChart';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import HeaderM from '../components/HeaderComponents/Header';
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
     backgroundColor: theme.palette.common.blue1,
-    height: "100vh",
-    "@media (max-width:1024px)": {
-      height: "140vh",
+    minHeight: '100vh',
+    padding: '1em',
+    maxWidth: '2000px',
+    margin: 'auto',
+  },
+  assetListGrid: {
+    '@media (min-width:600px)': {
+      flex: 1,
+      marginRight: '1em',
     },
-    padding: "1em",
+    '@media (min-width:1024px)': {
+      marginRight: '0em',
+    },
+
+  },
+  assetStructureGrid: {
+    '@media (min-width:600px)': {
+      flex: 1,
+    },
   },
 }));
 
 const PortfolioPage = () => {
   const classes = useStyles();
-  const matches1024 = useMediaQuery("(max-width:1024px");
+  const matches1024 = useMediaQuery('(max-width:1024px');
 
   // Scroll Down to Charts
-  useEffect(()=> {
+  useEffect(() => {
     window.scroll({
       top: 120,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
-  }, [])
+  }, []);
 
   return (
     <>
       {/* Header Section */}
-        <Grid item container >
-              <HeaderM />
-        </Grid>
-      
+      <Grid item container>
+        <HeaderM />
+      </Grid>
+
       <Grid
         container
         direction="row"
@@ -58,23 +72,17 @@ const PortfolioPage = () => {
         </Grid>
 
         {/* Right */}
-        <Grid
-          item
-          container
-          xs={matches1024 ? 12 : 3}
-          direction={matches1024 ? "row" : "column"}
-        >
+        <Grid item container xs>
           {/*  Asset List */}
-          <Grid item container  style={{ flexBasis: matches1024 ?  "70%" : "auto", flexGrow: 1}}>
+          <Grid item container className={classes.assetListGrid}>
             <AssetListContainer />
           </Grid>
 
           {/*  Asset Circle Graph */}
-          <Grid item container style={{flexBasis: matches1024 ? "30%" : "auto", flexGrow: 1}}>
+          <Grid item container className={classes.assetStructureGrid}>
             <AssetStructure />
           </Grid>
         </Grid>
-      
       </Grid>
     </>
   );

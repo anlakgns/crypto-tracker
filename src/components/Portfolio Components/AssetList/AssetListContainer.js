@@ -11,7 +11,6 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.common.white,
     "@media (max-width:1024px)" : {
       marginTop: "1em",
-      marginRight:"0.5em"
     },
   },
   controlBar:{

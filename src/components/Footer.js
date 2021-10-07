@@ -1,59 +1,68 @@
-import React from "react";
-import { makeStyles } from "@material-ui/styles";
-import Grid from "@material-ui/core/Grid";
-import FacebookIcon from "@material-ui/icons/Facebook";
-import TwitterIcon from "@material-ui/icons/Twitter";
-import InstagramIcon from "@material-ui/icons/Instagram";
-import GithubIcon from "@material-ui/icons/GitHub";
-import Icon from "@material-ui/core/Icon";
-import { useHistory } from "react-router-dom";
+import React from 'react';
+import { makeStyles, useStyle } from '@material-ui/styles';
+import Grid from '@material-ui/core/Grid';
+import FacebookIcon from '@material-ui/icons/Facebook';
+import TwitterIcon from '@material-ui/icons/Twitter';
+import InstagramIcon from '@material-ui/icons/Instagram';
+import GithubIcon from '@material-ui/icons/GitHub';
+import Icon from '@material-ui/core/Icon';
+import { useHistory } from 'react-router-dom';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   footerContainer: {
-    fontFamily: "roboto",
+    fontFamily: 'roboto',
     backgroundColor: theme.palette.common.blue1,
+    marginTop:"2em",
+    
+  },
+  innerMain: {
+    maxWidth: '1500px',
+    margin: 'auto',
   },
   linkContainer: {
-    padding: "3em",
+    padding: '3em',
     color: theme.palette.common.textPurple,
-    lineHeight: "1.4em",
+    lineHeight: '1.4em',
   },
   coinOne: {
-    fontSize: "1.5rem",
-    marginBottom: "1.5rem",
-    color: "white",
-    zIndex: "100",
+    fontSize: '1.5rem',
+    marginBottom: '1.5rem',
+    color: 'white',
+    zIndex: '100',
   },
   one: {
     fontWeight: 600,
     color: theme.palette.secondary.main,
   },
   coinOneText: {
-    lineHeight: "1.4rem",
-    marginBottom: "1.2rem",
+    lineHeight: '1.4rem',
+    marginBottom: '1.2rem',
+    textAlign: 'center',
   },
   contactUs: {
-    marginBottom: "1.5rem",
-    color: "white",
-    fontWeight: "bold",
-    zIndex: "100",
+    marginBottom: '1.5rem',
+    color: 'white',
+    fontWeight: 'bold',
+    zIndex: '100',
   },
   quickLinks: {
-    marginBottom: "1.5rem",
-    color: "white",
-    fontWeight: "bold",
-    zIndex: "100",
+    marginBottom: '1.5rem',
+    color: 'white',
+    fontWeight: 'bold',
+    zIndex: '100',
   },
   coinOneIcon: {
-    width: "2rem",
-    height: "2rem",
-    marginRight: "0.6rem",
-    textDecoration: "none",
+    width: '2rem',
+    height: '2rem',
+    marginRight: '0.6rem',
+    textDecoration: 'none',
     color: theme.palette.common.textPurple,
   },
   copyRight: {
-    textAlign: "center",
-    padding: "2rem",
+    textAlign: 'center',
+    padding: '2rem',
     color: theme.palette.common.textPurple,
   },
 }));
@@ -61,37 +70,40 @@ const useStyles = makeStyles((theme) => ({
 const Footer = () => {
   const classes = useStyles();
   const history = useHistory();
-
+  const theme = useTheme();
+  const matchesSMdown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const logoHandler = () => {
-    history.push("/");
+    history.push('/');
     window.scroll({
       top: 0,
       left: 0,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   };
 
   return (
-    <footer
-      className={classes.footerContainer}
-    >
-      <Grid container direciton="row" justify="center">
-        <Grid
-          item
-          container
-          lg={3}
-          md={4}
-          sm={12}
-          xs={12}
-          className={classes.mainItem}
-        >
-          <Grid container direction="column" className={classes.linkContainer}>
+    <footer className={classes.footerContainer}>
+      <Grid
+        container
+        className={classes.innerMain}
+        direction={matchesSMdown ? 'column' : 'row'}
+        justify="center"
+        alignItems="center"
+      >
+        {/** Description Part **/}
+        <Grid item container md={4} sm={8} className={classes.mainItem}>
+          <Grid
+            alignItems="center"
+            container
+            direction="column"
+            className={classes.linkContainer}
+          >
             <Grid
               item
               className={classes.coinOne}
               onClick={logoHandler}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: 'pointer' }}
             >
               <span>Coin</span>
               <span className={classes.one}>Tracker</span>
@@ -143,8 +155,14 @@ const Footer = () => {
           </Grid>
         </Grid>
 
-        <Grid item lg={3} md={4} sm={6} xs={12} className={classes.mainItem}>
-          <Grid container direction="column" className={classes.linkContainer}>
+        {/** ContactUs Part **/}
+        <Grid item md={4} className={classes.mainItem}>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            className={classes.linkContainer}
+          >
             <Grid item className={classes.contactUs}>
               CONTACT US
             </Grid>
@@ -155,18 +173,8 @@ const Footer = () => {
             <Grid item>Email: info@cointracker.com</Grid>
           </Grid>
         </Grid>
-        <Grid item sm={6} lg={2} md={3} xs={12} className={classes.mainItem}>
-          <Grid container direction="column" className={classes.linkContainer}>
-            <Grid item className={classes.quickLinks}>
-              QUICK LINKS
-            </Grid>
-            <Grid item>ABOUT</Grid>
-            <Grid item>FEATURES</Grid>
-            <Grid item>TOKENS</Grid>
-            <Grid item>ROAD MAP</Grid>
-          </Grid>
-        </Grid>
       </Grid>
+
       <div className={classes.copyRight}>
         Copyright © 2021. All rights reserved. CoinOne LLC
       </div>

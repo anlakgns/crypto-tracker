@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { motion } from "framer-motion";
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { motion } from 'framer-motion';
 
-import { makeStyles } from "@material-ui/styles";
-import Grid from "@material-ui/core/Grid";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import { Typography } from "@material-ui/core";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { Tabs } from "@material-ui/core";
-import { Tab } from "@material-ui/core";
+import { makeStyles } from '@material-ui/styles';
+import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import { Typography } from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Tabs } from '@material-ui/core';
+import { Tab } from '@material-ui/core';
 
-import { useFormatter } from "../shared/utils/formatterHook";
+import { useFormatter } from '../shared/utils/formatterHook';
 import {
   LineChart,
   Line,
@@ -19,187 +19,215 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
-import { useTheme } from "@material-ui/core/styles";
-import { useFetchData } from "../shared/hooks/fetchDataHook";
+} from 'recharts';
+import { useTheme } from '@material-ui/core/styles';
+import { useFetchData } from '../shared/hooks/fetchDataHook';
 
 const useStyles = makeStyles((theme) => ({
   listContainer: {
     backgroundColor: theme.palette.common.blue3,
-    padding: "1em",
-    borderRadius: "1em",
-    marginTop: "2em",
-    marginRight: "1em",
-    "@media (max-width:960px)": {
-      marginLeft: "1em",
+    padding: '1em',
+    borderRadius: '1em',
+    marginTop: '2em',
+    maxHeight: '50em',
+    marginRight: '1em',
+    '@media (max-width:960px)': {
+      marginLeft: '1em',
     },
   },
+  charBitcoinGrid: {
+    flex: 8,
+  },
+  statisticTableGrid: {
+    flex: 4,
+    marginBottom:"2em"
+  },
   list: {
-    width: "100%",
+    width: '100%',
   },
   headline: {
-    fontSize: "1.5em",
+    fontSize: '1.5em',
     color: theme.palette.secondary.main,
   },
   headline2: {
     color: theme.palette.common.white,
     opacity: 0.6,
-    fontSize: "0.8em",
+    fontSize: '0.8em',
   },
   underline: {
-    borderBottom: "1px solid",
+    borderBottom: '1px solid',
     color: theme.palette.primary.light,
-    display: "block",
-    width: "95%",
-    margin: "auto",
+    display: 'block',
+    width: '95%',
+    margin: 'auto',
     opacity: 0.8,
   },
   priceItem: {
     color: theme.palette.common.white,
-    padding: "1em 1em",
+    padding: '1em 1em',
   },
   dayTag: {
-    padding: "0.2em",
-    borderRadius: "0.2em",
+    padding: '0.2em',
+    borderRadius: '0.2em',
     backgroundColor: theme.palette.common.buttonPurple,
-    fontSize: "0.8em",
+    fontSize: '0.8em',
   },
   priceChangeItem: {
     color: theme.palette.common.white,
-    padding: "1em 1em",
+    padding: '1em 1em',
   },
   rightNumbers: {
-    fontSize: "0.9em",
+    fontSize: '0.9em',
   },
   leftTexts: {
-    fontSize: "0.9em",
+    fontSize: '0.9em',
   },
   descriptionGrid: {
-    color: "white",
-    padding: "1em",
-    position: "relative",
+    color: 'white',
+    padding: '1em',
+    position: 'relative',
+    width: '97%',
+    margin: '2em 0em',
   },
   infoHeadline: {
-    fontSize: "1.5em",
+    fontSize: '1.5em',
     color: theme.palette.secondary.main,
-    marginBottom: "1em",
+    marginBottom: '1em',
   },
-  infoDescription: {
-    fontSize: "0.9em",
+  infoDescriptionFading: {
+    fontSize: '0.9em',
     opacity: 0.8,
-    overflowY: "auto",
-    "&::before": {
+    position: 'relative',
+    zIndex: 1200,
+    overflowY: 'auto',
+    '&::before': {
       content: '""',
-      position: "absolute",
+      position: 'absolute',
       bottom: 0,
       left: 0,
-      height: "100px",
-      width: "100%",
-      background: "linear-gradient(transparent, #2E3880)",
+      height: '80px',
+      width: '100%',
+      background: 'linear-gradient(transparent, #2E3880)',
     },
   },
+  infoDescriptionNoFading: {
+    fontSize: '0.9em',
+    opacity: 0.8,
+    position: 'relative',
+    zIndex: 1200,
+    overflowY: 'auto',
+  },
+  readMore: {
+    color: theme.palette.secondary.main,
+    opacity: 1,
+    position: 'relative',
+    zIndex: 1500,
+    marginLeft: '1em',
+    cursor: 'pointer',
+  },
+
   tooltipContainer: {
     background:
-      "linear-gradient(20deg, rgba(87,95,153,1) 50%, rgba(255,147,213,1) 100%)",
-    border: "4px solid",
+      'linear-gradient(20deg, rgba(87,95,153,1) 50%, rgba(255,147,213,1) 100%)',
+    border: '4px solid',
     borderColor: theme.palette.primary.main,
-    borderRadius: "1em",
-    padding: "0.5em",
+    borderRadius: '1em',
+    padding: '0.5em',
     color: theme.palette.common.white,
   },
 
   // Chart Css
   controlBar: {
-    paddingLeft: "1em",
-    paddingRight: "1em",
+    paddingLeft: '1em',
+    paddingRight: '1em',
     backgroundColor: theme.palette.common.blue3,
-    borderTopLeftRadius: "1em",
-    borderTopRightRadius: "1em",
-    minHeight: "3.8em",
-    [theme.breakpoints.up("xl")]: {
-      fontSize: "1.2em",
+    borderTopLeftRadius: '1em',
+    borderTopRightRadius: '1em',
+    minHeight: '3.8em',
+    [theme.breakpoints.up('xl')]: {
+      fontSize: '1.2em',
     },
-    "@media (max-width:653px)": {
-      minHeight: "4.8em",
+    '@media (max-width:653px)': {
+      minHeight: '4.8em',
     },
-    width: "95%",
-    marginLeft: "1em",
-    marginTop: "2em",
-    "@media (max-width:960px)": {
-      margin: "auto",
+    width: '95%',
+    marginLeft: '1em',
+    marginTop: '2em',
+    '@media (max-width:960px)': {
+      margin: 'auto',
     },
   },
   lineChart: {
     backgroundColor: theme.palette.common.blue2,
-    width: "95%",
-    marginLeft: "1em",
-    borderBottomLeftRadius: "1em",
-    borderBottomRightRadius: "1em",
-    paddingTop: "1em",
-    paddingBottom: "1em",
-    marginBottom: "1em",
-    "@media (max-width:960px)": {
-      margin: "auto",
+    width: '95%',
+    marginLeft: '1em',
+    borderBottomLeftRadius: '1em',
+    borderBottomRightRadius: '1em',
+    paddingTop: '1em',
+    paddingBottom: '1em',
+    marginBottom: '1em',
+    '@media (max-width:960px)': {
+      margin: 'auto',
     },
   },
   headlineChart: {
-    fontSize: "0.80em",
+    fontSize: '0.80em',
     color: theme.palette.common.white,
-    marginRight: "0.5em",
+    marginRight: '0.5em',
   },
   tabsData: {
     color: theme.palette.primary.main,
-    backgroundColor: "white",
-    borderRadius: "1.5em",
-    minHeight: "0",
-    height: "1.5em",
-    "@media (max-width:653px)": {
-      marginBottom: "0.6em",
+    backgroundColor: 'white',
+    borderRadius: '1.5em',
+    minHeight: '0',
+    height: '1.5em',
+    '@media (max-width:653px)': {
+      marginBottom: '0.6em',
     },
   },
   customDataIndicator: {
-    position: "absolute",
+    position: 'absolute',
     backgroundColor: theme.palette.secondary.light,
-    height: "1em",
-    borderRadius: "30px",
-    width: "4.6em",
-    margin: "0.25em",
+    height: '1em',
+    borderRadius: '30px',
+    width: '4.6em',
+    margin: '0.25em',
   },
   tabData: {
-    width: "7em",
-    fontSize: "0.7em",
-    textTransform: "none",
+    width: '7em',
+    fontSize: '0.7em',
+    textTransform: 'none',
   },
   tabDataRoot: {
     minWidth: 0,
-    minHeight: "0",
-    padding: "0.2em",
+    minHeight: '0',
+    padding: '0.2em',
   },
   tabTimeRoot: {
-    minWidth: "10px",
-    textTransform: "none",
-    minHeight: "0",
-    padding: "0",
-    paddingLeft: "0.5em",
-    paddingRight: "0.5em",
-    marginLeft: "0.4em",
+    minWidth: '10px',
+    textTransform: 'none',
+    minHeight: '0',
+    padding: '0',
+    paddingLeft: '0.5em',
+    paddingRight: '0.5em',
+    marginLeft: '0.4em',
   },
   tabsTimeRoot: {
-    minHeight: "0",
+    minHeight: '0',
   },
   tabsTime: {
     color: theme.palette.common.white,
   },
   tabTime: {
-    fontSize: "0.7em",
+    fontSize: '0.7em',
     color: theme.palette.common.white,
   },
   customTimeIndicator: {
-    position: "absolute",
+    position: 'absolute',
     backgroundColor: theme.palette.secondary.main,
-    height: "1.2em",
-    borderRadius: "3px",
-    width: "1.5em",
+    height: '1.2em',
+    borderRadius: '3px',
+    width: '1.5em',
   },
 }));
 
@@ -212,11 +240,13 @@ export const MainArea = ({ singleCoinResponse }) => {
   const [chartData, setChartData] = useState([]);
   const [chartDataType, setChartDataType] = useState(0);
   const [chartTimeType, setChartTimeType] = useState(1);
+  const [readMore, setReadMore] = useState(false);
   const [coinHistoricResponse, setCoinHistoricResponse] = useState([]);
   const [formattedData, setFormattedData] = useState({});
-  const matchesMDdown = useMediaQuery(theme.breakpoints.down("sm"));
-  const matches653 = useMediaQuery("(max-width:653px)");
-
+  const descriptionRef = useRef();
+  const matchesMDdown = useMediaQuery('@media (max-width:959.95px)');
+  const matches653 = useMediaQuery('(max-width:653px)');
+  console.log(theme.breakpoints.down('sm'));
   // Data Fetching
   useEffect(() => {
     const CancelToken = axios.CancelToken;
@@ -225,8 +255,8 @@ export const MainArea = ({ singleCoinResponse }) => {
     const fetch = async () => {
       try {
         const response = await fetchHistoricSingleData(
-          singleCoinResponse?.data.id || "bitcoin",
-          "usd",
+          singleCoinResponse?.data.id || 'bitcoin',
+          'usd',
           daysToFetch,
           source
         );
@@ -261,7 +291,7 @@ export const MainArea = ({ singleCoinResponse }) => {
         days = 360;
         break;
       case 6:
-        days = "max";
+        days = 'max';
         break;
       default:
         days = 1;
@@ -329,37 +359,37 @@ export const MainArea = ({ singleCoinResponse }) => {
       marketCapChange:
         singleCoinResponse?.data.market_data.market_cap_change_percentage_24h.toFixed(
           2
-        ) + "%",
+        ) + '%',
       priceChangeAmount: currencyFormatter(
         singleCoinResponse?.data.market_data.price_change_24h
       ),
       priceChange1d:
         singleCoinResponse?.data.market_data.price_change_percentage_24h.toFixed(
           2
-        ) + "%",
+        ) + '%',
       priceChange7d:
         singleCoinResponse?.data.market_data.price_change_percentage_7d.toFixed(
           2
-        ) + "%",
+        ) + '%',
       priceChange14d:
         singleCoinResponse?.data.market_data.price_change_percentage_14d.toFixed(
           2
-        ) + "%",
+        ) + '%',
       priceChange30d:
         singleCoinResponse?.data.market_data.price_change_percentage_30d.toFixed(
           2
-        ) + "%",
+        ) + '%',
       priceChange60d:
         singleCoinResponse?.data.market_data.price_change_percentage_60d.toFixed(
           2
-        ) + "%",
+        ) + '%',
       priceChange200d:
         singleCoinResponse?.data.market_data.price_change_percentage_200d.toFixed(
           2
-        ) + "%",
+        ) + '%',
       coinInfo: singleCoinResponse?.data.description.en.replace(
         /<[^>]*>?/gm,
-        ""
+        ''
       ),
     });
   }, [currencyFormatter, singleCoinResponse]);
@@ -369,16 +399,16 @@ export const MainArea = ({ singleCoinResponse }) => {
     let name;
     switch (chartDataType) {
       case 0:
-        name = "Price";
+        name = 'Price';
         break;
       case 1:
-        name = "Market Cap";
+        name = 'Market Cap';
         break;
       case 2:
-        name = "Volume";
+        name = 'Volume';
         break;
       default:
-        name = "Price";
+        name = 'Price';
     }
 
     if (active && payload && payload.length) {
@@ -402,16 +432,16 @@ export const MainArea = ({ singleCoinResponse }) => {
     let marginLeft;
     switch (chartDataType) {
       case 0:
-        marginLeft = "0.25em";
+        marginLeft = '0.25em';
         break;
       case 1:
-        marginLeft = "5em";
+        marginLeft = '5em';
         break;
       case 2:
-        marginLeft = "9.8em";
+        marginLeft = '9.8em';
         break;
       default:
-        marginLeft = "0.25em";
+        marginLeft = '0.25em';
     }
     return marginLeft;
   };
@@ -419,25 +449,25 @@ export const MainArea = ({ singleCoinResponse }) => {
     let marginLeft;
     switch (chartTimeType) {
       case 1:
-        marginLeft = "0.35em";
+        marginLeft = '0.35em';
         break;
       case 2:
-        marginLeft = "2.2em";
+        marginLeft = '2.2em';
         break;
       case 3:
-        marginLeft = "4.2em";
+        marginLeft = '4.2em';
         break;
       case 4:
-        marginLeft = "6.2em";
+        marginLeft = '6.2em';
         break;
       case 5:
-        marginLeft = "8.15em";
+        marginLeft = '8.15em';
         break;
       case 6:
-        marginLeft = "10em";
+        marginLeft = '10em';
         break;
       default:
-        marginLeft = "";
+        marginLeft = '';
     }
     return marginLeft;
   };
@@ -450,11 +480,62 @@ export const MainArea = ({ singleCoinResponse }) => {
     setChartTimeType(newValue);
   };
 
+  // readMore Handler
+  const readMoreHandler = () => {
+    setReadMore(!readMore);
+    descriptionRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest',
+    });
+  };
+
+  // readMore render
+  const readMore1200 = () => {
+    return (
+      <>
+        <span>
+          {readMore
+            ? `${formattedData.coinInfo}`
+            : `${formattedData.coinInfo?.substring(0, 1200)}......`}
+        </span>
+        {readMore ? (
+          <span className={classes.readMore} onClick={readMoreHandler}>
+            read less
+          </span>
+        ) : (
+          <span className={classes.readMore} onClick={readMoreHandler}>
+            read more
+          </span>
+        )}
+      </>
+    );
+  };
+
+  // readMore Class Logic
+  const readMoreClass = () => {
+    if (formattedData.coinInfo?.length > 1200) {
+      if (readMore) {
+        return classes.infoDescriptionNoFading;
+      } else {
+        return classes.infoDescriptionFading;
+      }
+    }
+    if (formattedData.coinInfo?.length <= 1200) {
+      return classes.infoDescriptionNoFading;
+    }
+  };
+
   return (
     <>
-      <Grid container direction={matchesMDdown ? "column" : "row"}>
+      <Grid container direction={matchesMDdown ? 'column' : 'row'}>
         {/* Chart & Bitcoin Info */}
-        <Grid item container direction="column" xs={matchesMDdown ? 12 : 8}>
+        <Grid
+          item
+          container
+          direction="column"
+          className={classes.charBitcoinGrid}
+        >
           {/** Chart **/}
           <Grid item xs container direction="column">
             {/*** Control Bar ***/}
@@ -483,14 +564,14 @@ export const MainArea = ({ singleCoinResponse }) => {
                   item
                   xs
                   container
-                  justify={matches653 ? "flex-end" : "center"}
+                  justify={matches653 ? 'flex-end' : 'center'}
                 >
                   <Tabs
                     value={chartDataType}
                     onChange={chartDataSwitcher}
                     className={classes.tabsData}
                     component={motion.div}
-                    TabIndicatorProps={{ style: { display: "none" } }}
+                    TabIndicatorProps={{ style: { display: 'none' } }}
                   >
                     <motion.div
                       className={classes.customDataIndicator}
@@ -523,13 +604,13 @@ export const MainArea = ({ singleCoinResponse }) => {
                 </Grid>
 
                 {/**** Time Tabs ****/}
-                <Grid item container justify={"flex-end"} xs>
+                <Grid item container justify={'flex-end'} xs>
                   <Tabs
                     value={chartTimeType}
                     onChange={timeSwitcher}
                     className={classes.tabsTime}
                     classes={{ root: classes.tabsTimeRoot }}
-                    TabIndicatorProps={{ style: { display: "none" } }}
+                    TabIndicatorProps={{ style: { display: 'none' } }}
                   >
                     <motion.div
                       className={classes.customTimeIndicator}
@@ -581,7 +662,7 @@ export const MainArea = ({ singleCoinResponse }) => {
               alignItems="center"
               className={classes.lineChart}
             >
-              <ResponsiveContainer height={400} width={"90%"}>
+              <ResponsiveContainer height={400} width={'90%'}>
                 <LineChart data={chartData}>
                   <XAxis
                     dataKey="xData"
@@ -594,7 +675,7 @@ export const MainArea = ({ singleCoinResponse }) => {
                     dataKey="yData"
                     type="number"
                     tickCount="3"
-                    domain={["auto", "auto"]}
+                    domain={['auto', 'auto']}
                     stroke={theme.palette.common.textPurple}
                   />
                   <Tooltip content={<CustomTooltip />} />
@@ -618,17 +699,19 @@ export const MainArea = ({ singleCoinResponse }) => {
             direction="column"
             className={classes.descriptionGrid}
           >
-            <Typography className={classes.infoHeadline}>
+            <Typography ref={descriptionRef} className={classes.infoHeadline}>
               What is {formattedData.coinName} ?
             </Typography>
-            <Typography className={classes.infoDescription} align="justify">
-              {formattedData.coinInfo}
+            <Typography className={readMoreClass()} align="justify">
+              {formattedData.coinInfo?.length > 1200
+                ? readMore1200()
+                : formattedData.coinInfo}
             </Typography>
           </Grid>
         </Grid>
 
         {/* Statistic Table */}
-        <Grid item container xs={matchesMDdown ? 12 : 4}>
+        <Grid item container className={classes.statisticTableGrid}>
           <Grid
             item
             container

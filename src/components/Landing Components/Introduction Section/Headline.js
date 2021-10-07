@@ -11,15 +11,23 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     padding: "em",
     marginTop: "6em",
+    [theme.breakpoints.down("sm")]: {
+      marginBottom:"4em",
+      padding: "0em 3em"
+    },
   },
   headline: {
     marginBottom: "0.6em",
+    fontSize: "clamp(32px, 8vw, 48px)",
+
   },
   subtitle: {
     textAlign: "center",
     color: theme.palette.common.textPurple,
     marginBottom: "2em",
     fontSize: "1.1em",
+    maxWidth:"500px",
+    margin:"auto"
   },
   exploreButton: {
     background:
@@ -45,13 +53,14 @@ const Headline = () => {
         for Your Coins
       </Typography>
       <Typography variant="subtitle1" className={classes.subtitle}>
-        Coin tracker offers user friendly charts with real-time prices. <br />
+        Coin tracker offers user friendly charts with real-time prices.
         You can easily manage your portfolio and watchlist.
       </Typography>
+      
       <Button
         variant="contained"
         className={classes.exploreButton}
-        onClick={() => history.push("/coinmarkets")}
+        onClick={() => history.push("/coinmarket")}
       >
         <span style={{ marginRight: 5, color: "white" }}>Explore Coins</span>
         <ButtonArrow width={20} height={20} fill={"white"} />

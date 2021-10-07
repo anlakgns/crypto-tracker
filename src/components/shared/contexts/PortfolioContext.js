@@ -16,6 +16,8 @@ export const PortfolioProvider = (props) => {
     totalProfit,
     selectedCoinForGraph,
     setSelectedCoinForGraph,
+    bookmarkHandler,
+    bookmarks
   } = usePortfolio();
 
   return (
@@ -31,6 +33,8 @@ export const PortfolioProvider = (props) => {
         totalProfit,
         selectedCoinForGraph,
         setSelectedCoinForGraph,
+        bookmarkHandler,
+        bookmarks
       }}
     >
       {props.children}

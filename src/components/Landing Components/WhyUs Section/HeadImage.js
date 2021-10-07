@@ -8,9 +8,12 @@ import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   headAll: {
-    marginTop: "-7em",
+    maxWidth:"1500px",
+    margin:"auto",
+    marginTop: "-5em",
     [theme.breakpoints.down("sm")]: {
       marginTop: "-2em",
+      marginBottom:"2em"
     },
   },
   image: {
@@ -46,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     fontWeight: "300",
     marginBottom: "0.8em",
+    fontSize: "clamp(32px, 8vw, 48px)",
     [theme.breakpoints.down("sm")]: {
       textAlign: "center",
     },
@@ -80,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
   imageContainer:{
     marginRight:"2em",
     marginTop: "6em",
+    marginBottom: "1em",
     display: "flex",
   }
 }));

@@ -14,7 +14,9 @@ import ButtonSecondary from "../shared/UI components/ButtonSecondary"
 
 const useStyles = makeStyles(theme => ({
   mainContainer:{
-    padding:"1em"
+    padding:"1em",
+    marginBottom:"2em"
+
   },
   table: {
     minWidth: 650,

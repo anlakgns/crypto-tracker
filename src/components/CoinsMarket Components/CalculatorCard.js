@@ -141,13 +141,15 @@ export const CalculatorCard = ({ coinListResponse }) => {
       const currencyNameListResponse = await openExchangeAPI.get(
         "/currencies.json"
       );
+      console.log(currencyRatesResponse, currencyNameListResponse )
       const rates = currencyRatesResponse.data.rates;
       const currencyListEditted = [];
+      
       Object.entries(currencyNameListResponse.data).map((currency) => {
         return currencyListEditted.push({
-          currencyName: currency[1],
-          currencyCode: currency[0],
-          currencyRate: rates[currency[0]],
+          currencyName: currency[1], 
+          currencyCode: currency[0], 
+          currencyRate: rates[currency[0]], 
         });
       });
       setRenderCurrencyList(currencyListEditted);

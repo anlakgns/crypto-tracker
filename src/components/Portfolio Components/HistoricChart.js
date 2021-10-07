@@ -1,128 +1,154 @@
-import React, { useState, useEffect, useContext } from "react";
-import { motion } from "framer-motion";
-import axios from "axios";
+import React, { useState, useEffect, useContext } from 'react';
+import { motion } from 'framer-motion';
+import axios from 'axios';
 
-import { makeStyles } from "@material-ui/styles";
-import Grid from "@material-ui/core/Grid";
-import { useTheme } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
-import { Tabs } from "@material-ui/core";
-import { Tab } from "@material-ui/core";
+import { makeStyles } from '@material-ui/styles';
+import Grid from '@material-ui/core/Grid';
+import { useTheme } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
+import { Tabs } from '@material-ui/core';
+import { Tab } from '@material-ui/core';
 
-import { useFetchData } from "../shared/hooks/fetchDataHook";
-import { useFormatter } from "../shared/utils/formatterHook";
-import { PortfolioContext } from "../shared/contexts/PortfolioContext";
+import { useFetchData } from '../shared/hooks/fetchDataHook';
+import { useFormatter } from '../shared/utils/formatterHook';
+import { PortfolioContext } from '../shared/contexts/PortfolioContext';
 
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
     backgroundColor: theme.palette.common.blue3,
-    marginBottom: "1em",
-    marginRight: "1em",
-    "@media (max-width:1024px)" : {
-      marginRight: "0em",
+    marginBottom: '1em',
+    marginRight: '1em',
+    '@media (max-width:1024px)': {
+      marginRight: '0em',
     },
-    borderRadius: "0.6em",
+    borderRadius: '0.6em',
+    minHeight: '20em',
+    '@media (min-width:960px)': {
+      minHeight: '15em',
+    },
+    position:"relative"
+  },
+  chartGrid: {
+    marginTop:"5rem",
+    padding:"1rem 0rem",
+    '@media (min-width:960px)': {
+      marginTop:"4rem",
+      padding:"0rem 0rem",
+
+    },
   },
   controlBar: {
-    paddingLeft: "1em",
-    paddingRight: "1em",
+    paddingLeft: '1em',
+    paddingRight: '1em',
     backgroundColor: theme.palette.common.blue2,
-    borderTopLeftRadius: "0.6em",
-    borderTopRightRadius: "0.6em",
-    maxHeight: "2.5em",
-    minHeight: "3.8em",
-    marginBottom: "1em",
-    [theme.breakpoints.up("xl")]: {
-      fontSize:"1.2em"
-    }
+    borderTopLeftRadius: '0.6em',
+    borderTopRightRadius: '0.6em',
+    height: '5rem',
+    '@media (min-width:600px)': {
+      height: '3.5em',
+    },
+    position:"absolute",
+    top:0,
+
+    [theme.breakpoints.up('xl')]: {
+      fontSize: '1.2em',
+    },
   },
   headline: {
-    fontSize: "0.80em",
+    fontSize: '0.80em',
     color: theme.palette.common.white,
+    marginRight: '1em',
   },
   tabTimeRoot: {
-    minWidth: "10px",
-    textTransform: "none",
-    minHeight: "0",
-    padding: "0",
-    paddingLeft: "0.5em",
-    paddingRight: "0.5em",
-    marginLeft: "0.4em",
+    minWidth: '10px',
+    textTransform: 'none',
+    minHeight: '0',
+    padding: '0',
+    paddingLeft: '0.5em',
+    paddingRight: '0.5em',
+    marginLeft: '0.4em',
   },
   tabsTimeRoot: {
-    minHeight: "0",
+    minHeight: '0',
   },
   tabsTime: {
     color: theme.palette.common.white,
   },
   tabTime: {
-    fontSize: "0.7em",
+    fontSize: '0.7em',
     color: theme.palette.common.white,
   },
   customTimeIndicator: {
-    position: "absolute",
+    position: 'absolute',
     backgroundColor: theme.palette.secondary.main,
-    height: "1.2em",
-    borderRadius: "3px",
-    width: "1.5em",
+    height: '1.2em',
+    borderRadius: '3px',
+    width: '1.5em',
   },
   tooltipContainer: {
     background:
-      "linear-gradient(20deg, rgba(87,95,153,1) 50%, rgba(255,147,213,1) 100%)",
-    border: "4px solid",
+      'linear-gradient(20deg, rgba(87,95,153,1) 50%, rgba(255,147,213,1) 100%)',
+    border: '4px solid',
     borderColor: theme.palette.primary.main,
-    borderRadius: "1em",
-    padding: "0.5em",
+    borderRadius: '1em',
+    padding: '0.5em',
     color: theme.palette.common.white,
   },
   tabsData: {
     color: theme.palette.primary.main,
-    backgroundColor: "white",
-    borderRadius: "1.5em",
-    minHeight: "0",
-    height: "1.5em",
+    backgroundColor: 'white',
+    borderRadius: '1.5em',
+    minHeight: '0',
+    height: '1.5em',
   },
   tabData: {
-    width: "7em",
-    fontSize: "0.7em",
-    textTransform: "none",
+    width: '7em',
+    fontSize: '0.7em',
+    textTransform: 'none',
   },
   tabDataRoot: {
     minWidth: 0,
-    minHeight: "0",
-    padding: "0.2em",
+    minHeight: '0',
+    padding: '0.2em',
   },
   customDataIndicator: {
-    position: "absolute",
+    position: 'absolute',
     backgroundColor: theme.palette.secondary.light,
-    height: "1em",
-    borderRadius: "30px",
-    width: "4.6em",
-    margin: "0.25em",
+    height: '1em',
+    borderRadius: '30px',
+    width: '4.6em',
+    margin: '0.25em',
   },
   chartSelectType: {
-    height: "1em",
+    height: '1em',
   },
   chartTypeformControl: {
     margin: theme.spacing(1),
     minWidth: 50,
   },
   chartTypeSelect: {
-    height: "1.8em",
-    borderRadius: "1em",
-    width: "7em",
+    height: '1.8em',
+    borderRadius: '1em',
+    width: '7em',
     color: theme.palette.primary.main,
-    paddingLeft: "0.5em",
-    paddingRight: "0.5em",
+    paddingLeft: '0.5em',
+    paddingRight: '0.5em',
   },
   totalSpent: {
     color: theme.palette.common.white,
-    fontSize: "0.8em",
+    fontSize: '0.8em',
   },
   totalProfit: {
-    fontSize: "0.8em",
+    fontSize: '0.8em',
   },
 }));
 
@@ -131,13 +157,10 @@ export const HistoricChart = () => {
   const classes = useStyles();
 
   const { dateFormatter, currencyFormatter } = useFormatter();
-  const {
-    fetchHistoricSingleData,
-    fetchHistoricBundleData,
-  } = useFetchData();
+  const { fetchHistoricSingleData, fetchHistoricBundleData } = useFetchData();
   const [chartDataType, setChartDataType] = useState(0);
   const [chartData, setChartData] = useState([]);
-  const [coinHistoricResponse, setCoinHistoricResponse] = useState([])
+  const [coinHistoricResponse, setCoinHistoricResponse] = useState([]);
   const {
     selectedCoinForGraph,
     setSelectedCoinForGraph,
@@ -147,38 +170,44 @@ export const HistoricChart = () => {
   } = useContext(PortfolioContext);
   const [chartTimeType, setChartTimeType] = useState(1);
   const [daysToFetch, setDaysToFetch] = useState(1);
-  
+
   // Dynamic One Coin Data Fetching
   useEffect(() => {
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source();
-    if (selectedCoinForGraph !== "All Assets") {
-      
+    if (selectedCoinForGraph !== 'All Assets') {
       const fetch = async () => {
-        const response = await fetchHistoricSingleData(selectedCoinForGraph, "usd", daysToFetch, source);
-        setCoinHistoricResponse(response)
-      }
-      fetch()
+        const response = await fetchHistoricSingleData(
+          selectedCoinForGraph,
+          'usd',
+          daysToFetch,
+          source
+        );
+        setCoinHistoricResponse(response);
+      };
+      fetch();
     }
 
-    return () => { source.cancel()}
+    return () => {
+      source.cancel();
+    };
   }, [daysToFetch, fetchHistoricSingleData, selectedCoinForGraph]);
 
   // Dynamic Portfolio Fetching
   useEffect(() => {
-    if (selectedCoinForGraph === "All Assets") {
+    if (selectedCoinForGraph === 'All Assets') {
       const portfolioNameList = portfolioList.map((coin) => coin.allInfo.id);
       const quantities = portfolioList.map((coin) => coin.quantity);
       const fetch = async () => {
         const response = await fetchHistoricBundleData(
-            portfolioNameList,
-            "usd",
-            daysToFetch,
-            quantities
-          )
-        setCoinHistoricResponse(response)
-      }
-      fetch()
+          portfolioNameList,
+          'usd',
+          daysToFetch,
+          quantities
+        );
+        setCoinHistoricResponse(response);
+      };
+      fetch();
     }
   }, [
     daysToFetch,
@@ -207,7 +236,7 @@ export const HistoricChart = () => {
         days = 360;
         break;
       case 6:
-        days = "max";
+        days = 'max';
         break;
       default:
         days = 1;
@@ -228,16 +257,16 @@ export const HistoricChart = () => {
     let marginLeft;
     switch (chartDataType) {
       case 0:
-        marginLeft = "0.25em";
+        marginLeft = '0.25em';
         break;
       case 1:
-        marginLeft = "5em";
+        marginLeft = '5em';
         break;
       case 2:
-        marginLeft = "9.8em";
+        marginLeft = '9.8em';
         break;
       default:
-        marginLeft = "0.25em";
+        marginLeft = '0.25em';
     }
     return marginLeft;
   };
@@ -245,25 +274,25 @@ export const HistoricChart = () => {
     let marginLeft;
     switch (chartTimeType) {
       case 1:
-        marginLeft = "0.35em";
+        marginLeft = '0.35em';
         break;
       case 2:
-        marginLeft = "2.2em";
+        marginLeft = '2.2em';
         break;
       case 3:
-        marginLeft = "4.2em";
+        marginLeft = '4.2em';
         break;
       case 4:
-        marginLeft = "6.2em";
+        marginLeft = '6.2em';
         break;
       case 5:
-        marginLeft = "8.15em";
+        marginLeft = '8.15em';
         break;
       case 6:
-        marginLeft = "10em";
+        marginLeft = '10em';
         break;
       default:
-        marginLeft = "";
+        marginLeft = '';
     }
     return marginLeft;
   };
@@ -283,7 +312,7 @@ export const HistoricChart = () => {
     }
 
     // Market Cap Data
-    if (chartDataType === 1 && selectedCoinForGraph !== "All Assets") {
+    if (chartDataType === 1 && selectedCoinForGraph !== 'All Assets') {
       console.log(coinHistoricResponse);
       data = coinHistoricResponse?.data?.market_caps.map((item) => {
         return {
@@ -295,7 +324,7 @@ export const HistoricChart = () => {
     }
 
     // Volume Data
-    if (chartDataType === 2 && selectedCoinForGraph !== "All Assets") {
+    if (chartDataType === 2 && selectedCoinForGraph !== 'All Assets') {
       data = coinHistoricResponse?.data?.total_volumes.map((item) => {
         return {
           date: dateFormatter(new Date(item[0])),
@@ -317,14 +346,14 @@ export const HistoricChart = () => {
   useEffect(() => {
     if (portfolioList.length === 0) {
       setChartData([]);
-      setSelectedCoinForGraph("All Assets");
+      setSelectedCoinForGraph('All Assets');
     }
   }, [portfolioList, setSelectedCoinForGraph]);
 
   const chartSelectHandler = (event) => {
     event.preventDefault();
     setSelectedCoinForGraph(event.target.value);
-    if (event.target.value === "All Assets") {
+    if (event.target.value === 'All Assets') {
       setChartDataType(0);
     }
   };
@@ -334,16 +363,16 @@ export const HistoricChart = () => {
     let name;
     switch (chartDataType) {
       case 0:
-        name = "Price";
+        name = 'Price';
         break;
       case 1:
-        name = "Market Cap";
+        name = 'Market Cap';
         break;
       case 2:
-        name = "Volume";
+        name = 'Volume';
         break;
       default:
-        name = "Price";
+        name = 'Price';
     }
 
     if (active && payload && payload.length) {
@@ -371,24 +400,23 @@ export const HistoricChart = () => {
         alignItems="center"
         direction="column"
       >
-        
         {/* Control Bar */}
         <Grid
           item
-          md
           container
           alignItems="center"
           justify="flex-end"
           className={classes.controlBar}
         >
+          {/* Headline */}
           <Grid item xs>
             <Typography className={classes.headline}>
-              {selectedCoinForGraph?.name || "Portfolio"} Historic Chart
+              {selectedCoinForGraph?.name || 'Portfolio'} Historic Chart
             </Typography>
           </Grid>
 
           {/* Coin Type Select */}
-          <Grid item xs>
+          <Grid item container justify="center" xs>
             <form>
               <select
                 value={selectedCoinForGraph}
@@ -407,15 +435,15 @@ export const HistoricChart = () => {
             </form>
           </Grid>
 
-          {/* Switcher -  Among Transaction Types */}
+          {/* Switcher -  Among Transaction Types - not available in mobile */}
           <Grid item xs container justify="center">
-            {selectedCoinForGraph !== "All Assets" ? (
+            {selectedCoinForGraph !== 'All Assets' ? (
               <Tabs
                 value={chartDataType}
                 onChange={chartDataSwitcher}
                 className={classes.tabsData}
                 component={motion.div}
-                TabIndicatorProps={{ style: { display: "none" } }}
+                TabIndicatorProps={{ style: { display: 'none' } }}
               >
                 <motion.div
                   className={classes.customDataIndicator}
@@ -446,18 +474,18 @@ export const HistoricChart = () => {
                 />
               </Tabs>
             ) : (
-              <Grid container>
+              <Grid container justify="flex-end">
                 <Grid item>
                   <Typography className={classes.totalSpent}>
                     {totalSpent === 0
-                      ? ""
-                      : `${currencyFormatter(totalSpent)} USD`}{" "}
+                      ? ''
+                      : `${currencyFormatter(totalSpent)} USD`}{' '}
                   </Typography>
                   <Typography
-                    style={{ color: totalProfit > 0 ? "green" : "red" }}
+                    style={{ color: totalProfit > 0 ? 'green' : 'red' }}
                     className={classes.totalProfit}
                   >
-                    {totalProfit === 0 ? "" : currencyFormatter(totalProfit)}
+                    {totalProfit === 0 ? '' : currencyFormatter(totalProfit)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -465,18 +493,13 @@ export const HistoricChart = () => {
           </Grid>
 
           {/* Time Tabs */}
-          <Grid
-            item
-            container
-            justify="flex-end"
-            xs
-          >
+          <Grid item container justify="flex-end" xs>
             <Tabs
               value={chartTimeType}
               onChange={timeSwitcher}
               className={classes.tabsTime}
               classes={{ root: classes.tabsTimeRoot }}
-              TabIndicatorProps={{ style: { display: "none" } }}
+              TabIndicatorProps={{ style: { display: 'none' } }}
             >
               <motion.div
                 className={classes.customTimeIndicator}
@@ -516,18 +539,15 @@ export const HistoricChart = () => {
               />
             </Tabs>
           </Grid>
-        
         </Grid>
 
         {/* Line Chart */}
-        <Grid 
-          item container xs 
-          justify="center" 
-          alignItems="center" >
-          <ResponsiveContainer height={(window.innerHeight - 100)/3} width="90%">
-            <LineChart
-              data={chartData}
-            >
+        <Grid item container justify="center" alignItems="center" className={classes.chartGrid}>
+          <ResponsiveContainer
+            height={(window.innerHeight - 100) / 3}
+            width="90%"
+          >
+            <LineChart data={chartData}>
               <XAxis
                 hide={portfolioList.length === 0 ? true : false}
                 dataKey="xData"
@@ -541,7 +561,7 @@ export const HistoricChart = () => {
                 dataKey="yData"
                 type="number"
                 tickCount="3"
-                domain={["auto", "auto"]}
+                domain={['auto', 'auto']}
                 stroke={theme.palette.common.textPurple}
               />
               <Tooltip content={<CustomTooltip />} />
@@ -555,7 +575,6 @@ export const HistoricChart = () => {
             </LineChart>
           </ResponsiveContainer>
         </Grid>
-      
       </Grid>
     </>
   );

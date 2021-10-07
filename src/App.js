@@ -16,10 +16,7 @@ const useStyles = makeStyles({
   main: {
     backgroundColor: "#2E3880"
   },
-  containerDiv:{
-    maxWidth:"1500px",
-    margin:"auto"
-  }
+
 })
 
 const App = ()=> {

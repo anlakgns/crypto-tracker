@@ -116,7 +116,7 @@ export const ControlBar = (props) => {
         container
         direction="row"
         alignItems="center"
-        justify="flex-end"
+        justify="space-between"
         className={classes.headIconContainer}
       >
         <Grid item md>

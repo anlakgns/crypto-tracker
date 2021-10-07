@@ -1,112 +1,112 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import Grid from "@material-ui/core/Grid";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import Button from "@material-ui/core/Button";
-import TableCell from "@material-ui/core/TableCell";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import { Typography } from "@material-ui/core";
-import Pagination from "@material-ui/lab/Pagination";
-import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
-import BookmarkIcon from "@material-ui/icons/Bookmark";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import Hidden from "@material-ui/core/Hidden";
+import Grid from '@material-ui/core/Grid';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import Button from '@material-ui/core/Button';
+import TableCell from '@material-ui/core/TableCell';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import { Typography } from '@material-ui/core';
+import Pagination from '@material-ui/lab/Pagination';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import BookmarkIcon from '@material-ui/icons/Bookmark';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Hidden from '@material-ui/core/Hidden';
 
-import { useSocketCC } from "../shared/hooks/socketCCHook";
-import HeadUnderline from "../shared/UI components/HeadUnderline";
-import { useFormatter } from "../shared/utils/formatterHook";
-import {useFetchData} from "../shared/hooks/fetchDataHook"
+import { useSocketCC } from '../shared/hooks/socketCCHook';
+import HeadUnderline from '../shared/UI components/HeadUnderline';
+import { useFormatter } from '../shared/utils/formatterHook';
+import { useFetchData } from '../shared/hooks/fetchDataHook';
+import { PortfolioContext } from "../shared/contexts/PortfolioContext";
 
-import { CoinCard } from "./CoinCard";
-import { FeatureBar } from "./FeaturesBar";
-import { Sparkline } from "./Sparkline";
+
+import { CoinCard } from './CoinCard';
+import { FeatureBar } from './FeaturesBar';
+import { Sparkline } from './Sparkline';
 
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 350,
-    border: "0.4em solid ",
+    border: '0.4em solid ',
     borderColor: theme.palette.primary.light,
   },
   price: {
-    transition: "color 1s ease-in",
+    transition: 'color 1s ease-in',
   },
   pagination: {
-    padding: "1em",
-    justifyContent: "center",
-    transition: "scroll",
-    borderBottom: "0.4em solid ",
-    borderLeft: "0.4em solid ",
-    borderRight: "0.4em solid ",
+    padding: '1em',
+    justifyContent: 'center',
+    transition: 'scroll',
+    borderBottom: '0.4em solid ',
+    borderLeft: '0.4em solid ',
+    borderRight: '0.4em solid ',
     borderLeftColor: theme.palette.primary.light,
     borderRightColor: theme.palette.primary.light,
     borderBottomColor: theme.palette.primary.light,
-    "@media (max-width:390px)": {
-      padding: "0.3em",
-    }
+    '@media (max-width:390px)': {
+      padding: '0.3em',
+    },
   },
   progressContainer: {
-    width: "8em",
+    width: '8em',
   },
   progress: {
-    height: "0.8em",
-    borderRadius: "1em",
+    height: '0.8em',
+    borderRadius: '1em',
   },
   optionBarContainer: {
-    padding: "0.7em",
-    paddingLeft: "1.6em",
-    marginBottom: "0.5em",
-    borderRadius: "0.3em",
+    padding: '0.7em',
+    paddingLeft: '1.6em',
+    marginBottom: '0.5em',
+    borderRadius: '0.3em',
     backgroundColor: theme.palette.primary.light,
-    color: "white",
+    color: 'white',
   },
   switchLive: {
-    display: "flex",
-    justifyContent: "center",
-    marginLeft: "auto",
+    display: 'flex',
+    justifyContent: 'center',
+    marginLeft: 'auto',
   },
   progressLine: {
-    width: "100%",
-    padding: "5em",
+    width: '100%',
+    padding: '5em',
   },
 }));
 
 const CoinTable = () => {
-  console.log("rendered")
-
-  // Hooks 
+  // Hooks
   const theme = useTheme();
   const classes = useStyles();
   const history = useHistory();
   const [livePrices, startSocketConnection, closeSocketConnection] =
-  useSocketCC();
+    useSocketCC();
   const { percentageFormatter, numberFormatter, currencyFormatter } =
-  useFormatter();
+    useFormatter();
   const { fetchCoinList, sourceAPI } = useFetchData();
-  
-  // Responsive Varibles
-  const isSmDown = useMediaQuery(theme.breakpoints.down("sm"))
-  const isMdDown = useMediaQuery(theme.breakpoints.down("md"));
+  const { bookmarkHandler, bookmarks } = useContext(PortfolioContext);
+
+  // Responsive Varaibles
+  const isSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMdDown = useMediaQuery(theme.breakpoints.down('md'));
   const matches680Down = useMediaQuery('(max-width:680px)');
   const matches530Down = useMediaQuery('(max-width:530px)');
   const matches780Down = useMediaQuery('(max-width:780px)');
 
   // Component States
-  const [searchSubmitTerm, setSearchSubmitTerm] = useState("");
+  const [searchSubmitTerm, setSearchSubmitTerm] = useState('');
   const [livePriceSwitch, setLivePriceSwitch] = useState(false);
-  const [bookmarks, setBookmarks] = useState([]);
   const [favoriteCheck, setFavoriteCheck] = useState(false);
 
-  const [sortType, setSortType] = useState("marketCapDescending");
+  const [sortType, setSortType] = useState('marketCapDescending');
   const [page, setPage] = useState(1);
   const [cardCoinsInfo, setCardCoinsInfo] = useState([]);
   const [socketList, setSocketList] = useState([]);
@@ -114,18 +114,19 @@ const CoinTable = () => {
   const [rawRenderList, setRawRenderList] = useState([]);
   const [searchedRenderList, setSearchedRenderList] = useState([]);
   const [finalRenderList, setFinalRenderList] = useState([]);
-  const [feedbackMessage, setFeedBackMessage] = useState("");
-  const [coinListResponse, setCoinListResponse] = useState([])
+  const [feedbackMessage, setFeedBackMessage] = useState('');
+  const [coinListResponse, setCoinListResponse] = useState([]);
 
+  console.log(bookmarks);
 
   // Data Fetching
   useEffect(() => {
     const fetch = async () => {
-      const response = await fetchCoinList(sourceAPI)
-      setCoinListResponse(response)
-    }
-    fetch()
-  }, [fetchCoinList, sourceAPI])
+      const response = await fetchCoinList(sourceAPI);
+      setCoinListResponse(response);
+    };
+    fetch();
+  }, [fetchCoinList, sourceAPI]);
 
   // Coin Cards Logic
   useEffect(() => {
@@ -174,62 +175,62 @@ const CoinTable = () => {
       let renderList;
       if (sortData) {
         switch (type) {
-          case "marketCapDescending":
+          case 'marketCapDescending':
             renderList = sortData
               .sort((a, b) => b.marketCap - a.marketCap)
               .slice((page - 1) * 10, page * 10);
             break;
-          case "marketCapAscending":
+          case 'marketCapAscending':
             renderList = sortData
               .sort((a, b) => a.marketCap - b.marketCap)
               .slice((page - 1) * 10, page * 10);
             break;
-          case "priceDescending":
+          case 'priceDescending':
             renderList = sortData
               .sort((a, b) => b.price - a.price)
               .slice((page - 1) * 10, page * 10);
             break;
-          case "priceAscending":
+          case 'priceAscending':
             renderList = sortData
               .sort((a, b) => a.price - b.price)
               .slice((page - 1) * 10, page * 10);
             break;
-          case "changePercentageDayDescending":
+          case 'changePercentageDayDescending':
             renderList = sortData
               .sort((a, b) => b.priceChangeDayPerc - a.priceChangeDayPerc)
               .slice((page - 1) * 10, page * 10);
             break;
-          case "changePercentageDayAscending":
+          case 'changePercentageDayAscending':
             renderList = sortData
               .sort((a, b) => a.priceChangeDayPerc - b.priceChangeDayPerc)
               .slice((page - 1) * 10, page * 10);
             break;
-          case "changePercentageWeekDescending":
+          case 'changePercentageWeekDescending':
             renderList = sortData
               .sort((a, b) => b.priceChangeWeekPerc - a.priceChangeWeekPerc)
               .slice((page - 1) * 10, page * 10);
             break;
-          case "changePercentageWeekAscending":
+          case 'changePercentageWeekAscending':
             renderList = sortData
               .sort((a, b) => a.priceChangeWeekPerc - b.priceChangeWeekPerc)
               .slice((page - 1) * 10, page * 10);
             break;
-          case "changeVolumeDayDescending":
+          case 'changeVolumeDayDescending':
             renderList = sortData
               .sort((a, b) => b.marketCapChangeDay - a.marketCapChangeDay)
               .slice((page - 1) * 10, page * 10);
             break;
-          case "changeVolumeDayAscending":
+          case 'changeVolumeDayAscending':
             renderList = sortData
               .sort((a, b) => a.marketCapChangeDay - b.marketCapChangeDay)
               .slice((page - 1) * 10, page * 10);
             break;
-          case "circulatingSupplyDescending":
+          case 'circulatingSupplyDescending':
             renderList = sortData
               .sort((a, b) => b.circulatingSupply - a.circulatingSupply)
               .slice((page - 1) * 10, page * 10);
             break;
-          case "circulatingSupplyAscending":
+          case 'circulatingSupplyAscending':
             renderList = sortData
               .sort((a, b) => a.circulatingSupply - b.circulatingSupply)
               .slice((page - 1) * 10, page * 10);
@@ -247,14 +248,14 @@ const CoinTable = () => {
     // No found coin
     if (searchedRenderList?.length === 0 && searchSubmitTerm?.length > 0) {
       listForSort = [];
-      setFeedBackMessage("No coin found!");
+      setFeedBackMessage('No coin found!');
     }
     // No favorites coin selected yet.
     if (bookmarks?.length === 0 && favoriteCheck) {
       listForSort = [];
-      setFeedBackMessage("No favorites coin selected yet");
+      setFeedBackMessage('No favorites coin selected yet');
     }
-    
+
     // Default, no searching
     if (searchedRenderList?.length === 0 && searchSubmitTerm?.length === 0) {
       listForSort = rawRenderList;
@@ -295,7 +296,7 @@ const CoinTable = () => {
     setPage(value);
     window.scroll({
       top: 100,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   };
   const sortToggleHandler = (sortType1, sortType2) => {
@@ -303,20 +304,11 @@ const CoinTable = () => {
     setPage(1);
     sortType === sortType1 ? setSortType(sortType2) : setSortType(sortType1);
   };
-  const bookmarkHandler = (coin) => {
-    if (bookmarks.find((item) => item.id === coin.id) === undefined) {
-      setBookmarks((prev) => [...prev, coin]);
-    } else {
-      setBookmarks((prev) => {
-        const removed = prev.filter((item) => item.id !== coin.id);
-        return [...removed];
-      });
-    }
-  };
+
   const tableClickHandler = (id) => {
     // const cell = event.target.closest("tr");
     // const coinName =
-      // cell.firstChild.firstChild.lastChild.firstChild.innerHTML.toLowerCase();
+    // cell.firstChild.firstChild.lastChild.firstChild.innerHTML.toLowerCase();
     history.push(`/currencies/${id}`);
   };
 
@@ -324,55 +316,54 @@ const CoinTable = () => {
   const fontSizeHeadline = () => {
     // Order is important
 
-    if(matches530Down) {
-      return "1.4em"
+    if (matches530Down) {
+      return '1.4em';
     }
-    if(matches780Down) {
-      return "1.5em"
+    if (matches780Down) {
+      return '1.5em';
     }
-    if(isMdDown) {
-      return "1.6em"
+    if (isMdDown) {
+      return '1.6em';
     }
-    return "1.8em"
-
-  }
+    return '1.8em';
+  };
 
   // Pagination Count for different cases
   const paginationCount = () => {
-    
-    let count = 10
+    let count = 10;
     // Searched : No found coin
     if (searchedRenderList?.length === 0 && searchSubmitTerm?.length > 0) {
-      count = 0
+      count = 0;
     }
     // Searched :  with results
     if (searchedRenderList?.length > 0 && searchSubmitTerm?.length > 0) {
-      count = Math.ceil((searchedRenderList.length / 10))
+      count = Math.ceil(searchedRenderList.length / 10);
     }
-    // Favorites 
+    // Favorites
     if (favoriteCheck) {
-      count = Math.ceil(bookmarks.length / 10)
+      count = Math.ceil(bookmarks.length / 10);
     }
-    return count
-  }
+    return count;
+  };
 
   return (
     <>
       {/* Headline */}
       <HeadUnderline
         headline="Today's Cryptocurrency Prices by Market Cap"
-        long={isMdDown ? "25em" : "30em"}
+        long={isMdDown ? '25em' : '30em'}
         marginBottom="2em"
         fontSize={fontSizeHeadline()}
       />
 
       {/* Cards */}
-      <Hidden mdDown> 
-        <Grid 
-          container 
-          justify="center" 
-          alignItems="center" 
-          spacing={isSmDown ? 0 : 2}>
+      <Hidden mdDown>
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          spacing={isSmDown ? 0 : 2}
+        >
           {cardCoinsInfo?.map((coin) => {
             return (
               <Grid item xs key={coin.id}>
@@ -391,7 +382,7 @@ const CoinTable = () => {
           })}
         </Grid>
       </Hidden>
-      
+
       {/* Functional Navitagiton */}
       <Grid
         container
@@ -412,7 +403,6 @@ const CoinTable = () => {
       {/* Table  */}
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
-          
           {/* Table Head */}
           <TableHead>
             <TableRow>
@@ -420,8 +410,8 @@ const CoinTable = () => {
                 <Button
                   onClick={() =>
                     sortToggleHandler(
-                      "marketCapDescending",
-                      "marketCapAscending"
+                      'marketCapDescending',
+                      'marketCapAscending'
                     )
                   }
                 >
@@ -431,7 +421,7 @@ const CoinTable = () => {
               <TableCell align="center">
                 <Button
                   onClick={() =>
-                    sortToggleHandler("priceDescending", "priceAscending")
+                    sortToggleHandler('priceDescending', 'priceAscending')
                   }
                 >
                   Price
@@ -441,8 +431,8 @@ const CoinTable = () => {
                 <Button
                   onClick={() =>
                     sortToggleHandler(
-                      "changePercentageDayDescending",
-                      "changePercentageDayAscending"
+                      'changePercentageDayDescending',
+                      'changePercentageDayAscending'
                     )
                   }
                 >
@@ -455,8 +445,8 @@ const CoinTable = () => {
                   <Button
                     onClick={() =>
                       sortToggleHandler(
-                        "marketCapDescending",
-                        "marketCapAscending"
+                        'marketCapDescending',
+                        'marketCapAscending'
                       )
                     }
                   >
@@ -464,28 +454,29 @@ const CoinTable = () => {
                   </Button>
                 </TableCell>
               </Hidden>
-                <TableCell 
+              <TableCell
                 align="center"
-                style={{display: matches680Down ? "none" : "table-cell"}}>
-                  <Button
-                    onClick={() =>
-                      sortToggleHandler(
-                        "changeVolumeDayDescending",
-                        "changeVolumeDayAscending"
-                      )
-                    }
-                  >
-                    Volume(24h)
-                  </Button>
-                </TableCell>
+                style={{ display: matches680Down ? 'none' : 'table-cell' }}
+              >
+                <Button
+                  onClick={() =>
+                    sortToggleHandler(
+                      'changeVolumeDayDescending',
+                      'changeVolumeDayAscending'
+                    )
+                  }
+                >
+                  Volume(24h)
+                </Button>
+              </TableCell>
 
               <Hidden mdDown>
                 <TableCell align="center">
                   <Button
                     onClick={() =>
                       sortToggleHandler(
-                        "circulatingSupplyDescending",
-                        "circulatingSupplyAscending"
+                        'circulatingSupplyDescending',
+                        'circulatingSupplyAscending'
                       )
                     }
                   >
@@ -493,21 +484,26 @@ const CoinTable = () => {
                   </Button>
                 </TableCell>
               </Hidden>
-              <TableCell 
+              <TableCell
                 align="center"
-                style={{display: matches530Down ? "none" : "table-cell"}}>
-                
+                style={{ display: matches530Down ? 'none' : 'table-cell' }}
+              >
                 &nbsp; LAST 7 DAYS &nbsp;
               </TableCell>
             </TableRow>
           </TableHead>
 
           {/* Table Body */}
-          <TableBody >
+          <TableBody>
             {finalRenderList.length > 0 ? (
               finalRenderList.map((coin) => (
-                <TableRow onClick={() => {tableClickHandler(coin.id)}} key={coin.id} style={{ cursor: "pointer" }}>
-                  
+                <TableRow
+                  onClick={() => {
+                    tableClickHandler(coin.id);
+                  }}
+                  key={coin.id}
+                  style={{ cursor: 'pointer' }}
+                >
                   {/* Bookmark & Logo Cell */}
                   <TableCell>
                     <Grid
@@ -523,19 +519,23 @@ const CoinTable = () => {
                             e.stopPropagation();
                           }}
                         >
-                          {bookmarks.find(
+                          {bookmarks.some(
                             (bookmark) => coin.id === bookmark.id
-                          ) === undefined ? (
-                            <BookmarkBorderIcon style={{color: theme.palette.secondary.main}} />
+                          ) ? (
+                            <BookmarkIcon
+                              style={{ color: theme.palette.secondary.main }}
+                            />
                           ) : (
-                            <BookmarkIcon style={{color: theme.palette.secondary.main}} />
+                            <BookmarkBorderIcon
+                              style={{ color: theme.palette.secondary.main }}
+                            />
                           )}
                         </Button>
                       </Grid>
                       <Grid item xs={4}>
                         <img
                           src={coin.logo}
-                          style={{ width: "2.5em" }}
+                          style={{ width: '2.5em' }}
                           alt={coin.id}
                         />
                       </Grid>
@@ -544,15 +544,13 @@ const CoinTable = () => {
                       </Grid>
                     </Grid>
                   </TableCell>
-                  
+
                   {/* Price Cell */}
                   <TableCell
                     className={classes.price}
                     align="center"
                     style={{
-                      color: livePrices?.[coin.id]?.isPlus
-                        ? "green"
-                        : "black",
+                      color: livePrices?.[coin.id]?.isPlus ? 'green' : 'black',
                     }}
                   >
                     {currencyFormatter(
@@ -561,26 +559,24 @@ const CoinTable = () => {
                         coin.price
                     )}
                   </TableCell>
-                  
+
                   {/* Price Change Cell */}
                   <TableCell
                     align="center"
                     style={{
-                      color: coin.priceChangeDayPerc > 0 ? "green" : "red",
-
+                      color: coin.priceChangeDayPerc > 0 ? 'green' : 'red',
                     }}
                   >
-                    <Grid 
-                      container 
-                      justify="center" 
+                    <Grid
+                      container
+                      justify="center"
                       alignItems="center"
-                      direction = {matches780Down ? "column" : "row"}>
+                      direction={matches780Down ? 'column' : 'row'}
+                    >
                       <Grid item>
-                        {percentageFormatter(
-                          coin.priceChangeDayPerc
-                        )}
+                        {percentageFormatter(coin.priceChangeDayPerc)}
                       </Grid>
-                      <Grid item style={{ marginBottom: "-0.3em" }}>
+                      <Grid item style={{ marginBottom: '-0.3em' }}>
                         {coin.priceChangeDayPerc > 0 ? (
                           <ArrowDropUpIcon />
                         ) : (
@@ -596,14 +592,15 @@ const CoinTable = () => {
                       {currencyFormatter(coin.marketCap, 13)}
                     </TableCell>
                   </Hidden>
-                  
+
                   {/* MarketCap Volume Change Cell */}
-                  <TableCell 
+                  <TableCell
                     align="center"
-                    style={{display: matches680Down ? "none" : "table-cell"}} >
+                    style={{ display: matches680Down ? 'none' : 'table-cell' }}
+                  >
                     {currencyFormatter(coin.marketCapChangeDay, 10)}
                   </TableCell>
-                  
+
                   {/* Supply Progress Cell */}
                   <Hidden mdDown>
                     <TableCell align="center">
@@ -629,11 +626,12 @@ const CoinTable = () => {
                       </Grid>
                     </TableCell>
                   </Hidden>
-                  
+
                   {/* Sparkline Cell */}
-                  <TableCell 
+                  <TableCell
                     align="center"
-                    style={{display: matches530Down ? "none" : "table-cell"}}>
+                    style={{ display: matches530Down ? 'none' : 'table-cell' }}
+                  >
                     <Sparkline chartData={coin.sparkline} />
                   </TableCell>
                 </TableRow>
@@ -655,9 +653,8 @@ const CoinTable = () => {
               </TableRow>
             )}
           </TableBody>
-        
         </Table>
-        
+
         <Pagination
           count={paginationCount()}
           color="primary"
@@ -666,7 +663,6 @@ const CoinTable = () => {
           page={page}
         />
       </TableContainer>
-    
     </>
   );
 };
