@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.blue3,
     marginTop: '1em',
     borderRadius: '0.6em',
-    '@media (max-width:1024px)': {},
-    paddingBottom:"1em"
+
+    paddingBottom: '1em',
   },
   assetIcon: {
     backgroundColor: theme.palette.common.blue2,
@@ -82,12 +82,15 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.blue2,
     borderTopLeftRadius: '0.6em',
     borderTopRightRadius: '0.6em',
-    height: '2rem',
     marginBottom: '1em',
+    height: '4em',
+
     [theme.breakpoints.up('xl')]: {
       fontSize: '1.2em',
     },
-    height: '4em',
+    '@media (min-width: 1024px)': {
+      height: '3em',
+    },
   },
   headline: {
     fontSize: '0.80em',
@@ -95,6 +98,9 @@ const useStyles = makeStyles((theme) => ({
   },
   chartContainers: {
     marginBottom: '1em',
+    '@media (min-width: 1024px)': {
+      marginBottom: '0em',
+    },
   },
   tabRoot: {
     minWidth: '10px',

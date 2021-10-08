@@ -32,16 +32,17 @@ const useStyles = makeStyles((theme) => ({
     },
     borderRadius: '0.6em',
     minHeight: '20em',
-    '@media (min-width:960px)': {
-      minHeight: '15em',
+    '@media (min-width:1024px)': {
+      minHeight: '12em',
     },
+
     position: 'relative',
   },
   chartGrid: {
     marginTop: '5rem',
     padding: '1rem 0rem',
-    '@media (min-width:960px)': {
-      marginTop: '4rem',
+    '@media (min-width:1024px)': {
+      marginTop: '2rem',
       padding: '0rem 0rem',
     },
   },

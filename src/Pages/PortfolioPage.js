@@ -16,12 +16,14 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '2000px',
     margin: 'auto',
   },
+
   assetListGrid: {
-    '@media (min-width:600px)': {
+    '@media (min-width:600px) and (max-width: 1024px)': {
       flex: 1,
       marginRight: '1em',
     },
-    '@media (min-width:1024px)': {
+    '@media (min-width:1025px)': {
+      flexGrow:1,
       marginRight: '0em',
     },
 
@@ -72,7 +74,7 @@ const PortfolioPage = () => {
         </Grid>
 
         {/* Right */}
-        <Grid item container xs>
+        <Grid item container xs className={classes.rightGrid}>
           {/*  Asset List */}
           <Grid item container className={classes.assetListGrid}>
             <AssetListContainer />

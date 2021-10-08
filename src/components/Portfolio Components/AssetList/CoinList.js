@@ -13,13 +13,10 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
     margin: 'auto',
     marginBottom: '0.5em',
+    height: '36vh',
+    '@media (max-width:1000px)': {
+    },
     '@media (min-width:1024px)': {
-      height: '30vh',
-    },
-    '@media (max-width:900px)': {
-      height: '50vh',
-    },
-    '@media (max-width:600px)': {
       height: '30vh',
     },
   },

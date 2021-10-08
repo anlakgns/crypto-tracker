@@ -24,11 +24,20 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.blue3,
     marginRight: '1em',
     borderRadius: '0.6em',
+    position: 'relative',
     '@media (max-width:1024px)': {
       marginRight: '0em',
     },
-    minHeight:"20em"
-
+    minHeight: '20em',
+    '@media (min-width:1024px)': {
+      minHeight: '12em',
+    },
+  },
+  chartGrid: {
+    marginTop: '4rem',
+    '@media (min-width:1024px)': {
+      marginTop: '2rem',
+    },
   },
   controlBar: {
     paddingLeft: '1em',
@@ -36,14 +45,15 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.blue2,
     borderTopLeftRadius: '0.6em',
     borderTopRightRadius: '0.6em',
-    marginBottom: '1em',
-    height:"4rem",
+    height: '4rem',
     [theme.breakpoints.up('xl')]: {
       fontSize: '1.2em',
     },
     '@media (min-width:600px)': {
       height: '3.5em',
-    }
+    },
+    position: 'absolute',
+    top: 0,
   },
   headline: {
     fontSize: '0.80em',
@@ -279,7 +289,14 @@ export const PerformanceChart = () => {
         </Grid>
 
         {/* Chart */}
-        <Grid item container justify="center" alignItems="center" xs>
+        <Grid
+          item
+          container
+          justify="center"
+          alignItems="center"
+          xs
+          className={classes.chartGrid}
+        >
           <ResponsiveContainer
             height={(window.innerHeight - 100) / 3}
             width="90%"
