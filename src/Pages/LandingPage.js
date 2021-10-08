@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
   introduction: {
     backgroundColor: theme.palette.primary.main,
     overflow: 'hidden',
-    height: "100vh"
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
