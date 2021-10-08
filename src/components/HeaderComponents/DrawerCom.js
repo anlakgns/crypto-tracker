@@ -17,6 +17,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.primary.main,
     width: "15em",
     height:"40em",
+    maxHeight: "100vh",
     borderBottomRightRadius:"2em"
   },
   logo: {

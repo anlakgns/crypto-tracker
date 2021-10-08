@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '-5em',
     [theme.breakpoints.down('sm')]: {
       marginTop: '-2em',
-      marginBottom: '2em',
     },
   },
   image: {
@@ -76,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       display: 'block',
       margin: 'auto',
-      marginBottom: '12em',
+      marginBottom: '8em',
       marginTop: '3em',
     },
   },

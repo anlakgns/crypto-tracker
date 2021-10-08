@@ -18,17 +18,17 @@ const Header = () => {
       container
       direction="row"
       justify="center"
-      style={{ padding: "2em 0em" }}
+      style={{ padding: "1em 0em" }}
     >
       <Grid item container xs={11} justify="space-between">
         
         {/* Left: Logo */}
-        <Grid item>
+        <Grid item container xs alignItems="center">
           <LogoButton />
         </Grid>
 
         {/* Right: Tabs or Drawer */}
-        <Grid item>
+        <Grid item xs container>
           {matchesMDup ? <TabsCom /> : <DrawerCom />}
         </Grid>
       

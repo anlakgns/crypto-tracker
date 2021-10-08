@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid"
 import {AuthContext} from "../shared/contexts/AuthContext"
 
 const useStyles = makeStyles(theme => ({
+ 
   tabContainer: {
     marginLeft: "auto",
     marginRight:"10px",
@@ -57,7 +58,7 @@ const TabsCom = () => {
 
   return (
     <>
-      <Grid container alignItems="center" >
+      <Grid  container alignItems="center" justify="flex-end" >
         
         {/* Tabs */}
         <Grid item >

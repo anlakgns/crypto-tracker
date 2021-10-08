@@ -14,8 +14,6 @@ const useStyles = makeStyles((theme) => ({
   footerContainer: {
     fontFamily: 'roboto',
     backgroundColor: theme.palette.common.blue1,
-    marginTop:"2em",
-    
   },
   innerMain: {
     maxWidth: '1500px',
