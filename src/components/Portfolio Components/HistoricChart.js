@@ -102,7 +102,11 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '1em',
     padding: '0.5em',
     color: theme.palette.common.white,
+    '@media (max-width: 600px)': {
+      maxWidth: '10rem',
+    },
   },
+
   tabsData: {
     color: theme.palette.primary.main,
     backgroundColor: 'white',
@@ -416,7 +420,13 @@ export const HistoricChart = () => {
           </Grid>
 
           {/* Coin Type Select */}
-          <Grid item container justify="center" xs>
+          <Grid
+            className={classes.selectGrid}
+            item
+            container
+            justify="center"
+            xs
+          >
             <form>
               <select
                 value={selectedCoinForGraph}
@@ -436,7 +446,13 @@ export const HistoricChart = () => {
           </Grid>
 
           {/* Switcher -  Among Transaction Types - not available in mobile */}
-          <Grid item xs container justify="center">
+          <Grid
+            item
+            xs
+            container
+            justify="center"
+            className={classes.switcherGrid}
+          >
             {selectedCoinForGraph !== 'All Assets' ? (
               <Tabs
                 value={chartDataType}
@@ -474,7 +490,7 @@ export const HistoricChart = () => {
                 />
               </Tabs>
             ) : (
-              <Grid container justify="flex-end">
+              <Grid container justify="center">
                 <Grid item>
                   <Typography className={classes.totalSpent}>
                     {totalSpent === 0
@@ -570,7 +586,10 @@ export const HistoricChart = () => {
                 domain={['auto', 'auto']}
                 stroke={theme.palette.common.textPurple}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip
+                className={classes.tooltip}
+                content={<CustomTooltip />}
+              />
               <Line
                 type="monotone"
                 dataKey="yData"

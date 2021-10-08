@@ -220,7 +220,8 @@ export const PerformanceChart = () => {
           <ul>
             {payload.map((c) => {
               return (
-                <li key={c.name}>
+                // math random is unacceptable, change it asap.
+                <li key={Math.random()}>
                   {c.name}: {c.value.toFixed(2)}%
                 </li>
               );

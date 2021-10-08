@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell } from 'recharts';
 import { Typography } from '@material-ui/core';
 import { Tabs } from '@material-ui/core';
 import { Tab } from '@material-ui/core';
@@ -261,8 +261,7 @@ export const AssetStructure = () => {
                         )} USD`}
                   </Typography>
                 </div>
-                <ResponsiveContainer height={200} >
-                  <PieChart>
+                  <PieChart height={200} width={200}>
                     <Pie
                       data={data}
                       innerRadius={65}
@@ -278,7 +277,6 @@ export const AssetStructure = () => {
                       ))}
                     </Pie>
                   </PieChart>
-                </ResponsiveContainer>
               </div>
             </Grid>
 
