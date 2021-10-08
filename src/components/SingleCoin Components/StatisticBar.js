@@ -52,10 +52,9 @@ const useStyles = makeStyles((theme) => ({
 
 export const StatisticBar = ({ singleCoinResponse }) => {
   const classes = useStyles();
-  const { currencyFormatter, numberFormatter, dateFormatter } = useFormatter();
+  const { currencyFormatter, numberFormatter } = useFormatter();
   const [formattedData, setFormattedData] = useState({});
   const matchesIphoneX = useMediaQuery('(max-width:500px)');
-  console.log(new Date(formattedData.allTimeHighDate))
   
   // Data Formatted & Editted
   useEffect(() => {

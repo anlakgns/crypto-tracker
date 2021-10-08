@@ -246,7 +246,6 @@ export const MainArea = ({ singleCoinResponse }) => {
   const descriptionRef = useRef();
   const matchesMDdown = useMediaQuery('@media (max-width:959.95px)');
   const matches653 = useMediaQuery('(max-width:653px)');
-  console.log(theme.breakpoints.down('sm'));
   // Data Fetching
   useEffect(() => {
     const CancelToken = axios.CancelToken;
@@ -262,7 +261,6 @@ export const MainArea = ({ singleCoinResponse }) => {
         );
         setCoinHistoricResponse(response);
       } catch (err) {
-        console.log(err);
       }
     };
     fetch();

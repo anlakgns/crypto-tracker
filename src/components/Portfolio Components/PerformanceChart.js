@@ -204,9 +204,6 @@ export const PerformanceChart = () => {
     setRenderData(renderAll);
   }, [editedData, portoflioNameList]);
 
-  //
-  console.log(window.innerHeight);
-
   // Colors for Bars
   const COLORS = ['#FF78CB', '#B4BDFF', '#9758A6', '#634893'];
 

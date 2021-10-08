@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, useStyle } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';

@@ -26,8 +26,7 @@ import { useSocketCC } from '../shared/hooks/socketCCHook';
 import HeadUnderline from '../shared/UI components/HeadUnderline';
 import { useFormatter } from '../shared/utils/formatterHook';
 import { useFetchData } from '../shared/hooks/fetchDataHook';
-import { PortfolioContext } from "../shared/contexts/PortfolioContext";
-
+import { PortfolioContext } from '../shared/contexts/PortfolioContext';
 
 import { CoinCard } from './CoinCard';
 import { FeatureBar } from './FeaturesBar';
@@ -116,8 +115,6 @@ const CoinTable = () => {
   const [finalRenderList, setFinalRenderList] = useState([]);
   const [feedbackMessage, setFeedBackMessage] = useState('');
   const [coinListResponse, setCoinListResponse] = useState([]);
-
-  console.log(bookmarks);
 
   // Data Fetching
   useEffect(() => {

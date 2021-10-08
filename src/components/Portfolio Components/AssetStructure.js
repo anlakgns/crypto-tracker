@@ -8,7 +8,6 @@ import { Tab } from '@material-ui/core';
 import { motion } from 'framer-motion';
 import { PortfolioContext } from '../shared/contexts/PortfolioContext';
 import { useFormatter } from '../shared/utils/formatterHook';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -142,7 +141,6 @@ export const AssetStructure = () => {
   const classes = useStyles();
   const [tabValue, setTabValue] = useState(1);
   const [data, setData] = useState([]);
-  const matches850Down = useMediaQuery('(max-width:850px)');
 
   const tabHandler = (_, newValue) => {
     setTabValue(newValue);
@@ -263,7 +261,7 @@ export const AssetStructure = () => {
                         )} USD`}
                   </Typography>
                 </div>
-                <ResponsiveContainer height={200} width={200}>
+                <ResponsiveContainer height={200} >
                   <PieChart>
                     <Pie
                       data={data}

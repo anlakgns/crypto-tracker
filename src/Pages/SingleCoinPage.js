@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
 import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-
 import { IntroductionBar } from '../components/SingleCoin Components/IntroductionBar';
 import { StatisticBar } from '../components/SingleCoin Components/StatisticBar';
 import { MainArea } from '../components/SingleCoin Components/MainArea';

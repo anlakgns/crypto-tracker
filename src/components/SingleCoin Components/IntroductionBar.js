@@ -16,7 +16,6 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Link from '@material-ui/core/Link';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import { usePortfolio } from '../shared/hooks/portfolioHook';
 import { PortfolioContext } from "../shared/contexts/PortfolioContext";
 
 import { useFormatter } from '../shared/utils/formatterHook';
@@ -122,7 +121,6 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
   
   const matches750 = useMediaQuery('(max-width:750px)');
   const matches520 = useMediaQuery('(max-width:520px)');
-  const matches375 = useMediaQuery('(max-width:375px)');
   const matches450 = useMediaQuery('(max-width:450px)');
 
   // Data Formatted & Editted
@@ -154,7 +152,6 @@ export const IntroductionBar = ({ singleCoinResponse }) => {
       repos: singleCoinResponse?.data.links.repos_url.github[0],
     });
   }, [singleCoinResponse, currencyFormatter]);
-  console.log(bookmarks);
 
   // Dom Handlers
   const handleExplorerClick = (event) => {
