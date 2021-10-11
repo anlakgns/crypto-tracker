@@ -14,8 +14,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 'auto',
     marginBottom: '0.5em',
     height: '36vh',
-    '@media (max-width:1000px)': {
-    },
+    '@media (max-width:1000px)': {},
     '@media (min-width:1024px)': {
       height: '30vh',
     },
@@ -91,9 +90,6 @@ export const CoinList = (props) => {
           return (
             <ListItem
               button
-              onClick={() => {
-                setSelectedCoinForGraph(coin.allInfo.id);
-              }}
               disableGutters
               classes={{ root: classes.listItemRoot }}
               key={coin.name}
@@ -101,6 +97,7 @@ export const CoinList = (props) => {
             >
               <CoinItem
                 tabValue={tabValue}
+                setSelectedCoinForGraph={setSelectedCoinForGraph}
                 setPortfolioModal={setPortfolioModal}
                 setPage={setPage}
                 setSelectedCoin={setSelectedCoin}

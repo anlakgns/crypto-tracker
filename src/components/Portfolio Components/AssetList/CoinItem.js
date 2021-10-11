@@ -1,76 +1,92 @@
-import React, { useState, useContext, useEffect } from "react";
-import { makeStyles, useTheme } from "@material-ui/styles";
-import Grid from "@material-ui/core/Grid";
-import { Typography } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
-import { useFormatter } from "../../shared/utils/formatterHook";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { PortfolioContext } from "../../shared/contexts/PortfolioContext";
+import React, { useState, useContext, useEffect } from 'react';
+import { makeStyles, useTheme } from '@material-ui/styles';
+import Grid from '@material-ui/core/Grid';
+import { Typography } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import { useFormatter } from '../../shared/utils/formatterHook';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { PortfolioContext } from '../../shared/contexts/PortfolioContext';
+
+import BookmarkIcon from '@material-ui/icons/Bookmark';
 
 const useStyles = makeStyles((theme) => ({
   itemContainer: {
-    fontSize:"1em",
-    [theme.breakpoints.up("xl")]: {
-      fontSize:"1.2em"
+    fontSize: '1em',
+    [theme.breakpoints.up('xl')]: {
+      fontSize: '1.2em',
     },
   },
   underline: {
-    borderBottom: "2px solid",
+    borderBottom: '2px solid',
     color: theme.palette.common.blue4,
   },
   logo: {
-    width: "35%",
+    width: '35%',
   },
   name: {
-    fontSize: "0.8em",
+    fontSize: '0.8em',
   },
   id: {
     opacity: 0.7,
-    fontSize: "0.8em",
+    fontSize: '0.8em',
   },
   quantity: {
-    fontSize: "0.5em",
+    fontSize: '0.5em',
   },
   quantitySpan: {
     opacity: 0.7,
-    marginRight: "0.2em",
+    marginRight: '0.2em',
   },
-  starIcon: {
+  bookmarkIcon: {
     color: theme.palette.common.white,
-    marginLeft: "0.5em",
-    fontSize: "0.7em",
+    marginLeft: '0.5em',
+    fontSize: '0.7em',
   },
   price: {
-    fontSize: "0.8em",
+    fontSize: '0.8em',
   },
   change: {
-    fontSize: "0.6em",
+    fontSize: '0.6em',
   },
   iconButtonBookRoot: {
-    padding: "0",
+    padding: '0',
     color: theme.palette.common.white,
-    marginRight: "2em",
+    marginRight: '2em',
   },
   iconButtonDot: {
-    fontSize: "0.2em",
+    fontSize: '0.2em',
   },
   menuItem: {
-    fontSize: "0.8em",
+    fontSize: '0.8em',
   },
 }));
 
 export const CoinItem = (props) => {
-  const { tabValue, setPortfolioModal, setSelectedCoin, setPage, coin } = props;
-  const { name, priceBought, quantity, value } = coin;
-  const { code, logo, priceChangeDayPerc } = coin.allInfo;
-
+  // Props & Hooks
   const theme = useTheme();
-  const { setCoinToDelete, sourceAPI, coinListResponse } =
-    useContext(PortfolioContext);
+  const {
+    tabValue,
+    setPortfolioModal,
+    setSelectedCoin,
+    setPage,
+    coin,
+    setSelectedCoinForGraph,
+  } = props;
+  const { name, priceBought, quantity, value } = coin;
+  const { code, logo, priceChangeDayPerc, id } = coin.allInfo;
+  const {
+    setCoinToDelete,
+    sourceAPI,
+    coinListResponse,
+    bookmarkHandler,
+    bookmarks,
+  } = useContext(PortfolioContext);
   const { currencyFormatter, percentageFormatter } = useFormatter();
+
+  // Component States
   const [anchorEl, setAnchorEl] = useState(null);
   const [primaryField, setPrimaryField] = useState();
   const [secondaryField, setSecondaryField] = useState();
@@ -115,11 +131,11 @@ export const CoinItem = (props) => {
 
   // Dom Handlers
   const itemClick = (event, option) => {
-    if (option === "Remove Asset") {
+    if (option === 'Remove Asset') {
       setCoinToDelete(name);
     }
 
-    if (option === "Buy More") {
+    if (option === 'Buy More') {
       setPortfolioModal(true);
       setSelectedCoin(coin.allInfo);
       setPage(2);
@@ -138,7 +154,7 @@ export const CoinItem = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const options = ["Remove Asset", "Buy More", "Sell"];
+  const options = ['Remove Asset', 'Buy More', 'Sell'];
   const ITEM_HEIGHT = 48;
 
   return (
@@ -151,7 +167,13 @@ export const CoinItem = (props) => {
         alignItems="center"
       >
         {/* Logo & Coin Name */}
-        <Grid item container xs={6} alignItems="center">
+        <Grid
+          item
+          container
+          xs={6}
+          alignItems="center"
+          onClick={() => setSelectedCoinForGraph(id)}
+        >
           {/* Logo */}
           <Grid item container justify="center" xs={4}>
             <img src={logo} alt="coin logo" className={classes.logo} />
@@ -174,7 +196,13 @@ export const CoinItem = (props) => {
 
         {/* Price & Icon */}
         <Grid item container xs={5} justify="center" alignItems="center">
-          <Grid item container direction="column" xs={8}>
+          <Grid
+            onClick={() => setSelectedCoinForGraph(id)}
+            item
+            container
+            direction="column"
+            xs={8}
+          >
             <Grid item>
               <Typography className={classes.price} align="right">
                 {primaryField}
@@ -185,7 +213,7 @@ export const CoinItem = (props) => {
                 className={classes.change}
                 style={{
                   color:
-                    parseFloat(secondaryField) >= 0 ? "#7CFC00" : "#FF5733 ",
+                    parseFloat(secondaryField) > 0 ? '#7CFC00' : '#FF5733 ',
                 }}
                 align="right"
               >
@@ -194,8 +222,12 @@ export const CoinItem = (props) => {
             </Grid>
           </Grid>
           <Grid item xs={4}>
-            <IconButton>
-              <BookmarkBorderIcon className={classes.starIcon} />
+            <IconButton onClick={() => bookmarkHandler(coin.allInfo)}>
+              {bookmarks.some((bookmark) => coin.allInfo.id === bookmark.id) ? (
+                <BookmarkIcon className={classes.bookmarkIcon} />
+              ) : (
+                <BookmarkBorderIcon className={classes.bookmarkIcon} />
+              )}
             </IconButton>
           </Grid>
         </Grid>
@@ -221,7 +253,7 @@ export const CoinItem = (props) => {
             PaperProps={{
               style: {
                 maxHeight: ITEM_HEIGHT * 4.5,
-                width: "20ch",
+                width: '20ch',
                 backgroundColor: theme.palette.secondary.light,
                 color: theme.palette.common.white,
               },

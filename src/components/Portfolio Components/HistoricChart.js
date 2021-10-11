@@ -41,8 +41,8 @@ const useStyles = makeStyles((theme) => ({
   chartGrid: {
     marginTop: '5rem',
     padding: '1rem 0rem',
-    '@media (min-width:1024px)': {
-      marginTop: '2rem',
+    '@media (min-width:1025px)': {
+      marginTop: '3.5rem',
       padding: '0rem 0rem',
     },
   },

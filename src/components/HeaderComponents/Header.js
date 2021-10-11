@@ -1,6 +1,5 @@
 import React from "react";
 
-import { useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
@@ -9,8 +8,7 @@ import TabsCom from "./TabsCom";
 import DrawerCom from "./DrawerCom";
 
 const Header = () => {
-  const theme = useTheme();
-  const matchesMDup = useMediaQuery(theme.breakpoints.up("md"))
+  const matchesMDup = useMediaQuery('@media (min-width:1020px)')
 
   return (
     <Grid

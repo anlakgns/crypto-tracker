@@ -23,10 +23,9 @@ const useStyles = makeStyles((theme) => ({
       marginRight: '1em',
     },
     '@media (min-width:1025px)': {
-      flexGrow:1,
+      flexGrow: 1,
       marginRight: '0em',
     },
-
   },
   assetStructureGrid: {
     '@media (min-width:600px)': {
@@ -42,7 +41,7 @@ const PortfolioPage = () => {
   // Scroll Down to Charts
   useEffect(() => {
     window.scroll({
-      top: 120,
+      top: 90,
       behavior: 'smooth',
     });
   }, []);

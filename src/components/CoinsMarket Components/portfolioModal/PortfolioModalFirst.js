@@ -121,6 +121,7 @@ export const PortfolioModalFirst = ({ listItemHandler, handleClose }) => {
       container 
       className={classes.gridContainer}
       style={{width : matches450Down ? "20em" : "27em" }}>
+      
       {/* Headline & Cross */}
       <Grid
         item

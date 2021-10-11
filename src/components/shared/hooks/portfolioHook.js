@@ -17,11 +17,26 @@ export const usePortfolio = () => {
 
   // Initial Data Fetching
   useEffect(() => {
-    const fetch = async () => {
-      const response = await fetchCoinList();
-      setCoinListResponse(response);
+    const fetch = () => {
+      const regularlyFetch = setInterval(async () => {
+        console.log('data fetched.');
+        const response = await fetchCoinList();
+        setCoinListResponse(response);
+      }, 20000);
+      return () => {
+        clearInterval(regularlyFetch);
+      };
     };
     fetch();
+  }, [fetchCoinList]);
+
+  useEffect(() => {
+    const fetchInitial = async ()=> {
+      console.log('data fetched.');
+      const response = await fetchCoinList();
+      setCoinListResponse(response);
+    }
+    fetchInitial()
   }, [fetchCoinList]);
 
   // Total Spent
@@ -120,6 +135,6 @@ export const usePortfolio = () => {
     setSelectedCoinForGraph,
     selectedCoinForGraph,
     bookmarkHandler,
-    bookmarks
+    bookmarks,
   };
 };

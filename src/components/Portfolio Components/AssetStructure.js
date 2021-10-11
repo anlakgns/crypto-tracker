@@ -141,7 +141,7 @@ export const AssetStructure = () => {
   const classes = useStyles();
   const [tabValue, setTabValue] = useState(1);
   const [data, setData] = useState([]);
-
+  console.log(data)
   const tabHandler = (_, newValue) => {
     setTabValue(newValue);
   };
@@ -149,23 +149,26 @@ export const AssetStructure = () => {
   // Render Logic
   useEffect(() => {
     const item = portfolioList;
-
+    
     const renderFunc = (unit) => {
+      const unitType = unit // value or profit
       if (item.length > 4) {
-        const sortedTopThree = item.sort((a, b) => b.unit - a.unit).slice(0, 3);
-        const rest = item.sort((a, b) => b.unit - a.unit).slice(3);
-        const restValue = rest.reduce((sum, cur) => sum + cur.unit, 0);
+        const sortedTopThree = item.sort((a, b) => b[unitType] - a[unitType]).slice(0, 3);
+
+        const rest = item.sort((a, b) => b[unitType] - a[unitType]).slice(3);
+        const restValue = rest.reduce((sum, cur) => sum + cur[unitType], 0);
         const renderData = [
           ...sortedTopThree,
-          { name: 'Rest', unit: restValue },
+          { name: 'Rest', unitType: restValue },
         ];
+        console.log(renderData)
         setData(renderData);
       } else {
         setData(item);
       }
     };
 
-    tabValue === 1 ? renderFunc(['value']) : renderFunc(['profit']);
+    tabValue === 1 ? renderFunc('value') : renderFunc('profit');
   }, [tabValue, totalSpentByCoin, portfolioList, coinListResponse]);
 
   const COLORS = ['#FF78CB', '#B4BDFF', '#9758A6', '#634893'];
@@ -231,6 +234,7 @@ export const AssetStructure = () => {
         </Grid>
 
         <Grid item container direction="column" alignItems="center">
+          
           {/* Chart & Icons Container */}
           <Grid
             item
@@ -315,7 +319,7 @@ export const AssetStructure = () => {
                       >
                         {tabValue === 1
                           ? ((coin.value / totalSpent) * 100).toFixed(2)
-                          : ((coin.profit / totalProfit) * 100).toFixed(2)}
+                          : ((coin.profit / totalProfit || 0) * 100).toFixed(2)}
                         %
                       </Typography>
                     </Grid>
@@ -324,6 +328,7 @@ export const AssetStructure = () => {
               })}
             </Grid>
           </Grid>
+       
         </Grid>
       </Grid>
     </>

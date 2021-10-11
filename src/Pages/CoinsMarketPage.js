@@ -31,7 +31,7 @@ const CoinMarketPage = () => {
   // Scroll Down to Table
   useEffect(() => {
     window.scroll({
-      top: 100,
+      top: 90,
       behavior: 'smooth',
     });
   }, []);

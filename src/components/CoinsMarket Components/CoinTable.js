@@ -301,7 +301,6 @@ const CoinTable = () => {
     setPage(1);
     sortType === sortType1 ? setSortType(sortType2) : setSortType(sortType1);
   };
-
   const tableClickHandler = (id) => {
     // const cell = event.target.closest("tr");
     // const coinName =
@@ -660,6 +659,7 @@ const CoinTable = () => {
           page={page}
         />
       </TableContainer>
+    
     </>
   );
 };
